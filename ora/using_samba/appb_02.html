@@ -1,0 +1,325 @@
+<!DOCTYPE HTML PUBLIC "html.dtd">
+<HTML>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+<HEAD>
+<TITLE>
+[Appendix B] B.2 Samba Tuning</TITLE><META NAME="DC.title" CONTENT=""><META NAME="DC.creator" CONTENT=""><META NAME="DC.publisher" CONTENT="O'Reilly &amp; Associates, Inc."><META NAME="DC.date" CONTENT="1999-11-05T21:42:03Z"><META NAME="DC.type" CONTENT="Text.Monograph"><META NAME="DC.format" SCHEME="MIME" CONTENT="text/html"><META NAME="DC.source" SCHEME="ISBN" CONTENT=""><META NAME="DC.language" CONTENT="en-US"><META NAME="generator" CONTENT="Jade 1.1/O'Reilly DocBook 3.0 to HTML 4.0"></HEAD>
+<BODY VLINK="#0000CC" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#990000">
+<TABLE WIDTH="90%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD COLSPAN="2">
+<IMG WIDTH="515" ALT="Search the Catalog" SRC="http://www.oreilly.com/graphics_new/catalog_header_buttons.gif" HEIGHT="37" ISMAP ALIGN="BOTTOM" USEMAP="#catalog_header_buttons" BORDER="0">
+<MAP NAME="catalog_header_buttons">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/search.html" COORDS="407,17,512,32">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/catalog/prdindex.html" COORDS="431,3,512,18">
+</MAP>
+</TD>
+</TR>
+<TR>
+<TD WIDTH="25%" VALIGN="TOP">
+<A HREF="http://www.oreilly.com/catalog/samba/">
+<IMG ALT="Using Samba" VALIGN="top" VSPACE="10" HSPACE="10" SRC="http://www.oreilly.com/catalog/covers/samba.s.gif" ALIGN="left" BORDER="0">
+</A>
+</TD>
+<TD VALIGN="TOP" HEIGHT="105">
+<BR>
+<H2>Using Samba</H2>
+<FONT SIZE="-1">
+Robert Eckstein, David Collier-Brown, Peter Kelly
+<BR>1st Edition November 1999
+<BR>1-56592-449-5, Order Number: 4495
+<BR>416 pages, $34.95
+</FONT>
+</TD>
+</TR>
+</TABLE>
+<HR NOSHADE SIZE="1">
+<!-- sample chapter begins -->
+
+<CENTER>
+<DIV CLASS="htmlnav">
+<TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="B.1 A Simple Benchmark" HREF="appb_01.html" CLASS="sect1">
+<IMG ALT="Previous: B.1 A Simple Benchmark" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<B>
+<FONT SIZE="-1" FACE="ARIEL,HELVETICA,HELV,SANSERIF">
+<A TITLE="B. Samba Performance Tuning" REL="up" HREF="appb_01.html" CLASS="appendix">
+Appendix B<BR>
+Samba Performance Tuning</A></FONT></B></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="B.3 Sizing Samba Servers" HREF="appb_03.html" CLASS="sect1">
+<IMG ALT="Next: B.3 Sizing Samba Servers" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR></TABLE>&nbsp;<HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+<BLOCKQUOTE>
+<DIV>
+<H2 CLASS="sect1">
+<A NAME="appb-50295" CLASS="title">
+B.2 Samba Tuning</A></H2><P CLASS="para">That being said, let's discuss how you can take an already fast networking package and make it even faster.</P><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="appb-pgfId-948325" CLASS="title">
+B.2.1 Benchmarking</A></H3><P CLASS="para">Benchmarking is an arcane and somewhat black art, but the level of expertise needed for simple performance tuning is fairly low. Since the Samba server's goal in life is to transfer files, we will examine only throughput, not response time to particular events, under the benchmarking microscope. After all, it's relatively easy to measure file transfer speed, and Samba doesn't suffer too badly from response-time problems that would require more sophisticated techniques. </P><P CLASS="para">
+Our basic strategy for this work will be:</P><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="appb-pgfId-948328" CLASS="listitem">
+</A>Find a reasonably-sized file to copy and a program that reports on copy speeds, such as <I CLASS="filename">
+smbclient</I>.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="appb-pgfId-948329" CLASS="listitem">
+</A>Find a quiet (or typical) time to do the test.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="appb-pgfId-948330" CLASS="listitem">
+</A>Pre-run each test a few times to preload buffers.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="appb-pgfId-948331" CLASS="listitem">
+</A>Run tests several times and watch for unusual results.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="appb-pgfId-948332" CLASS="listitem">
+</A>Record each run in detail.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="appb-pgfId-948333" CLASS="listitem">
+</A>Compare the average of the valid runs to expected values.</P></LI></UL><P CLASS="para">
+After establishing a baseline using this method, we can adjust a single parameter and do the measurements all over again. An empty table for your tests is provided at the end of this chapter.</P></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="appb-pgfId-948336" CLASS="title">
+B.2.2 Things to Tweak</A></H3><P CLASS="para">
+There are literally thousands of Samba setting combinations that you can use in search of that perfect server. Those of us with lives outside of system administration, however, can narrow down the number of options to those listed in this section, which are the most likely to affect overall throughput. They are presented  roughly in order of impact.</P><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="appb-pgfId-948339" CLASS="title">
+B.2.2.1 Log level</A></H4><P CLASS="para">This is an obvious one. Increasing the logging level (<CODE CLASS="literal">
+log</CODE> <CODE CLASS="literal">
+level</CODE> or <CODE CLASS="literal">
+debug</CODE> <CODE CLASS="literal">
+level</CODE> configuration options) is a good way to debug a problem, unless you happen to be searching for a performance problem! As mentioned in <B>Chapter 4, <CITE CLASS="chapter">
+Disk Shares </CITE></B>, Samba produces a ton of debugging messages at level 3 and above, and writing them to disk or syslog is a slow operation. In our <I CLASS="filename">
+smbclient/ftp</I> tests, raising the log level from 0 to 3 cut the untuned <CODE CLASS="literal">
+get</CODE> <CODE CLASS="literal">
+speed</CODE> from 645.3 to 622.2KB/s, or roughly 5 percent. Higher log levels were even worse.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="appb-pgfId-948342" CLASS="title">
+B.2.2.2 Socket options</A></H4><P CLASS="para">
+The next thing to look at are the <CODE CLASS="literal">
+socket</CODE> <CODE CLASS="literal">
+options</CODE> configuration options. These are really host system tuning options, but they're set on a per-connection basis, and can be reset by Samba on the sockets it employs by adding <CODE CLASS="literal">
+socket</CODE> <CODE CLASS="literal">
+options</CODE> <CODE CLASS="literal">
+=</CODE> <CODE CLASS="literal">
+option</CODE> to the <CODE CLASS="literal">
+[global]</CODE> section of your <I CLASS="filename">
+smb.conf </I>file. Not all of these options are supported by all vendors; check your vendor's manual pages on <I CLASS="function">
+setsockopt </I>(1) or <I CLASS="function">
+socket </I>(5) for details.</P><P CLASS="para">
+The main options are:</P><DL CLASS="variablelist">
+<DT CLASS="term">
+<CODE CLASS="literal">
+TCP_NODELAY</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Have the server send as many packets as necessary to keep delay low. This is used on telnet connections to give good response time, and is used&nbsp;- somewhat counter-intuitively&nbsp;- to get good speed even when doing small requests or when acknowledgments are delayed (as seems to occur with Microsoft TCP/IP). This is worth a 30-50 percent speedup by itself. Incidentally, in Samba 2.0.4, <CODE CLASS="literal">
+socket</CODE> <CODE CLASS="literal">
+options</CODE> <CODE CLASS="literal">
+=</CODE> <CODE CLASS="literal">
+TCP_NODELAY</CODE> became the default value for that option.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+IPTOS_LOWDELAY</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+This is another option that trades off throughput for lower delay, but which affects routers and other systems, not the server. All the IPTOS options are new; they're not supported by all operating systems and routers. If they are supported, set <CODE CLASS="literal">
+IPTOS_LOWDELAY</CODE> whenever you set <CODE CLASS="literal">
+TCP_NODELAY</CODE>.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+SO_SNDBUF</CODE> <CODE CLASS="literal">
+and</CODE> <CODE CLASS="literal">
+SO_RCVBUF</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+The send and receive buffers can often be the reset to a value higher than that of the operating system. This yields a marginal increase of speed (until it reaches a point of diminishing returns).  </P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+SO_KEEPALIVE</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+This initiates a periodic (four-hour) check to see if the client has disappeared. Expired connections are addressed somewhat better with Samba's <CODE CLASS="literal">
+keepalive</CODE> and <CODE CLASS="literal">
+dead</CODE> <CODE CLASS="literal">
+time</CODE> options. All three eventually arrange to close dead connections, returning unused memory and process-table entries to the operating system.</P></DD></DL><P CLASS="para">
+There are several other socket options you might look at, (e.g., <CODE CLASS="literal">
+SO_SNDLOWAT</CODE>), but they vary in availability from vendor to vendor. You probably want to look at <CITE CLASS="citetitle">
+TCP/IP Illustrated</CITE> if you're interested in exploring more of these options for performance tuning with Samba.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="appb-pgfId-948370" CLASS="title">
+B.2.2.3 read raw and write raw</A></H4><P CLASS="para">These are important performance configuration options; they enable Samba to use large reads and writes to the network, of up to 64KB in a single SMB request. They also require the largest SMB packet structures, <CODE CLASS="literal">
+SMBreadraw</CODE> and <CODE CLASS="literal">
+SMBwriteraw</CODE>, from which the options take their names. Note that this is not the same as a Unix <EM CLASS="emphasis">
+raw read</EM>. This Unix term usually refers to reading disks without using the files system, quite a different sense from the one described here for Samba.</P><P CLASS="para">
+In the past, some client programs failed if you tried to use <CODE CLASS="literal">
+read</CODE> <CODE CLASS="literal">
+raw</CODE>. As far as we know, no client suffers from this problem any more. Read and write raw default to <CODE CLASS="literal">
+yes</CODE>, and should be left on unless you find you have one of the buggy clients.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="appb-pgfId-948374" CLASS="title">
+B.2.2.4 Opportunistic locking</A></H4><P CLASS="para">Opportunistic locks, or <EM CLASS="emphasis">
+oplocks</EM>, allow clients to cache files locally, improving performance on the order of 30 percent. This option is now enabled by default. For read-only files, the <CODE CLASS="literal">
+fake</CODE> <CODE CLASS="literal">
+oplocks</CODE> provides the same functionality without actually doing any caching. If you have files that cannot be cached, <EM CLASS="emphasis">
+oplocks</EM> can be turned off.</P><P CLASS="para">
+Database files should never be cached, nor should any files that are updated both on the server and the client and whose changes must be immediately visible. For these files, the <CODE CLASS="literal">
+veto</CODE> <CODE CLASS="literal">
+oplock</CODE> <CODE CLASS="literal">
+files</CODE> option allows you to specify a list of individual files or a pattern containing wildcards to avoid caching. <EM CLASS="emphasis">
+oplocks</EM> can be turned off on a share-by-share basis if you have large groups of files you don't want cached on clients. See <B>Chapter 5, <CITE CLASS="chapter">
+Browsing and Advanced Disk Shares </CITE></B>, for more information on opportunistic locks.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="appb-pgfId-948378" CLASS="title">
+B.2.2.5 IP packet size (MTU)</A></H4><P CLASS="para">Networks generally set a limit to the size of an individual transmission or packet This is called the Maximum Segment Size, or if the packet header size is included, the Maximum Transport Unit (MTU). This MTU is not set by Samba, but Samba needs to use a <CODE CLASS="literal">
+max</CODE> <CODE CLASS="literal">
+xmit</CODE> (write size) bigger than the MTU, or throughput will be reduced. This is discussed in further detail in the following note. The MTU is normally preset to 1500 bytes on an Ethernet and 4098 bytes on FDDI. In general, having it too low cuts throughput, and having it too high causes a sudden performance dropoff due to fragmentation and retransmissions.</P><P CLASS="para">
+If you are communicating over a router, some systems will assume the router is a serial link (e.g., a T1) and set the MTU to more or less 536 bytes. Windows 95 makes this mistake, which causes nearby clients to perform well, but clients on the other side of the router to be noticeably slower. If the client makes the opposite error and uses a large MTU on a link which demands a small one, the packets will be broken up into fragments. This slows transfers slightly, and any networking errors will cause multiple fragments to be retransmitted, which slows Samba significantly. Fortunately, you can modify the Windows MTU size to prevent either error. To understand this in more detail, see "The Windows 95 Networking Frequently Asked Questions (FAQ)" at <A HREF="http://www.stanford.edu/~llurch/win95netbugs/faq.html" CLASS="systemitem.url">
+http://www.stanford.edu/~llurch/win95netbugs/faq.html</A>, which explains how to override the Windows MTU and Window Size.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="appb-19919" CLASS="title">
+B.2.2.6 The TCP receive window</A></H4><P CLASS="para">TCP/IP works by breaking down data into small packets that can be transmitted from one machine to another. When each packet is transmitted, it contains a checksum that allows the receiver to check the packet data for potential errors in transmission. Theoretically, when a packet is received and verified, an acknowledgment packet should be sent back to the sender that essentially says, "Everything arrived intact: please continue."</P><P CLASS="para">
+In order to keep things moving, however, TCP accepts a range (window) of packets that allows a sender to keep transmitting without having to wait for an acknowledgment of every single packet. (It can then bundle a group of acknowledgments and transmit them back to the sender at the same time.) In other words, this receive window is the number of bytes that the sender can transmit before it has to stop and wait for a receiver's acknowledgment. Like the MTU, it is automatically set based on the type of connection. Having the window too small causes a lot of unnecessary waiting for acknowledgment messages. Various operating systems set moderate buffer sizes on a per-socket basis to keep one program from hogging all the memory.</P><P CLASS="para">
+The buffer sizes are assigned in bytes, such as <CODE CLASS="literal">
+SO_SNDBUF=8192</CODE> in the <CODE CLASS="literal">
+socket</CODE> <CODE CLASS="literal">
+options</CODE> line. Thus, an example <CODE CLASS="literal">
+socket</CODE> <CODE CLASS="literal">
+options</CODE> configuration option is: </P><PRE CLASS="programlisting">
+&#13;<CODE CLASS="literal">
+socket</CODE> <CODE CLASS="literal">
+options</CODE> <CODE CLASS="literal">
+=</CODE> <CODE CLASS="literal">
+SO_SNDBUF=8192</CODE> </PRE><P CLASS="para">
+Normally, one tries to set these socket options higher than the default: 4098 in SunOS 4.1.3 and SVR4, and 8192-16384 in AIX, Solaris, and BSD. 16384 has been suggested as a good starting point: in a non-Samba test mentioned in Stevens' book, it yielded a 40 percent improvement. You'll need to experiment, because performance will fall off again if you set the sizes too high. This is illustrated in <A HREF="#appb-34738" CLASS="xref">
+Figure B.1</A>, a test done on a particular Linux system.  </P><H4 CLASS="figure">
+<A NAME="appb-34738" CLASS="title">
+Figure B.1: SO_SNDBUF size and performance</A></H4><IMG ALT="Figure B.1" CLASS="graphic" SRC="figs/sam.ab01.gif"><P CLASS="para">
+Setting the socket options <CODE CLASS="literal">
+O_SNDBUF</CODE> and <CODE CLASS="literal">
+SO_RCVBUF</CODE> to less than the default is inadvisable. Setting them higher improves performance, up to a network-specific limit. However, once you exceed that limit, performance will abruptly level off.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="appb-pgfId-960372" CLASS="title">
+B.2.2.7 max xmit</A></H4><P CLASS="para">In Samba, the option that is directly related with the MTU and window size is <CODE CLASS="literal">
+max</CODE> <CODE CLASS="literal">
+xmit</CODE>. This option sets the largest block of data Samba will try to write at any one time. It's sometimes known as the <I CLASS="firstterm">
+write size</I>, although that is not the name of the Samba configuration option.</P><P CLASS="para">
+Because the percentage of each block required for overhead falls as the blocks get larger, max xmit is conventionally set as large as possible. It defaults to the protocol's upper limit, which is 64 kilobytes. The smallest value that doesn't cause significant slowdowns is 2048. If it is set low enough, it will limit the largest packet size that Samba will be able to negotiate. This can be used to simulate a small MTU if you need to test an unreliable network connection. However, such a test should not be used in production for reducing the effective MTU.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="appb-pgfId-948396" CLASS="title">
+B.2.2.8 read size</A></H4><P CLASS="para">If <CODE CLASS="literal">
+max</CODE> <CODE CLASS="literal">
+xmit</CODE> is commonly called the write size, you'd expect <CODE CLASS="literal">
+read</CODE> <CODE CLASS="literal">
+size</CODE> to be the maximum amount of data that Samba would want to read from the client via the network. Actually, it's not. In fact, it's an option to trigger <I CLASS="firstterm">
+write ahead</I>. This means that if Samba gets behind reading from the disk and writing to the network (or vice versa) by the specified amount, it will start overlapping network writes with disk reads (or vice versa).</P><P CLASS="para">
+The read size doesn't have a big performance effect on Unix, unless you set its value quite small. At that point, it causes a detectable slowdown. For this reason, it defaults to 2048 and can't be set lower than 1024.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="appb-pgfId-950907" CLASS="title">
+B.2.2.9 read prediction </A></H4><P CLASS="para">Besides being counterintuitive, this option is also obsolete. It enables Samba to read ahead on files opened read only by the clients. The option is disabled in Samba 2.0 (and late 1.9) Because it interferes with opportunistic locking.</P></DIV></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="appb-pgfId-948407" CLASS="title">
+B.2.3 Other Samba Options</A></H3><P CLASS="para">The following Samba options will affect performance if they're set incorrectly, much like the debug level. They're mentioned here so you will know what to look out for:</P><DL CLASS="variablelist">
+<DT CLASS="term">
+<CODE CLASS="literal">hide files</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Providing a pattern to identify files hidden by the Windows client <CODE CLASS="literal">
+hide</CODE> <CODE CLASS="literal">
+files</CODE> will result in any file matching the pattern being passed to the client with the DOS hidden attribute set. It requires a pattern match per file when listing directories, and slows the server noticeably.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+lpq cache time</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">If your <CODE CLASS="literal">
+lpq</CODE> (printer queue contents) command takes a long time to complete, you should increase <CODE CLASS="literal">
+lpq</CODE> <CODE CLASS="literal">
+cache</CODE> <CODE CLASS="literal">
+time</CODE> to a value higher than the actual time required for <CODE CLASS="literal">
+lpq</CODE> to execute, so as to keep Samba from starting a new query when one's already running. The default is 10 seconds, which is reasonable.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+strict locking</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">Setting the <CODE CLASS="literal">
+strict</CODE> <CODE CLASS="literal">
+locking</CODE> option causes Samba to check for locks on every access, not just when asked to by the client. The option is primarily a bug-avoidance feature, and can prevent ill-behaved DOS and Windows applications from corrupting shared files. However, it is slow and should typically be avoided.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+strict sync</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">Setting <CODE CLASS="literal">
+strict</CODE> <CODE CLASS="literal">
+sync</CODE> will cause Samba to write each packet to disk and wait for the write to complete whenever the client sets the sync bit in a packet. Windows 98 Explorer sets the bit in all packets transmitted, so if you turn this on, anyone with Windows 98 will think Samba servers are horribly slow.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+sync always</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">Setting <CODE CLASS="literal">
+sync</CODE> <CODE CLASS="literal">
+always</CODE> causes Samba to flush every write to disk. This is good if your server crashes constantly, but the performance costs are immense. SMB servers normally use oplocks and automatic reconnection to avoid the ill effects of crashes, so setting this option is not normally necessary.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">wide links</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Turning off <CODE CLASS="literal">
+wide</CODE> <CODE CLASS="literal">
+links</CODE> prevents Samba from following symbolic links in one file share to files that are not in the share. It is turned on by default, since following links in Unix is not a security problem. Turning it off requires extra processing on every file open. If you do turn off wide links, be sure to turn on <CODE CLASS="literal">
+getwd</CODE> <CODE CLASS="literal">
+cache</CODE> to cache some of the required data.</P><P CLASS="para">
+There is also a <CODE CLASS="literal">
+follow</CODE> <CODE CLASS="literal">
+symlinks</CODE> option that can be turned off to prevent following any symbolic links at all. However, this option does not pose a performance problem.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">getwd cache</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+This option caches the path to the current directory, avoiding long tree-walks to discover it. It's a nice performance improvement on a printer server or if you've turned off <CODE CLASS="literal">
+wide</CODE> <CODE CLASS="literal">
+links</CODE>.</P></DD></DL></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="appb-pgfId-948430" CLASS="title">
+B.2.4 Our Recommendations </A></H3><P CLASS="para">Here's an <I CLASS="filename">
+smb.conf</I> file that incorporates the recommended performance enhancements so far. Comments have been added on the right side.</P><PRE CLASS="programlisting">
+&#13;[global] 
+	log level = 1                      # Default is 0 
+	socket options = TCP_NODELAY IPTOS_LOWDELAY 
+	read raw = yes                     # Default 
+	write raw = yes                    # Default 
+	oplocks = yes                      # Default 
+	max xmit = 65535                   # Default 
+	dead time = 15                     # Default is 0
+	getwd cache = yes
+	lpq cache = 30
+[okplace] 
+	veto oplock files = this/that/theotherfile
+[badplace] 
+	oplocks = no</PRE></DIV></DIV></BLOCKQUOTE>
+<DIV>
+<CENTER>
+<HR NOSHADE SIZE="1"><TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="B.1 A Simple Benchmark" HREF="appb_01.html" CLASS="sect1">
+<IMG ALT="Previous: B.1 A Simple Benchmark" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="" HREF="index.html" CLASS="book">
+<IMG ALT="" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txthome.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="B.3 Sizing Samba Servers" HREF="appb_03.html" CLASS="sect1">
+<IMG ALT="Next: B.3 Sizing Samba Servers" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR><TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+B.1 A Simple Benchmark</TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="Book Index" HREF="http://www.oreilly.com/catalog/samba/inx.html" CLASS="index">
+<IMG ALT="Book Index" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/index.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+B.3 Sizing Samba Servers</TD></TR></TABLE><HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+
+<!--  End of sample chapter -->
+<P><B>Back to: <A HREF="http://www.oreilly.com/catalog/samba/noframes.html">Using Samba</A></B>
+<CENTER>
+<HR NOSHADE SIZE="1">
+<FONT SIZE="1" FACE="Verdana, Arial, Helvetica">
+<A HREF="http://www.oreilly.com/">
+<B>O'Reilly Home</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/sales/bookstores">
+<B>O'Reilly Bookstores</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/order_new/">
+<B>How to Order</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/contact.html">
+<B>O'Reilly Contacts<BR></B></A>
+<A HREF="http://www.oreilly.com/international/">
+<B>International</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/about.html">
+<B>About O'Reilly</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/affiliates.html">
+<B>Affiliated Companies</B></A><P>
+<EM>&copy; 1999, O'Reilly &amp; Associates, Inc.</EM>
+</FONT>
+</CENTER>
+</BODY>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+</HTML>

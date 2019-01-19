@@ -1,0 +1,392 @@
+<!DOCTYPE HTML PUBLIC "html.dtd">
+<HTML>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+<HEAD>
+<TITLE>
+[Chapter 2] 2.2 Configuring Samba</TITLE><META NAME="DC.title" CONTENT=""><META NAME="DC.creator" CONTENT=""><META NAME="DC.publisher" CONTENT="O'Reilly &amp; Associates, Inc."><META NAME="DC.date" CONTENT="1999-11-05T21:29:05Z"><META NAME="DC.type" CONTENT="Text.Monograph"><META NAME="DC.format" SCHEME="MIME" CONTENT="text/html"><META NAME="DC.source" SCHEME="ISBN" CONTENT=""><META NAME="DC.language" CONTENT="en-US"><META NAME="generator" CONTENT="Jade 1.1/O'Reilly DocBook 3.0 to HTML 4.0"></HEAD>
+<BODY VLINK="#0000CC" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#990000">
+<TABLE WIDTH="90%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD COLSPAN="2">
+<IMG WIDTH="515" ALT="Search the Catalog" SRC="http://www.oreilly.com/graphics_new/catalog_header_buttons.gif" HEIGHT="37" ISMAP ALIGN="BOTTOM" USEMAP="#catalog_header_buttons" BORDER="0">
+<MAP NAME="catalog_header_buttons">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/search.html" COORDS="407,17,512,32">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/catalog/prdindex.html" COORDS="431,3,512,18">
+</MAP>
+</TD>
+</TR>
+<TR>
+<TD WIDTH="25%" VALIGN="TOP">
+<A HREF="http://www.oreilly.com/catalog/samba/">
+<IMG ALT="Using Samba" VALIGN="top" VSPACE="10" HSPACE="10" SRC="http://www.oreilly.com/catalog/covers/samba.s.gif" ALIGN="left" BORDER="0">
+</A>
+</TD>
+<TD VALIGN="TOP" HEIGHT="105">
+<BR>
+<H2>Using Samba</H2>
+<FONT SIZE="-1">
+Robert Eckstein, David Collier-Brown, Peter Kelly
+<BR>1st Edition November 1999
+<BR>1-56592-449-5, Order Number: 4495
+<BR>416 pages, $34.95
+</FONT>
+</TD>
+</TR>
+</TABLE>
+<HR NOSHADE SIZE="1">
+<!-- sample chapter begins -->
+
+<CENTER>
+<DIV CLASS="htmlnav">
+<TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="2.1 Downloading the Samba Distribution" HREF="ch02_01.html" CLASS="sect1">
+<IMG ALT="Previous: 2.1 Downloading the Samba Distribution" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<B>
+<FONT SIZE="-1" FACE="ARIEL,HELVETICA,HELV,SANSERIF">
+<A TITLE="2. Installing Samba on a Unix System" REL="up" HREF="ch02_01.html" CLASS="chapter">
+Chapter 2<BR>
+Installing Samba on a Unix System</A></FONT></B></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="2.3 Compiling and Installing Samba" HREF="ch02_03.html" CLASS="sect1">
+<IMG ALT="Next: 2.3 Compiling and Installing Samba" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR></TABLE>&nbsp;<HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+<BLOCKQUOTE>
+<DIV>
+<H2 CLASS="sect1">
+<A NAME="ch02-28558" CLASS="title">
+2.2 Configuring Samba</A></H2><P CLASS="para">The source distribution of Samba 2.0 and above doesn't initially have a makefile. Instead, one is generated through a GNU <I CLASS="filename">
+configure</I> script, which is located in the <I CLASS="filename">
+samba-2.0.x /source/</I> directory. The <I CLASS="firstterm">
+configure</I> script, which must be run as root, takes care of the machine-specific issues of building Samba. However, you still may want to decide on some global options. Global options can be set by passing options on the command-line:</P><PRE CLASS="programlisting">
+# ./configure --with-ssl</PRE><P CLASS="para">
+For example, this will configure the Samba makefile with support for the Secure Sockets Layer (SSL) encryption protocol. If you would like a complete list of options, type the following:</P><PRE CLASS="programlisting">
+# ./configure --help</PRE><P CLASS="para">Each of these options enable or disable various features. You typically enable a feature by specifying the <CODE CLASS="literal">
+--with-</CODE><CODE CLASS="replaceable">
+<I>
+feature</I></CODE> option, which will cause the feature to be compiled and installed. Likewise, if you specify a <CODE CLASS="literal">
+--without-</CODE><CODE CLASS="replaceable">
+<I>
+feature</I></CODE> option, the feature will be disabled. As of Samba 2.0.5, each of the following features is disabled by default:</P><DL CLASS="variablelist">
+<DT CLASS="term">
+<CODE CLASS="literal">
+--with-smbwrapper</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include SMB wrapper support, which allows executables on the Unix side to access SMB/CIFS filesystems as if they were regular Unix filesystems. We recommend using this option. However, at this time this book went to press, there were several incompatibilities between the <I CLASS="filename">
+smbwrapper</I> package and the GNU <I CLASS="filename">
+libc</I> version 2.1, and it would not compile on Red Hat 6.0. Look for more information on these incompatibilities on the Samba home page.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-afs</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include support of the Andrew Filesystem from Carnegie Mellon University. If you're going to serve AFS files via Samba, we recommend compiling Samba once first without enabling this feature to ensure that everything runs smoothly. Once that version is working smoothly, recompile Samba with this feature enabled and compare any errors you might receive against the previous setup.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-dfs</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include support for DFS, a later version of AFS, used by OSF/1 (Digital Unix). Note that this is <EM CLASS="emphasis">
+not</EM> the same as Microsoft DFS, which is an entirely different filesystem. Again, we recommend compiling Samba once first without this feature to ensure that everything runs smoothly, then recompile with this feature to compare any errors against the previous setup.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-krb4</CODE>=<CODE CLASS="replaceable">
+<I>
+base-directory</I></CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include support for Kerberos version 4.0, explicitly specifying the base directory of the distribution. Kerberos is a network security protocol from MIT that uses private key cryptography to provide strong security between nodes. Incidentally, Microsoft has announced that Kerberos 5.0 will be the standard authentication mechanism for Microsoft Windows 2000 (NT 5.0). However, the Kerberos 5.0 authentication mechanisms are quite different from the Kerberos 4.0 security mechanisms. If you have Kerberos version 4 on your system, the Samba team recommends that you upgrade and use the <CODE CLASS="literal">
+--with-krb5</CODE> option (see the next item). You can find more information on Kerberos at <EM CLASS="emphasis">
+http://web.mit.edu/kerberos/www</EM>.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-krb5</CODE>=<CODE CLASS="replaceable">
+<I>
+base-directory</I></CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include support for Kerberos version 5.0, explicitly specifying the base directory of the distribution. Microsoft has announced that Kerberos 5.0 will be the standard authentication mechanism for Microsoft Windows 2000 (NT 5.0). However, there is no guarantee that Microsoft will not extend Kerberos for their own needs in the future. Currently, Samba's Kerberos support only uses a plaintext password interface and not an encrypted one. You can find more information on Kerberos at its home page: <EM CLASS="emphasis">
+http://web.mit.edu/kerberos/www</EM>.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-automount</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include support for automounter, a feature often used on sites that offer NFS. </P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-smbmount</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include <EM CLASS="emphasis">
+smbmount</EM> support, which is for Linux only. This feature wasn't being maintained at the time the book was written, so the Samba team made it an optional feature and provided <EM CLASS="emphasis">
+smbwrapper</EM> instead. The <EM CLASS="emphasis">
+smbwrapper</EM> feature works on more Unix platforms than <EM CLASS="emphasis">
+smbmount</EM>, so you'll usually want to use <CODE CLASS="literal">
+--with-smbwrapper</CODE> instead of this option.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-pam</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include support for pluggable authentication modules (PAM), an authentication feature common in the Linux operating system.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-ldap</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include support for the Lightweight Directory Access Protocol (LDAP). A future version of LDAP will be used in the Windows 2000 (NT 5.0) operating system; this Samba support is experimental. LDAP is a flexible client-server directory protocol that can carry information such as certificates and group memberships.[<A HREF="#ch02-pgfId-943655" CLASS="footnote">
+4</A>]</P><BLOCKQUOTE CLASS="footnote">
+<DIV CLASS="footnote">
+<P CLASS="para">
+<A NAME="ch02-pgfId-943655" CLASS="footnote">
+[4]</A> By <EM CLASS="emphasis">
+directory</EM>, we don't mean a directory in a file system, but instead an indexed directory (such as a phone directory). Information is stored and can be easily retrieved in a public LDAP system.</P></DIV></BLOCKQUOTE></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-nis</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include support for getting password-file information from NIS (network yellow pages).</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-nisplus</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include support for obtaining password-file information from NIS+, the successor to NIS.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-ssl</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include experimental support for the Secure Sockets Layer (SSL), which is used to provide encrypted connections from client to server. <B>Appendix A, <CITE CLASS="appendix">
+Configuring Samba with SSL</CITE></B>, describes setting up Samba with SSL support.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-nisplus-home</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include support for locating which server contains a particular user's home directory and telling the client to connect to it. Requires <CODE CLASS="literal">
+--with-nis</CODE> and, usually, <CODE CLASS="literal">
+--with-automounter</CODE>. </P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-mmap</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include experimental memory mapping code. This is not required for fast locking, which already uses mmap or System V shared memory.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-syslog</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include support for using the SYSLOG utility for logging information generated from the Samba server. There are a couple of Samba configuration options that you can use to enable SYSLOG support; <B>Chapter 4, <CITE CLASS="chapter">
+Disk Shares </CITE></B>, discusses these options.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-netatalk</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include experimental support for interoperating with the (Macintosh) Netatalk file server.</P></DD><DT CLASS="term">
+<CODE CLASS="literal">
+--with-quotas</CODE></DT><DD CLASS="listitem">
+<P CLASS="para">
+Include disk-quota support.</P></DD></DL><P CLASS="para">
+Because each of these options is disabled by default, none of these features are essential to Samba. However, you may want to come back and build a modified version of Samba if you discover that you need one at a later time.</P><P CLASS="para">
+In addition, <A HREF="#ch02-85125" CLASS="xref">
+Table 2.1</A> shows some other parameters that you can give the <I CLASS="filename">
+configure</I> script if you wish to store parts of the Samba distribution in different places, perhaps to make use of multiple disks or partitions. Note that the defaults sometimes refer to a prefix specified earlier in the table.  </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch02-85125" CLASS="title">
+Table 2.1: Additional Configure Options </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Option</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Meaning</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Default</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+--prefix</CODE>=<CODE CLASS="replaceable">
+<I>
+directory</I></CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Install architecture-independent files at the base directory specified.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<I CLASS="filename">
+/usr/local/samba</I></P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+--eprefix</CODE>=<CODE CLASS="replaceable">
+<I>
+directory</I></CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Install architecture-dependent files at the base directory specified.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<I CLASS="filename">
+/usr/local/samba</I></P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+--bindir</CODE>=<CODE CLASS="replaceable">
+<I>
+directory</I></CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Install user executables in the directory specified.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="replaceable">
+<I>
+eprefix</I></CODE><I CLASS="filename">
+/bin</I></P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+--sbindir</CODE>=<CODE CLASS="replaceable">
+<I>
+directory</I></CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Install administrator executables in the directory specified.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="replaceable">
+<I>
+eprefix</I></CODE><I CLASS="filename">
+/bin</I></P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+--libexecdir</CODE>=<CODE CLASS="replaceable">
+<I>
+directory</I></CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Install program executables in the directory specified.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="replaceable">
+<I>
+eprefix</I></CODE><I CLASS="filename">
+/libexec</I></P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+--datadir</CODE>=<CODE CLASS="replaceable">
+<I>
+directory</I></CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Install read-only architecture independent data in the directory specified.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="replaceable">
+<I>
+prefix</I></CODE><I CLASS="filename">
+/share</I></P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+--libdir</CODE>=<CODE CLASS="replaceable">
+<I>
+directory</I></CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Install program libraries in the directory specified.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="replaceable">
+<I>
+eprefix</I></CODE><I CLASS="filename">
+/lib</I></P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+--includedir</CODE>=<CODE CLASS="replaceable">
+<I>
+directory</I></CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Install package include files in the directory specified.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="replaceable">
+<I>
+prefix</I></CODE><I CLASS="filename">
+/include</I></P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+--infodir</CODE>=<CODE CLASS="replaceable">
+<I>
+directory</I></CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Install additional information files in the directory specified.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="replaceable">
+<I>
+prefix</I></CODE><I CLASS="filename">
+/info</I></P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+--mandir</CODE>=<CODE CLASS="replaceable">
+<I>
+directory</I></CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Install manual pages in the directory specified. </P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="replaceable">
+<I>
+prefix</I></CODE><I CLASS="filename">
+/man</I></P></TD></TR></TBODY></TABLE><P CLASS="para">
+Again, before running the <I CLASS="filename">
+configure</I> script, it is important that you are the root user on the system. Otherwise, you may get a warning such as:</P><PRE CLASS="programlisting">
+configure: warning: running as non-root will disable some tests</PRE><P CLASS="para">
+You don't want any test to be disabled when the Samba makefile is being created; this leaves the potential for errors down the road when compiling or running Samba on your system.</P><P CLASS="para">
+Here is a sample execution of the <I CLASS="filename">
+configure</I> script, which creates a Samba 2.0.4 makefile for the Linux platform. Note that you must run the configure script in the <EM CLASS="emphasis">
+source</EM> directory, and that several lines from the middle of the excerpt have been omitted:</P><PRE CLASS="programlisting">
+# cd samba-2.0.4b/source/
+# ./configure | tee mylog
+
+loading cache ./config.cache
+checking for gcc... (cached) gcc
+checking whether the C compiler (gcc -O ) works... yes
+checking whether the C compiler (gcc -O ) is a cross-compiler... no
+checking whether we are using GNU C... (cached) yes
+checking whether gcc accepts -g... (cached) yes
+checking for a BSD compatible install... (cached) /usr/bin/install -c
+
+<EM CLASS="emphasis">
+...(content omitted)...</EM>
+
+checking configure summary
+configure OK
+creating ./config.status
+creating include/stamp-h
+creating Makefile
+creating include/config.h</PRE><P CLASS="para">
+In general, any message from <I CLASS="filename">
+configure</I> that doesn't begin with the words <CODE CLASS="literal">
+checking</CODE> or <CODE CLASS="literal">
+creating</CODE> is an error; it often helps to redirect the output of the configure script to a file so you can quickly search for errors, as we did with the <CODE CLASS="literal">
+tee</CODE> command above. If there was an error during configuration, more detailed information about it can be found in the <I CLASS="filename">
+config.log</I> file, which is written to the local directory by the <I CLASS="filename">
+configure</I> script.</P><P CLASS="para">
+If the configuration works, you'll see a <CODE CLASS="literal">
+checking</CODE> <CODE CLASS="literal">
+configure</CODE> <CODE CLASS="literal">
+summary</CODE> message followed by a <CODE CLASS="literal">
+configure</CODE> <CODE CLASS="literal">
+OK</CODE> message and four or five file creation messages. So far, so good.... Next step: compiling. </P></DIV></BLOCKQUOTE>
+<DIV>
+<CENTER>
+<HR NOSHADE SIZE="1"><TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="2.1 Downloading the Samba Distribution" HREF="ch02_01.html" CLASS="sect1">
+<IMG ALT="Previous: 2.1 Downloading the Samba Distribution" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="" HREF="index.html" CLASS="book">
+<IMG ALT="" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txthome.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="2.3 Compiling and Installing Samba" HREF="ch02_03.html" CLASS="sect1">
+<IMG ALT="Next: 2.3 Compiling and Installing Samba" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR><TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+2.1 Downloading the Samba Distribution</TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="Book Index" HREF="http://www.oreilly.com/catalog/samba/inx.html" CLASS="index">
+<IMG ALT="Book Index" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/index.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+2.3 Compiling and Installing Samba</TD></TR></TABLE><HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+
+<!--  End of sample chapter -->
+<P><B>Back to: <A HREF="http://www.oreilly.com/catalog/samba/noframes.html">Using Samba</A></B>
+<CENTER>
+<HR NOSHADE SIZE="1">
+<FONT SIZE="1" FACE="Verdana, Arial, Helvetica">
+<A HREF="http://www.oreilly.com/">
+<B>O'Reilly Home</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/sales/bookstores">
+<B>O'Reilly Bookstores</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/order_new/">
+<B>How to Order</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/contact.html">
+<B>O'Reilly Contacts<BR></B></A>
+<A HREF="http://www.oreilly.com/international/">
+<B>International</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/about.html">
+<B>About O'Reilly</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/affiliates.html">
+<B>Affiliated Companies</B></A><P>
+<EM>&copy; 1999, O'Reilly &amp; Associates, Inc.</EM>
+</FONT>
+</CENTER>
+</BODY>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+</HTML>

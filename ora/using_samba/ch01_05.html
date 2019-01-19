@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "html.dtd">
+<HTML>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+<HEAD>
+<TITLE>
+[Chapter 1] 1.5 An Overview of the Samba Distribution</TITLE><META NAME="DC.title" CONTENT=""><META NAME="DC.creator" CONTENT=""><META NAME="DC.publisher" CONTENT="O'Reilly &amp; Associates, Inc."><META NAME="DC.date" CONTENT="1999-11-05T21:30:00Z"><META NAME="DC.type" CONTENT="Text.Monograph"><META NAME="DC.format" SCHEME="MIME" CONTENT="text/html"><META NAME="DC.source" SCHEME="ISBN" CONTENT=""><META NAME="DC.language" CONTENT="en-US"><META NAME="generator" CONTENT="Jade 1.1/O'Reilly DocBook 3.0 to HTML 4.0"></HEAD>
+<BODY VLINK="#0000CC" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#990000">
+<TABLE WIDTH="90%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD COLSPAN="2">
+<IMG WIDTH="515" ALT="Search the Catalog" SRC="http://www.oreilly.com/graphics_new/catalog_header_buttons.gif" HEIGHT="37" ISMAP ALIGN="BOTTOM" USEMAP="#catalog_header_buttons" BORDER="0">
+<MAP NAME="catalog_header_buttons">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/search.html" COORDS="407,17,512,32">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/catalog/prdindex.html" COORDS="431,3,512,18">
+</MAP>
+</TD>
+</TR>
+<TR>
+<TD WIDTH="25%" VALIGN="TOP">
+<A HREF="http://www.oreilly.com/catalog/samba/">
+<IMG ALT="Using Samba" VALIGN="top" VSPACE="10" HSPACE="10" SRC="http://www.oreilly.com/catalog/covers/samba.s.gif" ALIGN="left" BORDER="0">
+</A>
+</TD>
+<TD VALIGN="TOP" HEIGHT="105">
+<BR>
+<H2>Using Samba</H2>
+<FONT SIZE="-1">
+Robert Eckstein, David Collier-Brown, Peter Kelly
+<BR>1st Edition November 1999
+<BR>1-56592-449-5, Order Number: 4495
+<BR>416 pages, $34.95
+</FONT>
+</TD>
+</TR>
+</TABLE>
+<HR NOSHADE SIZE="1">
+<!-- sample chapter begins -->
+
+<CENTER>
+<DIV CLASS="htmlnav">
+<TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="1.4 Microsoft Implementations" HREF="ch01_04.html" CLASS="sect1">
+<IMG ALT="Previous: 1.4 Microsoft Implementations" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<B>
+<FONT SIZE="-1" FACE="ARIEL,HELVETICA,HELV,SANSERIF">
+<A TITLE="1. Learning the Samba" REL="up" HREF="ch01_01.html" CLASS="chapter">
+Chapter 1<BR>
+Learning the Samba</A></FONT></B></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="1.6 How Can I Get Samba?" HREF="ch01_06.html" CLASS="sect1">
+<IMG ALT="Next: 1.6 How Can I Get Samba?" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR></TABLE>&nbsp;<HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+<BLOCKQUOTE>
+<DIV>
+<H2 CLASS="sect1">
+<A NAME="ch01-32691" CLASS="title">
+1.5 An Overview of the Samba Distribution</A></H2><P CLASS="para">
+As mentioned earlier, Samba actually contains several programs that serve different but related purposes. Let's introduce each of them briefly, and show how they work together. The majority of the programs that come with the Samba distribution center on its two daemons. Let's take a refined look at the responsibilities of each daemon:</P><DL CLASS="variablelist">
+<DT CLASS="term">
+<EM CLASS="emphasis">
+smbd</EM></DT><DD CLASS="listitem">
+<P CLASS="para">
+The <EM CLASS="emphasis">
+smbd</EM> daemon is responsible for managing the shared resources between the Samba server machine and its clients. It provides file, print, and browser services to <SPAN CLASS="acronym">
+SMB</SPAN> clients across one or more networks. <EM CLASS="emphasis">
+smdb</EM> handles all notifications between the Samba server and the network clients. In addition, it is responsible for user authentication, resource locking, and data sharing through the <SPAN CLASS="acronym">
+SMB</SPAN> protocol.</P></DD><DT CLASS="term">
+<EM CLASS="emphasis">
+nmbd</EM></DT><DD CLASS="listitem">
+<P CLASS="para">
+The <EM CLASS="emphasis">
+nmbd</EM> daemon is a simple nameserver that mimics the WINS and NetBIOS name server functionality, as you might expect to encounter with the LAN Manager package. This daemon listens for nameserver requests and provides the appropriate information when called upon. It also provides browse lists for the Network Neighborhood and participates in browsing elections.</P></DD></DL><P CLASS="para">
+The Samba distribution also comes with a small set of Unix command-line tools:</P><DL CLASS="variablelist">
+<DT CLASS="term">
+<A TITLE="smbclient" HREF="mailto:smbclient" CLASS="email">
+smbclient</A></DT><DD CLASS="listitem">
+<P CLASS="para">
+An FTP-like Unix client that can be used to connect to Samba shares</P></DD><DT CLASS="term">
+<A TITLE="smbtar" HREF="mailto:smbtar" CLASS="email">
+smbtar</A></DT><DD CLASS="listitem">
+<P CLASS="para">
+A program for backing up data in shares, similar to the Unix <I CLASS="filename">
+tar</I> command</P></DD><DT CLASS="term">
+<A TITLE="nmblookup" HREF="mailto:nmblookup" CLASS="email">
+nmblookup</A></DT><DD CLASS="listitem">
+<P CLASS="para">
+A program that provides NetBIOS over TCP/IP name lookups</P></DD><DT CLASS="term">
+<A TITLE="smbpasswd" HREF="mailto:smbpasswd" CLASS="email">
+smbpasswd</A></DT><DD CLASS="listitem">
+<P CLASS="para">
+A program that allows an administrator to change the encrypted passwords used by Samba</P></DD><DT CLASS="term">
+<A TITLE="smbstatus" HREF="mailto:smbstatus" CLASS="email">
+smbstatus</A></DT><DD CLASS="listitem">
+<P CLASS="para">
+A program for reporting the current network connections to the shares on a Samba server</P></DD><DT CLASS="term">
+<A TITLE="testparm" HREF="mailto:testparm" CLASS="email">
+testparm</A></DT><DD CLASS="listitem">
+<P CLASS="para">
+A simple program to validate the Samba configuration file</P></DD><DT CLASS="term">
+<A TITLE="testprns" HREF="mailto:testprns" CLASS="email">
+testprns</A></DT><DD CLASS="listitem">
+<P CLASS="para">
+A program that tests whether various printers are recognized by the <I CLASS="filename">
+smbd</I> daemon</P></DD></DL><P CLASS="para">
+Each significant release of Samba goes through a significant exposure test before it's announced. In addition, it is quickly updated afterward if problems or unwanted side-effects are found. The latest stable distribution as of this writing is Samba 2.0.5, the long-awaited production version of Samba 2.0. This book focuses on the functionality supported in Samba 2.0, as opposed to the older 1.9.<EM CLASS="emphasis">
+x</EM> versions of Samba, which are now obsolete.</P></DIV></BLOCKQUOTE>
+<DIV>
+<CENTER>
+<HR NOSHADE SIZE="1"><TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="1.4 Microsoft Implementations" HREF="ch01_04.html" CLASS="sect1">
+<IMG ALT="Previous: 1.4 Microsoft Implementations" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="" HREF="index.html" CLASS="book">
+<IMG ALT="" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txthome.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="1.6 How Can I Get Samba?" HREF="ch01_06.html" CLASS="sect1">
+<IMG ALT="Next: 1.6 How Can I Get Samba?" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR><TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+1.4 Microsoft Implementations</TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="Book Index" HREF="http://www.oreilly.com/catalog/samba/inx.html" CLASS="index">
+<IMG ALT="Book Index" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/index.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+1.6 How Can I Get Samba?</TD></TR></TABLE><HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+
+<!--  End of sample chapter -->
+<P><B>Back to: <A HREF="http://www.oreilly.com/catalog/samba/noframes.html">Using Samba</A></B>
+<CENTER>
+<HR NOSHADE SIZE="1">
+<FONT SIZE="1" FACE="Verdana, Arial, Helvetica">
+<A HREF="http://www.oreilly.com/">
+<B>O'Reilly Home</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/sales/bookstores">
+<B>O'Reilly Bookstores</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/order_new/">
+<B>How to Order</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/contact.html">
+<B>O'Reilly Contacts<BR></B></A>
+<A HREF="http://www.oreilly.com/international/">
+<B>International</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/about.html">
+<B>About O'Reilly</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/affiliates.html">
+<B>Affiliated Companies</B></A><P>
+<EM>&copy; 1999, O'Reilly &amp; Associates, Inc.</EM>
+</FONT>
+</CENTER>
+</BODY>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+</HTML>

@@ -1,0 +1,943 @@
+<html><head>
+<title>[Chapter 3] Functions</TITLE>
+<meta name="DC.title" content="Programming Perl"><meta name="DC.creator" content="Larry Wall, Tom Christiansen &amp; Randal L. Schwartz"><meta name="DC.publisher" content="O'Reilly &amp; Associates, Inc."><meta name="DC.date" content="1999-07-02T01:46:58Z"><meta name="DC.type" content="Text.Monograph"><meta name="DC.format" content="text/html" scheme="MIME"><meta name="DC.source" content="1-56592-149-6" scheme="ISBN"><meta name="DC.language" content="en-US"><meta name="generator" content="Jade 1.1/O'Reilly DocBook 3.0 to HTML 4.0"><link rev="made" href="mailto:online-books@oreilly.com" title="Online Books Comments"><link rel="up" href="index.htm" title="Programming Perl"><link rel="prev" href="ch02_09.htm#PERL2-CH-2-SECT-9.4" title="2.9 Special Variables"><link rel="next" href="ch03_02.htm" title="3.2 Perl Functions in Alphabetical Order"></HEAD
+><body bgcolor="#FFFFFF" text="#000000"><div class="htmlnav"><h1><img src="gifs/smbanner.gif" alt="Programming Perl" usemap="#srchmap" border="0"></H1
+><map name="srchmap"><area shape="RECT" coords="0,0,466,65" href="index.htm" alt="Programming Perl"><area shape="RECT" coords="467,0,514,18" href="../search/psrch.htm" alt="Search this book"></MAP
+><table width="515" border="0" cellspacing="0" cellpadding="0"><tr><td align="LEFT" valign="TOP" width="172"><a class="SECT1" href="ch02_09.htm#PERL2-CH-2-SECT-9.4" title="2.9 Special Variables"><img src="../gifs/txtpreva.gif" alt="Previous: 2.9 Special Variables" border="0"></A
+></TD
+><td align="CENTER" valign="TOP" width="171"><b><font face="ARIEL,HELVETICA,HELV,SANSERIF" size="-1">Chapter 3</FONT
+></B
+></TD
+><td align="RIGHT" valign="TOP" width="172"><a class="SECT1" href="ch03_02.htm" title="3.2 Perl Functions in Alphabetical Order"><img src="../gifs/txtnexta.gif" alt="Next: 3.2 Perl Functions in Alphabetical Order" border="0"></A
+></TD
+></TR
+></TABLE
+>&nbsp;<hr align="LEFT" width="515" title="footer"></DIV
+><div class="CHAPTER"><h1 class="chapter"><a class="title" name="PERL2-CH-3">3. Functions</A
+></H1
+><div class="htmltoc"><p><b>Contents:</B
+><br><a class="SECT1" href="#PERL2-CH-3-SECT-1" title="3.1 Perl Functions by Category">Perl Functions by Category</A
+><br><a class="SECT1" href="ch03_02.htm" title="3.2 Perl Functions in Alphabetical Order">Perl Functions in Alphabetical Order</A
+></P
+><p></P
+></DIV
+><p class="para">This chapter describes each of the Perl functions.
+They're presented one by one in alphabetical order.
+(Well, actually, some related functions are presented in pairs, or
+even threes or fours.  This is usually the case when the Perl
+functions simply make
+UNIX
+system calls or C library calls.  In such cases, the
+presentation of the Perl function matches up with the corresponding
+UNIX manpage organization.)<a class="indexterm" name="CH03.FUN"></A
+></P
+><p class="para">Each function description begins with a brief presentation of the syntax for
+that function.  Parameters in <code class="replaceable"><i>ALL_CAPS</I
+></CODE
+> represent placeholders for actual
+expressions, as described in the body of the function description.  Some
+parameters are optional; the text describes the default values used when the
+parameter is not included.</P
+><p class="para"><a class="indexterm" name="AUTOID-8533"></A
+>The functions described in this chapter can serve as terms in an
+expression, along with literals and variables.  (Or you can think
+of them as prefix operators.  We call them operators half the time anyway.)
+Some of these operators, er, functions
+take a <code class="replaceable"><i>LIST</I
+></CODE
+> as an argument.  Such a list can consist of any combination
+of scalar and list values, but any list values are interpolated as a sequence of
+scalar values; that is, the overall argument <code class="replaceable"><i>LIST</I
+></CODE
+> remains a
+single-dimensional list value.  (To interpolate an array as a single
+element, you must explicitly create and interpolate a reference to
+the array instead.)
+Elements of the <code class="replaceable"><i>LIST</I
+></CODE
+> should be separated
+by commas (or by <code class="literal">=&gt;</CODE
+>, which is just a funny kind of comma).
+Each element of the <code class="replaceable"><i>LIST</I
+></CODE
+> is evaluated in a list context.</P
+><p class="para"><a class="indexterm" name="AUTOID-8542"></A
+><a class="indexterm" name="AUTOID-8545"></A
+><a class="indexterm" name="AUTOID-8547"></A
+><a class="indexterm" name="AUTOID-8549"></A
+>The functions described in this chapter may be used either with or without
+parentheses around their arguments.  (The syntax descriptions omit the
+parentheses.) If you use the parentheses, the simple (but occasionally
+surprising) rule is this:  if it looks like a function, it is a
+function, and precedence doesn't matter.  Otherwise it's a list
+operator or unary operator, and precedence does matter.  And whitespace
+between the function and its left 
+parenthesis doesn't count&nbsp;- so you 
+need to be careful sometimes:</P
+><pre class="programlisting">print 1+2+3;       # Prints 6.
+print(1+2) + 3;    # Prints 3.
+print (1+2)+3;     # Also prints 3!
+print +(1+2)+3;    # Prints 6.
+print ((1+2)+3);   # Prints 6.</PRE
+><p class="para"><a class="indexterm" name="AUTOID-8554"></A
+>If you run Perl with the <b class="emphasis.bold">-w</B
+> switch it can warn you about this.  For
+example, the third line above produces:</P
+><pre class="programlisting">print (...) interpreted as function at - line 3.
+Useless use of integer addition in void context at - line 3.</PRE
+><p class="para">Some of the <code class="replaceable"><i>LIST</I
+></CODE
+> operators impose special semantic
+significance on the first element or two of the list.  For example, the <a class="xref" href="ch03_012.htm#PERL2-CMD-CHMOD" title="chmod"><b class="xref.cmd">chmod</B
+></A
+> function requires that the first element of
+the list be the new permission to apply to the files listed in the remaining
+elements.  Syntactically, however, the argument to <a class="xref" href="ch03_012.htm#PERL2-CMD-CHMOD" title="chmod"><b class="xref.cmd">chmod</B
+></A
+> is really just a <code class="replaceable"><i>LIST</I
+></CODE
+>, and
+you could say:</P
+><pre class="programlisting">unshift @array,0644;
+chmod @array;</PRE
+><p class="para">which is the same as:</P
+><pre class="programlisting">chmod 0644, @array;</PRE
+><p class="para">In these cases, the syntax summary at the top of the section mentions
+only the bare
+<code class="replaceable"><i>LIST</I
+></CODE
+>,
+and any special initial arguments are documented in the description.</P
+><p class="para">On the other hand, if the syntax summary lists any arguments before the
+<code class="replaceable"><i>LIST</I
+></CODE
+>, those arguments are syntactically distinguished (not
+just semantically distinguished), and may impose syntactic constraints
+on the actual arguments you pass to the function when you call it.
+For instance, the first argument to the <a class="xref" href="ch03_112.htm#PERL2-CMD-PUSH" title="push"><b class="xref.cmd">push</B
+></A
+>
+function must be an array name.
+(You may also put such syntactic constraints on your own subroutine
+declarations by the use of prototypes.  See &quot;Prototypes&quot; in <a class="xref" href="ch02_01.htm" title="The Gory Details">Chapter 2, <cite class="chapter">The Gory Details</CITE
+></A
+>.)</P
+><p class="para"><a class="indexterm" name="AUTOID-8574"></A
+><a class="indexterm" name="AUTOID-8577"></A
+><a class="indexterm" name="AUTOID-8580"></A
+>Many of these operations are based directly on the C library's functions.
+If so, we do not attempt to duplicate the UNIX
+system documentation for that function, but refer you directly to the manual
+page.  Such references look like this:  &quot;See
+<em class="emphasis">getlogin</EM
+>(3).&quot;  The number in parentheses tells you which section of
+the UNIX manual normally contains the given entry.  If you can't find a
+manual page (manpage for short) for a particular C function on your
+system, it's likely that the corresponding Perl function is unimplemented.
+For example, not all systems implement <em class="emphasis">socket</EM
+>(2) calls.
+If you're running in the MS-DOS world, you may have <em class="emphasis">socket</EM
+> calls, but
+you won't have <em class="emphasis">fork</EM
+>(2).  (You probably won't
+have manpages either, come to think of it.)</P
+><p class="para">Occasionally you'll find that the documented C function has more arguments than
+the corresponding Perl function.  The missing arguments are almost always things
+that Perl already knows, such as the length of the previous argument, so you
+needn't supply them in Perl.  Any remaining disparities are due to different
+ways Perl and C specify their filehandles and their success/failure values.</P
+><p class="para"><a class="indexterm" name="AUTOID-8589"></A
+><a class="indexterm" name="AUTOID-8591"></A
+>For functions that can be used in either scalar or list context,
+non-abortive failure is generally indicated in a scalar context by
+returning the undefined value, and in a list context by returning the
+null list.  Successful execution is generally indicated by returning
+a value that will evaluate to true (in context).</P
+><p class="para">Remember the following rule:  <em class="emphasis">there is no general rule for converting a
+list into a scalar!</EM
+></P
+><p class="para">Many operators can return a list in list context.
+Each such operator knows whether it is being called in scalar or
+list context, and in scalar context returns whichever sort of value
+it would be most appropriate to return.  Some operators return the
+length of the list that would have been returned in list context.  Some
+operators return the first value in the list.  Some operators return the
+last value in the list.  Some operators return the &quot;other&quot; value, when
+something can be looked up either by number or by name.  Some operators
+return a count of successful operations.  In general, Perl operators do
+exactly what you want, unless you want consistency.</P
+><div class="sect1"><h2 class="sect1"><a class="title" name="PERL2-CH-3-SECT-1">3.1 Perl Functions by Category</A
+></H2
+><p class="para">Here are Perl's functions and function-like keywords, arranged by
+category.  Some functions appear under more than one heading.</P
+><dl class="variablelist"><dt class="term">Scalar manipulation</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_013.htm#PERL2-CMD-CHOMP" title="chomp"><b class="xref.cmd">chomp</B
+></A
+>,
+<a class="xref" href="ch03_014.htm#PERL2-CMD-CHOP" title="chop"><b class="xref.cmd">chop</B
+></A
+>,
+<a class="xref" href="ch03_016.htm#PERL2-CMD-CHR" title="chr"><b class="xref.cmd">chr</B
+></A
+>,
+<a class="xref" href="ch03_022.htm#PERL2-CMD-CRYPT" title="crypt"><b class="xref.cmd">crypt</B
+></A
+>,
+<a class="xref" href="ch03_073.htm#PERL2-CMD-HEX" title="hex"><b class="xref.cmd">hex</B
+></A
+>,
+<a class="xref" href="ch03_075.htm#PERL2-CMD-INDEX" title="index"><b class="xref.cmd">index</B
+></A
+>,
+<a class="xref" href="ch03_082.htm#PERL2-CMD-LC" title="lc"><b class="xref.cmd">lc</B
+></A
+>,
+<a class="xref" href="ch03_083.htm#PERL2-CMD-LCFIRST" title="lcfirst"><b class="xref.cmd">lcfirst</B
+></A
+>,
+<a class="xref" href="ch03_084.htm#PERL2-CMD-LENGTH" title="length"><b class="xref.cmd">length</B
+></A
+>,
+<a class="xref" href="ch03_101.htm#PERL2-CMD-OCT" title="oct"><b class="xref.cmd">oct</B
+></A
+>,
+<a class="xref" href="ch03_104.htm#PERL2-CMD-ORD" title="ord"><b class="xref.cmd">ord</B
+></A
+>,
+<a class="xref" href="ch03_105.htm#PERL2-CMD-PACK" title="pack"><b class="xref.cmd">pack</B
+></A
+>,
+<a class="linkend" href="ch03_113.htm" title="q/STRING/"><b class="emphasis.bold">q//</B
+></A
+>,
+<a class="linkend" href="ch03_113.htm" title="q/STRING/"><b class="emphasis.bold">qq//</B
+></A
+>,
+<a class="xref" href="ch03_126.htm#PERL2-CMD-REVERSE" title="reverse"><b class="xref.cmd">reverse</B
+></A
+>,
+<a class="xref" href="ch03_128.htm#PERL2-CMD-RINDEX" title="rindex"><b class="xref.cmd">rindex</B
+></A
+>,
+<a class="xref" href="ch03_156.htm#PERL2-CMD-SPRINTF" title="sprintf"><b class="xref.cmd">sprintf</B
+></A
+>,
+<a class="xref" href="ch03_162.htm#PERL2-CMD-SUBSTR" title="substr"><b class="xref.cmd">substr</B
+></A
+>,
+<a class="linkend" href="ch03_175.htm#PERL2-CMD-TR" title="tr///"><b class="emphasis.bold">tr///</B
+></A
+>,
+<a class="xref" href="ch03_177.htm#PERL2-CMD-UC" title="uc"><b class="xref.cmd">uc</B
+></A
+>,
+<a class="xref" href="ch03_178.htm#PERL2-CMD-UCFIRST" title="ucfirst"><b class="xref.cmd">ucfirst</B
+></A
+>,
+<a class="xref" href="ch03_194.htm#PERL2-CMD-YSSS" title="y///"><b class="xref.cmd">y///</B
+></A
+></P
+></DD
+><dt class="term">Regular expressions and pattern matching</DT
+><dd class="listitem"><p class="para"><a class="linkend" href="ch03_001.htm#PERL2-CMD-SPATTERNS" title="/PATTERN/"><b class="emphasis.bold">m//</B
+></A
+>,
+<a class="xref" href="ch03_109.htm#PERL2-CMD-POS" title="pos"><b class="xref.cmd">pos</B
+></A
+>,
+<a class="xref" href="ch03_114.htm#PERL2-CMD-QUOTEMETA" title="quotemeta"><b class="xref.cmd">quotemeta</B
+></A
+>,
+<a class="xref" href="ch03_130.htm" title="s///"><b class="xref.cmd">s///</B
+></A
+>,
+<a class="xref" href="ch03_155.htm#PERL2-CMD-SPLIT" title="split"><b class="xref.cmd">split</B
+></A
+>,
+<a class="xref" href="ch03_160.htm#PERL2-CMD-STUDY" title="study"><b class="xref.cmd">study</B
+></A
+></P
+></DD
+><dt class="term">Numeric functions</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_003.htm#PERL2-CMD-ABS" title="abs"><b class="xref.cmd">abs</B
+></A
+>,
+<a class="xref" href="ch03_006.htm#PERL2-CMD-ATAN2" title="atan2"><b class="xref.cmd">atan2</B
+></A
+>,
+<a class="xref" href="ch03_021.htm#PERL2-CMD-COS" title="cos"><b class="xref.cmd">cos</B
+></A
+>,
+<a class="xref" href="ch03_036.htm#PERL2-CMD-EXP" title="exp"><b class="xref.cmd">exp</B
+></A
+>,
+<a class="xref" href="ch03_073.htm#PERL2-CMD-HEX" title="hex"><b class="xref.cmd">hex</B
+></A
+>,
+<a class="xref" href="ch03_076.htm#PERL2-CMD-INT" title="int"><b class="xref.cmd">int</B
+></A
+>,
+<a class="xref" href="ch03_089.htm#PERL2-CMD-LOG" title="log"><b class="xref.cmd">log</B
+></A
+>,
+<a class="xref" href="ch03_101.htm#PERL2-CMD-OCT" title="oct"><b class="xref.cmd">oct</B
+></A
+>,
+<a class="xref" href="ch03_115.htm#PERL2-CMD-RAND" title="rand"><b class="xref.cmd">rand</B
+></A
+>,
+<a class="xref" href="ch03_149.htm#PERL2-CMD-SIN" title="sin"><b class="xref.cmd">sin</B
+></A
+>,
+<a class="xref" href="ch03_157.htm#PERL2-CMD-SQRT" title="sqrt"><b class="xref.cmd">sqrt</B
+></A
+>,
+<a class="xref" href="ch03_158.htm#PERL2-CMD-SRAND" title="srand"><b class="xref.cmd">srand</B
+></A
+></P
+></DD
+><dt class="term">Array processing</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_108.htm#PERL2-CMD-POP" title="pop"><b class="xref.cmd">pop</B
+></A
+>,
+<a class="xref" href="ch03_112.htm#PERL2-CMD-PUSH" title="push"><b class="xref.cmd">push</B
+></A
+>,
+<a class="xref" href="ch03_143.htm#PERL2-CMD-SHIFT" title="shift"><b class="xref.cmd">shift</B
+></A
+>,
+<a class="xref" href="ch03_154.htm#PERL2-CMD-SPLICE" title="splice"><b class="xref.cmd">splice</B
+></A
+>,
+<a class="xref" href="ch03_183.htm#PERL2-CMD-UNSHIFT" title="unshift"><b class="xref.cmd">unshift</B
+></A
+></P
+></DD
+><dt class="term">List processing</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_072.htm#PERL2-CMD-GREP" title="grep"><b class="xref.cmd">grep</B
+></A
+>,
+<a class="xref" href="ch03_078.htm#PERL2-CMD-JOIN" title="join"><b class="xref.cmd">join</B
+></A
+>,
+<a class="xref" href="ch03_091.htm#PERL2-CMD-MAP" title="map"><b class="xref.cmd">map</B
+></A
+>,
+<a class="linkend" href="ch03_113.htm" title="q/STRING/"><b class="emphasis.bold">qw//</B
+></A
+>,
+<a class="xref" href="ch03_126.htm#PERL2-CMD-REVERSE" title="reverse"><b class="xref.cmd">reverse</B
+></A
+>,
+<a class="xref" href="ch03_153.htm#PERL2-CMD-SORT" title="sort"><b class="xref.cmd">sort</B
+></A
+>,
+<a class="xref" href="ch03_182.htm#PERL2-CMD-UNPACK" title="unpack"><b class="xref.cmd">unpack</B
+></A
+></P
+></DD
+><dt class="term">Hash processing</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_026.htm#PERL2-CMD-DELETE" title="delete"><b class="xref.cmd">delete</B
+></A
+>,
+<a class="xref" href="ch03_030.htm#PERL2-CMD-EACH" title="each"><b class="xref.cmd">each</B
+></A
+>,
+<a class="xref" href="ch03_034.htm#PERL2-CMD-EXISTS" title="exists"><b class="xref.cmd">exists</B
+></A
+>,
+<a class="xref" href="ch03_079.htm#PERL2-CMD-KEYS" title="keys"><b class="xref.cmd">keys</B
+></A
+>,
+<a class="xref" href="ch03_187.htm#PERL2-CMD-VALUES" title="values"><b class="xref.cmd">values</B
+></A
+></P
+></DD
+><dt class="term">Input and output</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_008.htm#PERL2-CMD-BINMODE" title="binmode"><b class="xref.cmd">binmode</B
+></A
+>,
+<a class="xref" href="ch03_018.htm#PERL2-CMD-CLOSE" title="close"><b class="xref.cmd">close</B
+></A
+>,
+<a class="xref" href="ch03_019.htm#PERL2-CMD-CLOSEDIR" title="closedir"><b class="xref.cmd">closedir</B
+></A
+>,
+<a class="xref" href="ch03_023.htm#PERL2-CMD-DBMCLOSE" title="dbmclose"><b class="xref.cmd">dbmclose</B
+></A
+>,
+<a class="xref" href="ch03_024.htm#PERL2-CMD-DBMOPEN" title="dbmopen"><b class="xref.cmd">dbmopen</B
+></A
+>,
+<a class="xref" href="ch03_027.htm#PERL2-CMD-DIE" title="die"><b class="xref.cmd">die</B
+></A
+>,
+<a class="xref" href="ch03_031.htm#PERL2-CMD-EOF" title="eof"><b class="xref.cmd">eof</B
+></A
+>,
+<a class="xref" href="ch03_038.htm#PERL2-CMD-FILENO" title="fileno"><b class="xref.cmd">fileno</B
+></A
+>,
+<a class="xref" href="ch03_039.htm#PERL2-CMD-FLOCK" title="flock"><b class="xref.cmd">flock</B
+></A
+>,
+<a class="xref" href="ch03_041.htm#PERL2-CMD-FORMAT" title="format"><b class="xref.cmd">format</B
+></A
+>,
+<a class="xref" href="ch03_043.htm#PERL2-CMD-GETC" title="getc"><b class="xref.cmd">getc</B
+></A
+>,
+<a class="xref" href="ch03_110.htm#PERL2-CMD-PRINT" title="print"><b class="xref.cmd">print</B
+></A
+>,
+<a class="xref" href="ch03_111.htm#PERL2-CMD-PRINTF" title="printf"><b class="xref.cmd">printf</B
+></A
+>,
+<a class="xref" href="ch03_116.htm#PERL2-CMD-READ" title="read"><b class="xref.cmd">read</B
+></A
+>,
+<a class="xref" href="ch03_117.htm#PERL2-CMD-READDIR" title="readdir"><b class="xref.cmd">readdir</B
+></A
+>,
+<a class="xref" href="ch03_127.htm#PERL2-CMD-REWINDDIR" title="rewinddir"><b class="xref.cmd">rewinddir</B
+></A
+>,
+<a class="xref" href="ch03_132.htm#PERL2-CMD-SEEK" title="seek"><b class="xref.cmd">seek</B
+></A
+>,
+<a class="xref" href="ch03_133.htm#PERL2-CMD-SEEKDIR" title="seekdir"><b class="xref.cmd">seekdir</B
+></A
+>,
+<a class="xref" href="ch03_135.htm#PERL2-CMD-SELECT" title="select (ready file descriptors)"><b class="xref.cmd">select (ready file descriptors)</B
+></A
+>,
+<a class="xref" href="ch03_164.htm#PERL2-CMD-SYSCALL" title="syscall"><b class="xref.cmd">syscall</B
+></A
+>,
+<a class="xref" href="ch03_166.htm#PERL2-CMD-SYSREAD" title="sysread"><b class="xref.cmd">sysread</B
+></A
+>,
+<a class="xref" href="ch03_168.htm#PERL2-CMD-SYSWRITE" title="syswrite"><b class="xref.cmd">syswrite</B
+></A
+>,
+<a class="xref" href="ch03_169.htm#PERL2-CMD-TELL" title="tell"><b class="xref.cmd">tell</B
+></A
+>,
+<a class="xref" href="ch03_170.htm#PERL2-CMD-TELLDIR" title="telldir"><b class="xref.cmd">telldir</B
+></A
+>,
+<a class="xref" href="ch03_176.htm#PERL2-CMD-TRUNCATE" title="truncate"><b class="xref.cmd">truncate</B
+></A
+>,
+<a class="xref" href="ch03_192.htm#PERL2-CMD-WARN" title="warn"><b class="xref.cmd">warn</B
+></A
+>,
+<a class="xref" href="ch03_193.htm#PERL2-CMD-WRITE" title="write"><b class="xref.cmd">write</B
+></A
+></P
+></DD
+><dt class="term">Fixed-length data and records</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_105.htm#PERL2-CMD-PACK" title="pack"><b class="xref.cmd">pack</B
+></A
+>,
+<a class="xref" href="ch03_116.htm#PERL2-CMD-READ" title="read"><b class="xref.cmd">read</B
+></A
+>,
+<a class="xref" href="ch03_164.htm#PERL2-CMD-SYSCALL" title="syscall"><b class="xref.cmd">syscall</B
+></A
+>,
+<a class="xref" href="ch03_166.htm#PERL2-CMD-SYSREAD" title="sysread"><b class="xref.cmd">sysread</B
+></A
+>,
+<a class="xref" href="ch03_168.htm#PERL2-CMD-SYSWRITE" title="syswrite"><b class="xref.cmd">syswrite</B
+></A
+>,
+<a class="xref" href="ch03_182.htm#PERL2-CMD-UNPACK" title="unpack"><b class="xref.cmd">unpack</B
+></A
+>,
+<a class="xref" href="ch03_188.htm#PERL2-CMD-VEC" title="vec"><b class="xref.cmd">vec</B
+></A
+></P
+></DD
+><dt class="term">Filehandles, files, and directories</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_011.htm#PERL2-CMD-CHDIR" title="chdir"><b class="xref.cmd">chdir</B
+></A
+>,
+<a class="xref" href="ch03_012.htm#PERL2-CMD-CHMOD" title="chmod"><b class="xref.cmd">chmod</B
+></A
+>,
+<a class="xref" href="ch03_015.htm#PERL2-CMD-CHOWN" title="chown"><b class="xref.cmd">chown</B
+></A
+>,
+<a class="xref" href="ch03_017.htm#PERL2-CMD-CHROOT" title="chroot"><b class="xref.cmd">chroot</B
+></A
+>,
+<a class="xref" href="ch03_037.htm#PERL2-CMD-FCNTL" title="fcntl"><b class="xref.cmd">fcntl</B
+></A
+>,
+<a class="xref" href="ch03_069.htm#PERL2-CMD-GLOB" title="glob"><b class="xref.cmd">glob</B
+></A
+>,
+<a class="xref" href="ch03_077.htm#PERL2-CMD-IOCTL" title="ioctl"><b class="xref.cmd">ioctl</B
+></A
+>,
+<a class="xref" href="ch03_085.htm#PERL2-CMD-LINK" title="link"><b class="xref.cmd">link</B
+></A
+>,
+<a class="xref" href="ch03_090.htm#PERL2-CMD-LSTAT" title="lstat"><b class="xref.cmd">lstat</B
+></A
+>,
+<a class="xref" href="ch03_092.htm#PERL2-CMD-MKDIR" title="mkdir"><b class="xref.cmd">mkdir</B
+></A
+>,
+<a class="xref" href="ch03_102.htm#PERL2-CMD-OPEN" title="open"><b class="xref.cmd">open</B
+></A
+>,
+<a class="xref" href="ch03_103.htm#PERL2-CMD-OPENDIR" title="opendir"><b class="xref.cmd">opendir</B
+></A
+>,
+<a class="xref" href="ch03_118.htm#PERL2-CMD-READLINK" title="readlink"><b class="xref.cmd">readlink</B
+></A
+>,
+<a class="xref" href="ch03_122.htm#PERL2-CMD-RENAME" title="rename"><b class="xref.cmd">rename</B
+></A
+>,
+<a class="xref" href="ch03_129.htm#PERL2-CMD-RMDIR" title="rmdir"><b class="xref.cmd">rmdir</B
+></A
+>,
+<a class="xref" href="ch03_135.htm#PERL2-CMD-SELECT" title="select (ready file descriptors)"><b class="xref.cmd">select (ready file descriptors)</B
+></A
+>,
+<a class="xref" href="ch03_134.htm#PERL2-CMD-SELECT-OUT" title="select (output filehandle)"><b class="xref.cmd">select (output filehandle)</B
+></A
+>,
+<a class="xref" href="ch03_159.htm#PERL2-CMD-STAT" title="stat"><b class="xref.cmd">stat</B
+></A
+>,
+<a class="xref" href="ch03_163.htm#PERL2-CMD-SYMLINK" title="symlink"><b class="xref.cmd">symlink</B
+></A
+>,
+<a class="xref" href="ch03_165.htm#PERL2-CMD-SYSOPEN" title="sysopen"><b class="xref.cmd">sysopen</B
+></A
+>,
+<a class="xref" href="ch03_179.htm#PERL2-CMD-UMASK" title="umask"><b class="xref.cmd">umask</B
+></A
+>,
+<a class="xref" href="ch03_181.htm#PERL2-CMD-UNLINK" title="unlink"><b class="xref.cmd">unlink</B
+></A
+>,
+<a class="xref" href="ch03_186.htm#PERL2-CMD-UTIME" title="utime"><b class="xref.cmd">utime</B
+></A
+></P
+></DD
+><dt class="term">Flow of program control</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_010.htm#PERL2-CMD-CALLER" title="caller"><b class="xref.cmd">caller</B
+></A
+>,
+<b class="emphasis.bold">continue</B
+>,
+<a class="xref" href="ch03_027.htm#PERL2-CMD-DIE" title="die"><b class="xref.cmd">die</B
+></A
+>,
+<a class="xref" href="ch03_028.htm#PERL2-CMD-DO" title="do"><b class="xref.cmd">do</B
+></A
+>,
+<a class="xref" href="ch03_029.htm#PERL2-CMD-DUMP" title="dump"><b class="xref.cmd">dump</B
+></A
+>,
+<a class="xref" href="ch03_032.htm#PERL2-CMD-EVAL" title="eval"><b class="xref.cmd">eval</B
+></A
+>,
+<a class="xref" href="ch03_035.htm#PERL2-CMD-EXIT" title="exit"><b class="xref.cmd">exit</B
+></A
+>,
+<a class="xref" href="ch03_071.htm#PERL2-CMD-GOTO" title="goto"><b class="xref.cmd">goto</B
+></A
+>,
+<a class="xref" href="ch03_081.htm#PERL2-CMD-LAST" title="last"><b class="xref.cmd">last</B
+></A
+>,
+<a class="xref" href="ch03_099.htm#PERL2-CMD-NEXT" title="next"><b class="xref.cmd">next</B
+></A
+>,
+<a class="xref" href="ch03_120.htm#PERL2-CMD-REDO" title="redo"><b class="xref.cmd">redo</B
+></A
+>,
+<a class="xref" href="ch03_125.htm#PERL2-CMD-RETURN" title="return"><b class="xref.cmd">return</B
+></A
+>,
+<a class="xref" href="ch03_161.htm#PERL2-CMD-SUB" title="sub"><b class="xref.cmd">sub</B
+></A
+>,
+<a class="xref" href="ch03_191.htm#PERL2-CMD-WANTARRAY" title="wantarray"><b class="xref.cmd">wantarray</B
+></A
+></P
+></DD
+><dt class="term">Scoping </DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_010.htm#PERL2-CMD-CALLER" title="caller"><b class="xref.cmd">caller</B
+></A
+>,
+<a class="xref" href="ch03_074.htm#PERL2-CMD-IMPORT" title="import"><b class="xref.cmd">import</B
+></A
+>,
+<a class="xref" href="ch03_087.htm#PERL2-CMD-LOCAL" title="local"><b class="xref.cmd">local</B
+></A
+>,
+<a class="xref" href="ch03_097.htm#PERL2-CMD-MY" title="my"><b class="xref.cmd">my</B
+></A
+>,
+<a class="xref" href="ch03_106.htm#PERL2-CMD-PACKAGE" title="package"><b class="xref.cmd">package</B
+></A
+>,
+<a class="xref" href="ch03_185.htm#PERL2-CMD-USE" title="use"><b class="xref.cmd">use</B
+></A
+></P
+></DD
+><dt class="term">Miscellaneous</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_025.htm#PERL2-CMD-DEFINED" title="defined"><b class="xref.cmd">defined</B
+></A
+>,
+<a class="xref" href="ch03_029.htm#PERL2-CMD-DUMP" title="dump"><b class="xref.cmd">dump</B
+></A
+>,
+<a class="xref" href="ch03_032.htm#PERL2-CMD-EVAL" title="eval"><b class="xref.cmd">eval</B
+></A
+>,
+<a class="xref" href="ch03_042.htm#PERL2-CMD-FORMLINE" title="formline"><b class="xref.cmd">formline</B
+></A
+>,
+<a class="xref" href="ch03_087.htm#PERL2-CMD-LOCAL" title="local"><b class="xref.cmd">local</B
+></A
+>,
+<a class="xref" href="ch03_097.htm#PERL2-CMD-MY" title="my"><b class="xref.cmd">my</B
+></A
+>,
+<a class="xref" href="ch03_124.htm#PERL2-CMD-RESET" title="reset"><b class="xref.cmd">reset</B
+></A
+>,
+<a class="xref" href="ch03_131.htm#PERL2-CMD-SCALAR" title="scalar"><b class="xref.cmd">scalar</B
+></A
+>,
+<a class="xref" href="ch03_180.htm#PERL2-CMD-UNDEF" title="undef"><b class="xref.cmd">undef</B
+></A
+>,
+<a class="xref" href="ch03_191.htm#PERL2-CMD-WANTARRAY" title="wantarray"><b class="xref.cmd">wantarray</B
+></A
+></P
+></DD
+><dt class="term">Processes and process groups</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_005.htm#PERL2-CMD-ALARM" title="alarm"><b class="xref.cmd">alarm</B
+></A
+>,
+<a class="xref" href="ch03_033.htm#PERL2-CMD-EXEC" title="exec"><b class="xref.cmd">exec</B
+></A
+>,
+<a class="xref" href="ch03_040.htm#PERL2-CMD-FORK" title="fork"><b class="xref.cmd">fork</B
+></A
+>,
+<a class="xref" href="ch03_055.htm#PERL2-CMD-GETPGRP" title="getpgrp"><b class="xref.cmd">getpgrp</B
+></A
+>,
+<a class="xref" href="ch03_056.htm#PERL2-CMD-GETPPID" title="getppid"><b class="xref.cmd">getppid</B
+></A
+>,
+<a class="xref" href="ch03_057.htm#PERL2-CMD-GETPRIORITY" title="getpriority"><b class="xref.cmd">getpriority</B
+></A
+>,
+<a class="xref" href="ch03_080.htm#PERL2-CMD-KILL" title="kill"><b class="xref.cmd">kill</B
+></A
+>,
+<a class="xref" href="ch03_107.htm#PERL2-CMD-PIPE" title="pipe"><b class="xref.cmd">pipe</B
+></A
+>,
+<a class="linkend" href="ch03_113.htm" title="q/STRING/"><b class="emphasis.bold">qx//</B
+></A
+>,
+<a class="xref" href="ch03_140.htm#PERL2-CMD-SETPGRP" title="setpgrp"><b class="xref.cmd">setpgrp</B
+></A
+>,
+<a class="xref" href="ch03_141.htm#PERL2-CMD-SETPRIORITY" title="setpriority"><b class="xref.cmd">setpriority</B
+></A
+>,
+<a class="xref" href="ch03_150.htm#PERL2-CMD-SLEEP" title="sleep"><b class="xref.cmd">sleep</B
+></A
+>,
+<a class="xref" href="ch03_167.htm#PERL2-CMD-SYSTEM" title="system"><b class="xref.cmd">system</B
+></A
+>,
+<a class="xref" href="ch03_174.htm#PERL2-CMD-TIMES" title="times"><b class="xref.cmd">times</B
+></A
+>,
+<a class="xref" href="ch03_189.htm#PERL2-CMD-WAIT" title="wait"><b class="xref.cmd">wait</B
+></A
+>,
+<a class="xref" href="ch03_190.htm#PERL2-CMD-WAITPID" title="waitpid"><b class="xref.cmd">waitpid</B
+></A
+></P
+></DD
+><dt class="term">Library modules</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_028.htm#PERL2-CMD-DO" title="do"><b class="xref.cmd">do</B
+></A
+>,
+<a class="xref" href="ch03_074.htm#PERL2-CMD-IMPORT" title="import"><b class="xref.cmd">import</B
+></A
+>,
+<a class="xref" href="ch03_100.htm#PERL2-CMD-NO" title="no"><b class="xref.cmd">no</B
+></A
+>,
+<a class="xref" href="ch03_106.htm#PERL2-CMD-PACKAGE" title="package"><b class="xref.cmd">package</B
+></A
+>,
+<a class="xref" href="ch03_123.htm#PERL2-CMD-REQUIRE" title="require"><b class="xref.cmd">require</B
+></A
+>,
+<a class="xref" href="ch03_185.htm#PERL2-CMD-USE" title="use"><b class="xref.cmd">use</B
+></A
+></P
+></DD
+><dt class="term">Classes and objects</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_009.htm#PERL2-CMD-BLESS" title="bless"><b class="xref.cmd">bless</B
+></A
+>,
+<a class="xref" href="ch03_023.htm#PERL2-CMD-DBMCLOSE" title="dbmclose"><b class="xref.cmd">dbmclose</B
+></A
+>,
+<a class="xref" href="ch03_024.htm#PERL2-CMD-DBMOPEN" title="dbmopen"><b class="xref.cmd">dbmopen</B
+></A
+>,
+<a class="xref" href="ch03_106.htm#PERL2-CMD-PACKAGE" title="package"><b class="xref.cmd">package</B
+></A
+>,
+<a class="xref" href="ch03_121.htm#PERL2-CMD-REF" title="ref"><b class="xref.cmd">ref</B
+></A
+>,
+<a class="xref" href="ch03_171.htm#PERL2-CMD-TIE" title="tie"><b class="xref.cmd">tie</B
+></A
+>,
+<a class="xref" href="ch03_172.htm#PERL2-CMD-TIED" title="tied"><b class="xref.cmd">tied</B
+></A
+>,
+<a class="xref" href="ch03_184.htm#PERL2-CMD-UNTIE" title="untie"><b class="xref.cmd">untie</B
+></A
+>,
+<a class="xref" href="ch03_185.htm#PERL2-CMD-USE" title="use"><b class="xref.cmd">use</B
+></A
+></P
+></DD
+><dt class="term">Low-level socket access</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_004.htm#PERL2-CMD-ACCEPT" title="accept"><b class="xref.cmd">accept</B
+></A
+>,
+<a class="xref" href="ch03_007.htm#PERL2-CMD-BIND" title="bind"><b class="xref.cmd">bind</B
+></A
+>,
+<a class="xref" href="ch03_020.htm#PERL2-CMD-CONNECT" title="connect"><b class="xref.cmd">connect</B
+></A
+>,
+<a class="xref" href="ch03_054.htm#PERL2-CMD-GETPEERNAME" title="getpeername"><b class="xref.cmd">getpeername</B
+></A
+>,
+<a class="xref" href="ch03_067.htm#PERL2-CMD-GETSOCKNAME" title="getsockname"><b class="xref.cmd">getsockname</B
+></A
+>,
+<a class="xref" href="ch03_068.htm#PERL2-CMD-GETSOCKOPT" title="getsockopt"><b class="xref.cmd">getsockopt</B
+></A
+>,
+<a class="xref" href="ch03_086.htm#PERL2-CMD-LISTEN" title="listen"><b class="xref.cmd">listen</B
+></A
+>,
+<a class="xref" href="ch03_119.htm#PERL2-CMD-RECV" title="recv"><b class="xref.cmd">recv</B
+></A
+>,
+<a class="xref" href="ch03_139.htm#PERL2-CMD-SEND" title="send"><b class="xref.cmd">send</B
+></A
+>,
+<a class="xref" href="ch03_142.htm#PERL2-CMD-SETSOCKOPT" title="setsockopt"><b class="xref.cmd">setsockopt</B
+></A
+>,
+<a class="xref" href="ch03_148.htm#PERL2-CMD-SHUTDOWN" title="shutdown"><b class="xref.cmd">shutdown</B
+></A
+>,
+<a class="xref" href="ch03_151.htm#PERL2-CMD-SOCKET" title="socket"><b class="xref.cmd">socket</B
+></A
+>,
+<a class="xref" href="ch03_152.htm#PERL2-CMD-SOCKETPAIR" title="socketpair"><b class="xref.cmd">socketpair</B
+></A
+></P
+></DD
+><dt class="term">System V interprocess communication</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_093.htm#PERL2-CMD-MSGCTL" title="msgctl"><b class="xref.cmd">msgctl</B
+></A
+>,
+<a class="xref" href="ch03_094.htm#PERL2-CMD-MSGGET" title="msgget"><b class="xref.cmd">msgget</B
+></A
+>,
+<a class="xref" href="ch03_095.htm#PERL2-CMD-MSGRCV" title="msgrcv"><b class="xref.cmd">msgrcv</B
+></A
+>,
+<a class="xref" href="ch03_096.htm#PERL2-CMD-MSGSND" title="msgsnd"><b class="xref.cmd">msgsnd</B
+></A
+>,
+<a class="xref" href="ch03_136.htm#PERL2-CMD-SEMCTL" title="semctl"><b class="xref.cmd">semctl</B
+></A
+>,
+<a class="xref" href="ch03_137.htm#PERL2-CMD-SEMGET" title="semget"><b class="xref.cmd">semget</B
+></A
+>,
+<a class="xref" href="ch03_138.htm#PERL2-CMD-SEMOP" title="semop"><b class="xref.cmd">semop</B
+></A
+>,
+<a class="xref" href="ch03_144.htm#PERL2-CMD-SHMCTL" title="shmctl"><b class="xref.cmd">shmctl</B
+></A
+>,
+<a class="xref" href="ch03_145.htm#PERL2-CMD-SHMGET" title="shmget"><b class="xref.cmd">shmget</B
+></A
+>,
+<a class="xref" href="ch03_146.htm#PERL2-CMD-SHMREAD" title="shmread"><b class="xref.cmd">shmread</B
+></A
+>,
+<a class="xref" href="ch03_147.htm#PERL2-CMD-SHMWRITE" title="shmwrite"><b class="xref.cmd">shmwrite</B
+></A
+></P
+></DD
+><dt class="term">Fetching user and group information</DT
+><dd class="listitem"><p class="para"><a class="linkend" href="ch03_044.htm#PERL2-CMD-GETGRENT" title="getgrent"><b class="emphasis.bold">endgrent</B
+></A
+>,
+<a class="linkend" href="ch03_049.htm#PERL2-CMD-GETHOSTENT" title="gethostent"><b class="emphasis.bold">endhostent</B
+></A
+>,
+<a class="linkend" href="ch03_053.htm#PERL2-CMD-GETNETENT" title="getnetent"><b class="emphasis.bold">endnetent</B
+></A
+>,
+<a class="linkend" href="ch03_061.htm#PERL2-CMD-GETPWENT" title="getpwent"><b class="emphasis.bold">endpwent</B
+></A
+>,
+<a class="xref" href="ch03_044.htm#PERL2-CMD-GETGRENT" title="getgrent"><b class="xref.cmd">getgrent</B
+></A
+>,
+<a class="xref" href="ch03_045.htm#PERL2-CMD-GETGRGID" title="getgrgid"><b class="xref.cmd">getgrgid</B
+></A
+>,
+<a class="xref" href="ch03_046.htm#PERL2-CMD-GETGRNAM" title="getgrnam"><b class="xref.cmd">getgrnam</B
+></A
+>,
+<a class="xref" href="ch03_050.htm#PERL2-CMD-GETLOGIN" title="getlogin"><b class="xref.cmd">getlogin</B
+></A
+>,
+<a class="xref" href="ch03_061.htm#PERL2-CMD-GETPWENT" title="getpwent"><b class="xref.cmd">getpwent</B
+></A
+>,
+<a class="xref" href="ch03_062.htm#PERL2-CMD-GETPWNAM" title="getpwnam"><b class="xref.cmd">getpwnam</B
+></A
+>,
+<a class="xref" href="ch03_063.htm#PERL2-CMD-GETPWUID" title="getpwuid"><b class="xref.cmd">getpwuid</B
+></A
+>,
+<a class="linkend" href="ch03_044.htm#PERL2-CMD-GETGRENT" title="getgrent"><b class="emphasis.bold">setgrent</B
+></A
+>,
+<a class="linkend" href="ch03_061.htm#PERL2-CMD-GETPWENT" title="getpwent"><b class="emphasis.bold">setpwent</B
+></A
+></P
+></DD
+><dt class="term">Fetching network information</DT
+><dd class="listitem"><p class="para"><a class="linkend" href="ch03_060.htm#PERL2-CMD-GETPROTOENT" title="getprotoent"><b class="emphasis.bold">endprotoent</B
+></A
+>,
+<a class="linkend" href="ch03_066.htm#PERL2-CMD-GETSERVENT" title="getservent"><b class="emphasis.bold">endservent</B
+></A
+>,
+<a class="xref" href="ch03_047.htm#PERL2-CMD-GETHOSTBYADDR" title="gethostbyaddr"><b class="xref.cmd">gethostbyaddr</B
+></A
+>,
+<a class="xref" href="ch03_048.htm#PERL2-CMD-GETHOSTBYNAME" title="gethostbyname"><b class="xref.cmd">gethostbyname</B
+></A
+>,
+<a class="xref" href="ch03_049.htm#PERL2-CMD-GETHOSTENT" title="gethostent"><b class="xref.cmd">gethostent</B
+></A
+>,
+<a class="xref" href="ch03_051.htm#PERL2-CMD-GETNETBYADDR" title="getnetbyaddr"><b class="xref.cmd">getnetbyaddr</B
+></A
+>,
+<a class="xref" href="ch03_052.htm#PERL2-CMD-GETNETBYNAME" title="getnetbyname"><b class="xref.cmd">getnetbyname</B
+></A
+>,
+<a class="xref" href="ch03_053.htm#PERL2-CMD-GETNETENT" title="getnetent"><b class="xref.cmd">getnetent</B
+></A
+>,
+<a class="xref" href="ch03_058.htm#PERL2-CMD-GETPROTOBYNAME" title="getprotobyname"><b class="xref.cmd">getprotobyname</B
+></A
+>,
+<a class="xref" href="ch03_059.htm#PERL2-CMD-GETPROTOBYNUMBER" title="getprotobynumber"><b class="xref.cmd">getprotobynumber</B
+></A
+>,
+<a class="xref" href="ch03_060.htm#PERL2-CMD-GETPROTOENT" title="getprotoent"><b class="xref.cmd">getprotoent</B
+></A
+>,
+<a class="xref" href="ch03_064.htm#PERL2-CMD-GETSERVBYNAME" title="getservbyname"><b class="xref.cmd">getservbyname</B
+></A
+>,
+<a class="xref" href="ch03_065.htm#PERL2-CMD-GETSERVBYPORT" title="getservbyport"><b class="xref.cmd">getservbyport</B
+></A
+>,
+<a class="xref" href="ch03_066.htm#PERL2-CMD-GETSERVENT" title="getservent"><b class="xref.cmd">getservent</B
+></A
+>,
+<a class="linkend" href="ch03_049.htm#PERL2-CMD-GETHOSTENT" title="gethostent"><b class="emphasis.bold">sethostent</B
+></A
+>,
+<a class="linkend" href="ch03_053.htm#PERL2-CMD-GETNETENT" title="getnetent"><b class="emphasis.bold">setnetent</B
+></A
+>,
+<a class="linkend" href="ch03_060.htm#PERL2-CMD-GETPROTOENT" title="getprotoent"><b class="emphasis.bold">setprotoent</B
+></A
+>,
+<a class="linkend" href="ch03_066.htm#PERL2-CMD-GETSERVENT" title="getservent"><b class="emphasis.bold">setservent</B
+></A
+></P
+></DD
+><dt class="term">Time</DT
+><dd class="listitem"><p class="para"><a class="xref" href="ch03_070.htm#PERL2-CMD-GMTIME" title="gmtime"><b class="xref.cmd">gmtime</B
+></A
+>,
+<a class="xref" href="ch03_088.htm#PERL2-CMD-LOCALTIME" title="localtime"><b class="xref.cmd">localtime</B
+></A
+>,
+<a class="xref" href="ch03_173.htm#PERL2-CMD-TIME" title="time"><b class="xref.cmd">time</B
+></A
+>,
+<a class="xref" href="ch03_174.htm#PERL2-CMD-TIMES" title="times"><b class="xref.cmd">times</B
+></A
+></P
+></DD
+></DL
+></DIV
+></DIV
+><div class="htmlnav"><p></P
+><hr align="LEFT" width="515" title="footer"><table width="515" border="0" cellspacing="0" cellpadding="0"><tr><td align="LEFT" valign="TOP" width="172"><a class="SECT1" href="ch02_09.htm#PERL2-CH-2-SECT-9.4" title="2.9 Special Variables"><img src="../gifs/txtpreva.gif" alt="Previous: 2.9 Special Variables" border="0"></A
+></TD
+><td align="CENTER" valign="TOP" width="171"><a class="book" href="index.htm" title="Programming Perl"><img src="../gifs/txthome.gif" alt="Programming Perl" border="0"></A
+></TD
+><td align="RIGHT" valign="TOP" width="172"><a class="SECT1" href="ch03_02.htm" title="3.2 Perl Functions in Alphabetical Order"><img src="../gifs/txtnexta.gif" alt="Next: 3.2 Perl Functions in Alphabetical Order" border="0"></A
+></TD
+></TR
+><tr><td align="LEFT" valign="TOP" width="172">2.9 Special Variables</TD
+><td align="CENTER" valign="TOP" width="171"><a class="index" href="index/idx_0.htm" title="Book Index"><img src="../gifs/index.gif" alt="Book Index" border="0"></A
+></TD
+><td align="RIGHT" valign="TOP" width="172">3.2 Perl Functions in Alphabetical Order</TD
+></TR
+></TABLE
+><hr align="LEFT" width="515" title="footer"><p class="nav"><font size="-1">[ <a href="../index.html" title="The Perl CD Bookshelf">Library Home</A
+> | <a href="../perlnut/index.htm" title="Perl in a Nutshell">Perl in a Nutshell</A
+> | <a href="../learn/index.htm" title="Learning Perl">Learning Perl</A
+> | <a href="../learn32/index.htm" title="Learning Perl on Win32 Systems">Learning Perl on Win32</A
+> | <a href="index.htm" title="Programming Perl">Programming Perl</A
+> | <a href="../advprog/index.htm" title="Advanced Perl Programming">Advanced Perl Programming</A
+> | <a href="../cookbook/index.htm" title="Perl Cookbook">Perl Cookbook</A
+> ]</FONT
+></P
+></DIV
+></BODY
+></HTML
+>

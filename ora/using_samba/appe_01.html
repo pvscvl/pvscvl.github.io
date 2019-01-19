@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "html.dtd">
+<HTML>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+<HEAD>
+<TITLE>[Appendix E] Downloading Samba with CVS</TITLE>
+</HEAD>
+<BODY VLINK="#0000CC" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#990000">
+<TABLE WIDTH="90%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD COLSPAN="2">
+<IMG WIDTH="515" ALT="Search the Catalog" SRC="http://www.oreilly.com/graphics_new/catalog_header_buttons.gif" HEIGHT="37" ISMAP ALIGN="BOTTOM" USEMAP="#catalog_header_buttons" BORDER="0">
+<MAP NAME="catalog_header_buttons">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/search.html" COORDS="407,17,512,32">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/catalog/prdindex.html" COORDS="431,3,512,18">
+</MAP>
+</TD>
+</TR>
+<TR>
+<TD WIDTH="25%" VALIGN="TOP">
+<A HREF="http://www.oreilly.com/catalog/samba/">
+<IMG ALT="Using Samba" VALIGN="top" VSPACE="10" HSPACE="10" SRC="http://www.oreilly.com/catalog/covers/samba.s.gif" ALIGN="left" BORDER="0">
+</A>
+</TD>
+<TD VALIGN="TOP" HEIGHT="105">
+<BR>
+<H2>Using Samba</H2>
+<FONT SIZE="-1">
+Robert Eckstein, David Collier-Brown, Peter Kelly
+<BR>1st Edition November 1999
+<BR>1-56592-449-5, Order Number: 4495
+<BR>416 pages, $34.95
+</FONT>
+</TD>
+</TR>
+</TABLE>
+<HR NOSHADE SIZE="1">
+<!-- sample chapter begins -->
+
+<CENTER>
+<DIV CLASS="htmlnav">
+<TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="" HREF="appd_01.html" CLASS="appendix">
+<IMG ALT="Previous: Appendix D." SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD>
+<TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<B>
+<FONT SIZE="-1" FACE="ARIEL,HELVETICA,HELV,SANSERIF">
+Appendix E</FONT></B></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="" HREF="appf_01.html" CLASS="appendix">
+<IMG ALT="Next: Appendix F." SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR>
+</TABLE>
+&nbsp;<HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+<BLOCKQUOTE>
+<DIV CLASS="samplechapter">
+<H1 CLASS="appendix"><A NAME="appe-58937" CLASS="title">Appendix E. Downloading Samba with CVS</A></H1>
+<P CLASS="para">This appendix contains information on how to download the latest source version of Samba using the Concurrent Versions System (CVS). CVS is a freely available configuration management tool available from Cyclic Software and is distributed under the GNU General Public License. You can download the latest copy from <A HREF="http://www.cyclic.com/." CLASS="systemitem.url">
+http://www.cyclic.com/.</A></P><P CLASS="para">CVS works on top of the GNU Revision Control System (RCS). Many Unix systems come preinstalled with RCS. However, if you want to download the latest version of RCS, you can find it at <A HREF="http://ftp.gnu.org/gnu/rcs/." CLASS="systemitem.url">http://ftp.gnu.org/gnu/rcs/.</A></P><P CLASS="para">
+One of the nicest things about CVS is its ability to handle remote logins. This means that people across the globe on the Internet can download and update various source files for any project that uses a CVS repository. Such is the case with Samba. Once you have RCS and CVS installed on your system, you must first log in to the Samba source server with the following command:</P><PRE CLASS="programlisting">
+&#13;cvs -d :pserver:cvs@cvs.samba.org:/cvsroot login</PRE><P CLASS="para">
+This tells CVS to connect to the CVS server at <I CLASS="filename">
+cvs.samba.org</I>. Once you are connected, you can download the latest source tree with the following command:</P><PRE CLASS="programlisting">
+&#13;cvs -d :pserver:cvs@cvs.samba.org:/cvsroot co samba</PRE><P CLASS="para">
+This will download the entire Samba distribution (file by file) into a directory entitled <I CLASS="filename">
+/samba</I>, which it will create on your hard drive. This directory will have the same structure as the Samba source distribution described in <B>Chapter 2, <CITE CLASS="chapter">
+Installing Samba on a Unix System</CITE></B>. It includes source and header files, documentation, and sample configuration files to help get you started. After that is completed, you can follow the instructions in <B>Chapter 2</B> to configure and compile Samba on your server.</P></DIV></BLOCKQUOTE>
+<DIV>
+<CENTER>
+<HR NOSHADE SIZE="1"><TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="" HREF="appd_01.html" CLASS="appendix">
+<IMG ALT="Previous: Appendix D." SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="" HREF="index.html" CLASS="book">
+<IMG ALT="" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txthome.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="" HREF="appf_01.html" CLASS="appendix">
+<IMG ALT="Next: Appendix F." SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR><TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+D. Samba Configuration Option Quick Reference</TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="Book Index" HREF="http://www.oreilly.com/catalog/samba/inx.html" CLASS="index">
+<IMG ALT="Book Index" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/index.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+F. Sample Configuration File</TD></TR></TABLE><HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+
+<!--  End of sample chapter -->
+<P><B>Back to: <A HREF="http://www.oreilly.com/catalog/samba/noframes.html">Using Samba</A></B>
+<CENTER>
+<HR NOSHADE SIZE="1">
+<FONT SIZE="1" FACE="Verdana, Arial, Helvetica">
+<A HREF="http://www.oreilly.com/">
+<B>O'Reilly Home</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/sales/bookstores">
+<B>O'Reilly Bookstores</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/order_new/">
+<B>How to Order</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/contact.html">
+<B>O'Reilly Contacts<BR></B></A>
+<A HREF="http://www.oreilly.com/international/">
+<B>International</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/about.html">
+<B>About O'Reilly</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/affiliates.html">
+<B>Affiliated Companies</B></A><P>
+<EM>&copy; 1999, O'Reilly &amp; Associates, Inc.</EM>
+</FONT>
+</CENTER>
+</BODY>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+</HTML>

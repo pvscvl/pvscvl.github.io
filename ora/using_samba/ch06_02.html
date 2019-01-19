@@ -1,0 +1,442 @@
+<!DOCTYPE HTML PUBLIC "html.dtd">
+<HTML>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+<HEAD>
+<TITLE>
+[Chapter 6] 6.2 Controlling Access to Shares</TITLE><META NAME="DC.title" CONTENT=""><META NAME="DC.creator" CONTENT=""><META NAME="DC.publisher" CONTENT="O'Reilly &amp; Associates, Inc."><META NAME="DC.date" CONTENT="1999-11-05T21:33:37Z"><META NAME="DC.type" CONTENT="Text.Monograph"><META NAME="DC.format" SCHEME="MIME" CONTENT="text/html"><META NAME="DC.source" SCHEME="ISBN" CONTENT=""><META NAME="DC.language" CONTENT="en-US"><META NAME="generator" CONTENT="Jade 1.1/O'Reilly DocBook 3.0 to HTML 4.0"></HEAD>
+<BODY VLINK="#0000CC" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#990000">
+<TABLE WIDTH="90%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD COLSPAN="2">
+<IMG WIDTH="515" ALT="Search the Catalog" SRC="http://www.oreilly.com/graphics_new/catalog_header_buttons.gif" HEIGHT="37" ISMAP ALIGN="BOTTOM" USEMAP="#catalog_header_buttons" BORDER="0">
+<MAP NAME="catalog_header_buttons">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/search.html" COORDS="407,17,512,32">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/catalog/prdindex.html" COORDS="431,3,512,18">
+</MAP>
+</TD>
+</TR>
+<TR>
+<TD WIDTH="25%" VALIGN="TOP">
+<A HREF="http://www.oreilly.com/catalog/samba/">
+<IMG ALT="Using Samba" VALIGN="top" VSPACE="10" HSPACE="10" SRC="http://www.oreilly.com/catalog/covers/samba.s.gif" ALIGN="left" BORDER="0">
+</A>
+</TD>
+<TD VALIGN="TOP" HEIGHT="105">
+<BR>
+<H2>Using Samba</H2>
+<FONT SIZE="-1">
+Robert Eckstein, David Collier-Brown, Peter Kelly
+<BR>1st Edition November 1999
+<BR>1-56592-449-5, Order Number: 4495
+<BR>416 pages, $34.95
+</FONT>
+</TD>
+</TR>
+</TABLE>
+<HR NOSHADE SIZE="1">
+<!-- sample chapter begins -->
+
+<CENTER>
+<DIV CLASS="htmlnav">
+<TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="6.1 Users and Groups" HREF="ch06_01.html" CLASS="sect1">
+<IMG ALT="Previous: 6.1 Users and Groups" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<B>
+<FONT SIZE="-1" FACE="ARIEL,HELVETICA,HELV,SANSERIF">
+<A TITLE="6. Users, Security, and Domains " REL="up" HREF="ch06_01.html" CLASS="chapter">
+Chapter 6<BR>
+Users, Security, and Domains </A></FONT></B></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="6.3 Authentication Security" HREF="ch06_03.html" CLASS="sect1">
+<IMG ALT="Next: 6.3 Authentication Security" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR></TABLE>&nbsp;<HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+<BLOCKQUOTE>
+<DIV>
+<H2 CLASS="sect1">
+<A NAME="ch06-27678" CLASS="title">
+6.2 Controlling Access to Shares</A></H2><P CLASS="para">Often you will need to restrict the users who can access a specific share for security reasons. This is very easy to do with Samba since it contains a wealth of options for creating practically any security configuration. Let's introduce a few configurations that you might want to use in your own Samba setup.</P><BLOCKQUOTE CLASS="warning">
+<P CLASS="para">
+<STRONG>
+WARNING:</STRONG> Again, if you are connecting with Windows 98 or NT 4.0 with Service Pack 3 (or above), those clients will send encrypted passwords to the Samba server. If Samba is not configured for this, it will continually refuse the connection. This chapter describes how to set up Samba for encrypted passwords. See the <A HREF="ch06_04.html" CLASS="xref">
+Section 6.4, Passwords</A>" section.</P></BLOCKQUOTE><P CLASS="para">
+We've seen what happens when you specify valid users. However, you are also allowed to specify a list of invalid users&nbsp;- users who should never be allowed access to Samba or its shares. This is done with the <CODE CLASS="literal">
+invalid</CODE> <CODE CLASS="literal">
+users</CODE> option. We hinted at one frequent use of this option earlier: a global default with the <CODE CLASS="literal">
+[homes]</CODE> section to ensure that various system users and superusers cannot be forged for access. For example:</P><PRE CLASS="programlisting">
+[global]
+	invalid users = root bin daemon adm sync shutdown \
+						halt mail news uucp operator gopher
+	auto services = dave peter bob
+
+[homes]
+	browsable = no
+	writeable = yes</PRE><P CLASS="para">
+The <CODE CLASS="literal">
+invalid</CODE> <CODE CLASS="literal">
+users</CODE> option, like <CODE CLASS="literal">
+valid</CODE> <CODE CLASS="literal">
+users</CODE>, can take group names as well as usernames. In the event that a user or group appears in both lists, the <CODE CLASS="literal">
+invalid</CODE> <CODE CLASS="literal">
+users</CODE> option takes precedence and the user or group will be denied access to the share.</P><P CLASS="para">
+At the other end of the spectrum, you can explicitly specify users who will be allowed superuser (root) access to a share with the <CODE CLASS="literal">
+admin</CODE> <CODE CLASS="literal">
+users</CODE> option. An example follows:</P><PRE CLASS="programlisting">
+[sales]
+		path = /home/sales
+		comment = Fiction Corp Sales Data
+		writeable = yes
+		valid users = tom dick harry
+		admin users = mike</PRE><P CLASS="para">
+This option takes both group names and usernames. In addition, you can specify NIS netgroups by preceding them with an <CODE CLASS="literal">
+@</CODE> as well; if the netgroup is not found, Samba will assume that you are referring to a standard Unix group. </P><P CLASS="para">
+Be careful if you assign an entire group administrative privileges to a share. The Samba team highly recommends you avoid using this option, as it essentially gives root access to the specified users or groups for that share.</P><P CLASS="para">
+If you wish to force read-only or read-write access to users who access a share, you can do so with the <CODE CLASS="literal">
+read</CODE> <CODE CLASS="literal">
+list</CODE> and <CODE CLASS="literal">
+write</CODE> <CODE CLASS="literal">
+list</CODE> options, respectively. These options can be used on a per-share basis to restrict a writable share or grant write access to specific users in a read-only share, respectively. For example:</P><PRE CLASS="programlisting">
+[sales]
+		path = /home/sales
+		comment = Fiction Corp Sales Data
+		read only = yes
+		write list = tom dick</PRE><P CLASS="para">
+The <CODE CLASS="literal">
+write</CODE> <CODE CLASS="literal">
+list</CODE> option cannot override Unix permissions. If you've created the share without giving the write-list user write permission on the Unix system, he or she will be denied write access regardless of the setting of <CODE CLASS="literal">
+write</CODE> <CODE CLASS="literal">
+list</CODE>.</P><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch06-pgfId-968870" CLASS="title">
+6.2.1 Guest Access</A></H3><P CLASS="para">As mentioned earlier, you can specify users who have guest access to a share. The options that control guest access are easy to work with. The first option, <CODE CLASS="literal">
+guest</CODE> <CODE CLASS="literal">
+account</CODE>, specifies the Unix account that guest users should be assigned when connecting to the Samba server. The default value for this is set during compilation, and is typically <CODE CLASS="literal">
+nobody</CODE>. However, you may want to reset the guest user to <CODE CLASS="literal">
+ftp</CODE> if you have trouble accessing various system services. </P><P CLASS="para">
+If you wish to restrict access in a share only to guests&nbsp;- in other words, all clients connect as the guest account when accessing the share&nbsp;- you can use the <CODE CLASS="literal">
+guest</CODE> <CODE CLASS="literal">
+only</CODE> option in conjunction with the <CODE CLASS="literal">
+guest ok</CODE> option, as shown in the following example:</P><PRE CLASS="programlisting">
+[sales]
+		path = /home/sales
+		comment = Fiction Corp Sales Data
+		writeable = yes
+		guest ok = yes
+		guest account = ftp
+		guest only = yes</PRE><P CLASS="para">
+Make sure you specify <CODE CLASS="literal">
+yes</CODE> for both <CODE CLASS="literal">
+guest only</CODE> and <CODE CLASS="literal">
+guest ok</CODE> in this scenario; otherwise, Samba will not use the guest acount that you specify.</P></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch06-pgfId-960007" CLASS="title">
+6.2.2 Access Control Options</A></H3><P CLASS="para">
+<A HREF="#ch06-28077" CLASS="xref">Table 6.1</A> summarizes the options that you can use to control access to shares. </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch06-28077" CLASS="title">
+Table 6.1: Share-level Access Options </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Option</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Parameters</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Function</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Default</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Scope</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+admin users</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (list of usernames)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Specifies a list of users who can perform operations as root.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+valid users</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (list of usernames)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Specifies a list of users that can connect to a share.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+invalid users</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (list of usernames)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Specifies a list of users that will be denied access to a share.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+read list</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (list of usernames)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Specifies a list of users that have read-only access to a writable share.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+write list</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (list of usernames)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Specifies a list of users that have read-write access to a read-only share.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+max connections</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+numerical</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Indicates the maximum number of connections for a share at a given time.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+0</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+guest only (only guest)</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+boolean</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Specifies that this share allows only guest access.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+no</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+guest account</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (name of account)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Names the Unix account that will be used for guest access.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+nobody</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR></TBODY></TABLE><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-959222" CLASS="title">
+6.2.2.1 admin users</A></H4><P CLASS="para">
+This option specifies a list of users that perform file operations as if they were <CODE CLASS="literal">
+root</CODE>. This means that they can modify or destroy any other user's work, no matter what the permissions. Any files that they create will have root ownership and will use the default group of the admin user. The <CODE CLASS="literal">
+admin</CODE> <CODE CLASS="literal">
+users</CODE> option is used to allow PC users to act as administrators for particular shares. We urge you to avoid this option. </P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-960368" CLASS="title">
+6.2.2.2 valid users and invalid users</A></H4><P CLASS="para">
+These two options let you enumerate the users and groups who are granted or denied access to a particular share. You can enter a list of comma-delimited users, or indicate an NIS or Unix group name by prefixing the name with an at-sign (<CODE CLASS="literal">
+@</CODE>). </P><P CLASS="para">
+The important rule to remember with these options is that any name or group in the <CODE CLASS="literal">
+invalid</CODE> <CODE CLASS="literal">
+users</CODE> list will <EM CLASS="emphasis">
+always</EM> be denied access, even if it is included (in any form) in the <CODE CLASS="literal">
+valid</CODE> <CODE CLASS="literal">
+users</CODE> list. By default, neither option has a value associated with it. If both options have no value, any user is allowed to access the share.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-959243" CLASS="title">
+6.2.2.3 read list and write list</A></H4><P CLASS="para">
+Like the <CODE CLASS="literal">
+valid</CODE> <CODE CLASS="literal">
+users</CODE> <CODE CLASS="literal">
+and</CODE> <CODE CLASS="literal">
+invalid</CODE> <CODE CLASS="literal">
+users</CODE> options, this pair of options specifies which users have read-only access to a writeable share and read-write access to a read-only share, respectively. The value of either options is a list of users. <CODE CLASS="literal">
+read</CODE> <CODE CLASS="literal">
+list</CODE> overrides any other Samba permissions granted&nbsp;- as well as Unix file permissions on the server system&nbsp;- to deny users write access. <CODE CLASS="literal">
+write</CODE> <CODE CLASS="literal">
+list</CODE> overrides other Samba permissions to grant write access, but cannot grant write access if the user lacks write permissions for the file on the Unix system. You can specify NIS or Unix group names by prefixing the name with an at sign (such as <CODE CLASS="literal">
+@users</CODE>). Neither configuration option has a default value associated with it.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-959253" CLASS="title">
+6.2.2.4 max connections</A></H4><P CLASS="para">
+This option specifies the maximum number of client connections that a share can have at any given time. Any connections that are attempted after the maximum is reached will be rejected. The default value is <CODE CLASS="literal">
+0</CODE>, which means that an unlimited number of connections are allowed. You can override it per share as follows:</P><PRE CLASS="programlisting">
+[accounting]
+	max connections = 30</PRE><P CLASS="para">
+This option is useful in the event that you need to limit the number of users who are accessing a licensed program or piece of data concurrently.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-958842" CLASS="title">
+6.2.2.5 guest only</A></H4><P CLASS="para">
+This share-level option (sometimes called <CODE CLASS="literal">
+only</CODE> <CODE CLASS="literal">
+guest</CODE>) forces a connection to a share to be performed with the user specified by the <CODE CLASS="literal">
+guest</CODE> <CODE CLASS="literal">
+account</CODE> option. The share to which this is applied must explicitly specify <CODE CLASS="literal">
+guest</CODE> <CODE CLASS="literal">
+ok</CODE> <CODE CLASS="literal">
+=</CODE> <CODE CLASS="literal">
+yes</CODE> in order for this option to be recognized by Samba. The default value for this option is <CODE CLASS="literal">
+no</CODE>. </P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-960637" CLASS="title">
+6.2.2.6 guest account</A></H4><P CLASS="para">
+This option specifies the name of account to be used for guest access to shares in Samba. The default for this option varies from system to system, but it is often set to <CODE CLASS="literal">
+nobody</CODE>. Some default user accounts have trouble connecting as guest users. If that occurs on your system, the Samba team recommends using the ftp account as the guest user. </P></DIV></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch06-pgfId-959934" CLASS="title">
+6.2.3 Username Options</A></H3><P CLASS="para">
+<A HREF="#ch06-82964" CLASS="xref">Table 6.2</A> shows two additional options that Samba can use to correct for incompatibilities in usernames between Windows and Unix. </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch06-82964" CLASS="title">
+Table 6.2: Username Options </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Option</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Parameters</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Function</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Default</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Scope</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+username map</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (fully-qualified pathname)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the name of the username mapping file.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+username level</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+numerical</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Indicates the number of capital letters to use when trying to match a username.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+0</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR></TBODY></TABLE><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-959982" CLASS="title">
+6.2.3.1 username map</A></H4><P CLASS="para">Client usernames on an SMB network can be relatively large (up to 255 characters), while usernames on a Unix network often cannot be larger than eight characters. This means that an individual user may have one username on a client and another (shorter) one on the Samba server. You can get past this issue by<I CLASS="firstterm">
+ mapping</I> a free-form client username to a Unix username of eight or fewer characters. It is placed in a standard text file, using a format that we'll describe shortly. You can then specify the pathname to Samba with the global <CODE CLASS="literal">
+username</CODE> <CODE CLASS="literal">
+map</CODE> option. Be sure to restrict access to this file; make the root user the file's owner and deny write access to others. Otherwise, an untrusted user who can access the file can easily map their client username to the root user of the Samba server.</P><P CLASS="para">
+You can specify this option as follows:</P><PRE CLASS="programlisting">
+[global]
+	username map = /etc/samba/usermap.txt</PRE><P CLASS="para">
+Each of the entries in the username map file should be listed as follows: the Unix username, followed by an equal sign (<CODE CLASS="literal">
+=</CODE>), followed by one or more whitespace-separated SMB client usernames. Note that unless instructed otherwise, (i.e., a guest connection), Samba will expect both the client and the server user to have the same password. You can also map NT groups to one or more specific Unix groups using the <CODE CLASS="literal">
+@</CODE> sign. Here are some examples:</P><PRE CLASS="programlisting">
+jarwin = JosephArwin
+manderso = MarkAnderson
+users = @account</PRE><P CLASS="para">
+Also, you can use the asterisk to specify a wildcard that matches any free-form client username as an entry in the username map file:</P><PRE CLASS="programlisting">
+nobody = *</PRE><P CLASS="para">
+Comments in the file can be specified as lines beginning with (<CODE CLASS="literal">
+#</CODE>) and (<CODE CLASS="literal">
+;</CODE>).</P><P CLASS="para">
+Note that you can also use this file to redirect one Unix user to another user. Be careful if you do so because Samba and your client may not notify the user that the mapping has been made and Samba may be expecting a different password. </P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-959994" CLASS="title">
+6.2.3.2 username level</A></H4><P CLASS="para">SMB clients (such as Windows) will often send usernames in SMB connection requests entirely in capital letters; in other words, client usernames are not necessarily case sensitive. On a Unix server, however, usernames <EM CLASS="emphasis">
+are</EM> case sensitive: the user <CODE CLASS="literal">
+ANDY</CODE> is different from the user <CODE CLASS="literal">
+andy</CODE>. By default, Samba attacks this problem by doing the following:</P><OL CLASS="orderedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-959996" CLASS="listitem">
+</A>Checking for a user account with the exact name sent by the client</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-969146" CLASS="listitem">
+</A>Testing the username in all lowercase letters</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-969147" CLASS="listitem">
+</A>Testing the username in lowercase letters with only the first letter capitalized</P></LI></OL><P CLASS="para">
+If you wish to have Samba attempt more combinations of uppercase and lowercase letters, you can use the <CODE CLASS="literal">
+username</CODE> <CODE CLASS="literal">
+level</CODE> global configuration option. This option takes an integer value that specifies how many letters in the username should be capitalized when attempting to connect to a share. You can specify this options as follows:</P><PRE CLASS="programlisting">
+[global]
+	username level = 3</PRE><P CLASS="para">
+In this case, Samba will then attempt all permutations of usernames it can compute having three capital letters. The larger the number, the more computations Samba will have to perform to match the username and the longer the authentication will take. </P></DIV></DIV></DIV></BLOCKQUOTE>
+<DIV>
+<CENTER>
+<HR NOSHADE SIZE="1"><TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="6.1 Users and Groups" HREF="ch06_01.html" CLASS="sect1">
+<IMG ALT="Previous: 6.1 Users and Groups" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="" HREF="index.html" CLASS="book">
+<IMG ALT="" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txthome.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="6.3 Authentication Security" HREF="ch06_03.html" CLASS="sect1">
+<IMG ALT="Next: 6.3 Authentication Security" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR><TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+6.1 Users and Groups</TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="Book Index" HREF="http://www.oreilly.com/catalog/samba/inx.html" CLASS="index">
+<IMG ALT="Book Index" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/index.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+6.3 Authentication Security</TD></TR></TABLE><HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+
+<!--  End of sample chapter -->
+<P><B>Back to: <A HREF="http://www.oreilly.com/catalog/samba/noframes.html">Using Samba</A></B>
+<CENTER>
+<HR NOSHADE SIZE="1">
+<FONT SIZE="1" FACE="Verdana, Arial, Helvetica">
+<A HREF="http://www.oreilly.com/">
+<B>O'Reilly Home</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/sales/bookstores">
+<B>O'Reilly Bookstores</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/order_new/">
+<B>How to Order</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/contact.html">
+<B>O'Reilly Contacts<BR></B></A>
+<A HREF="http://www.oreilly.com/international/">
+<B>International</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/about.html">
+<B>About O'Reilly</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/affiliates.html">
+<B>Affiliated Companies</B></A><P>
+<EM>&copy; 1999, O'Reilly &amp; Associates, Inc.</EM>
+</FONT>
+</CENTER>
+</BODY>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+</HTML>

@@ -1,0 +1,487 @@
+<!DOCTYPE HTML PUBLIC "html.dtd">
+<HTML>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+<HEAD>
+<TITLE>
+[Chapter 8] 8.3 Internationalization</TITLE><META NAME="DC.title" CONTENT=""><META NAME="DC.creator" CONTENT=""><META NAME="DC.publisher" CONTENT="O'Reilly &amp; Associates, Inc."><META NAME="DC.date" CONTENT="1999-11-05T21:35:51Z"><META NAME="DC.type" CONTENT="Text.Monograph"><META NAME="DC.format" SCHEME="MIME" CONTENT="text/html"><META NAME="DC.source" SCHEME="ISBN" CONTENT=""><META NAME="DC.language" CONTENT="en-US"><META NAME="generator" CONTENT="Jade 1.1/O'Reilly DocBook 3.0 to HTML 4.0"></HEAD>
+<BODY VLINK="#0000CC" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#990000">
+<TABLE WIDTH="90%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD COLSPAN="2">
+<IMG WIDTH="515" ALT="Search the Catalog" SRC="http://www.oreilly.com/graphics_new/catalog_header_buttons.gif" HEIGHT="37" ISMAP ALIGN="BOTTOM" USEMAP="#catalog_header_buttons" BORDER="0">
+<MAP NAME="catalog_header_buttons">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/search.html" COORDS="407,17,512,32">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/catalog/prdindex.html" COORDS="431,3,512,18">
+</MAP>
+</TD>
+</TR>
+<TR>
+<TD WIDTH="25%" VALIGN="TOP">
+<A HREF="http://www.oreilly.com/catalog/samba/">
+<IMG ALT="Using Samba" VALIGN="top" VSPACE="10" HSPACE="10" SRC="http://www.oreilly.com/catalog/covers/samba.s.gif" ALIGN="left" BORDER="0">
+</A>
+</TD>
+<TD VALIGN="TOP" HEIGHT="105">
+<BR>
+<H2>Using Samba</H2>
+<FONT SIZE="-1">
+Robert Eckstein, David Collier-Brown, Peter Kelly
+<BR>1st Edition November 1999
+<BR>1-56592-449-5, Order Number: 4495
+<BR>416 pages, $34.95
+</FONT>
+</TD>
+</TR>
+</TABLE>
+<HR NOSHADE SIZE="1">
+<!-- sample chapter begins -->
+
+<CENTER>
+<DIV CLASS="htmlnav">
+<TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="8.2 Magic Scripts" HREF="ch08_02.html" CLASS="sect1">
+<IMG ALT="Previous: 8.2 Magic Scripts" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<B>
+<FONT SIZE="-1" FACE="ARIEL,HELVETICA,HELV,SANSERIF">
+<A TITLE="8. Additional Samba Information " REL="up" HREF="ch08_01.html" CLASS="chapter">
+Chapter 8<BR>
+Additional Samba Information </A></FONT></B></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="8.4 WinPopup Messages" HREF="ch08_04.html" CLASS="sect1">
+<IMG ALT="Next: 8.4 WinPopup Messages" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR></TABLE>&nbsp;<HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+<BLOCKQUOTE>
+<DIV>
+<H2 CLASS="sect1">
+<A NAME="ch08-91233" CLASS="title">
+8.3 Internationalization</A></H2><P CLASS="para">Samba has a limited ability to speak foreign tongues: if you need to deal with characters that aren't in standard ASCII, some options that can help you are shown in <A HREF="#ch08-40870" CLASS="xref">
+Table 8.3</A>. Otherwise, you can skip over this section.   </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch08-40870" CLASS="title">
+Table 8.3: Networking Configuration Options </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Option</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Parameters</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Function</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Default</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Scope</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+client code page</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Described in this section</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets a code page to expect from clients</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+850</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+character set</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Described in this section</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Translates code pages into alternate UNIX character sets</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+coding system</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Described in this section</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Translates code page 932 into an Asian character set</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+valid chars</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (set of characters)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Obsolete: formerly added individual characters to a code page, and had to be used after setting client code page</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR></TBODY></TABLE><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch08-17721" CLASS="title">
+8.3.1 client code page</A></H3><P CLASS="para">
+The character sets on Windows platforms hark back to the original concept of a <EM CLASS="emphasis">
+code page</EM>. These code pages are used by DOS and Windows clients to determine rules for mapping lowercase letters to uppercase letters. Samba can be instructed to use a variety of code pages through the use of the global <CODE CLASS="literal">
+client</CODE> <CODE CLASS="literal">
+code</CODE> <CODE CLASS="literal">
+page</CODE> option in order to match the corresponding code page in use on the client. This option loads a code-page definition file, and can take the values specified in <A HREF="#ch08-20815" CLASS="xref">
+Table 8.4</A>. </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch08-20815" CLASS="title">
+Table 8.4: Valid Code Pages with Samba 2.0 </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Code Page</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Definition</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+437</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">MS-DOS Latin (United States)</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+737</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Windows 95 Greek</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+850</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+MS-DOS Latin 1 (Western European)</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+852</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+MS-DOS Latin 2 (Eastern European)</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+861</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+MS-DOS Icelandic</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+866</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+MS-DOS Cyrillic (Russian)</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+932</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+MS-DOS Japanese Shift-JIS</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+936</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+MS-DOS Simplified Chinese</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+949</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+MS-DOS Korean Hangul</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+950</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+MS-DOS Traditional Chinese</P></TD></TR></TBODY></TABLE><P CLASS="para">
+You can set the client code page as follows:</P><PRE CLASS="programlisting">
+[global]
+	client code page = 852</PRE><P CLASS="para">
+The default value of this option is 850. You can use the <EM CLASS="emphasis">
+make_smbcodepage</EM> tool that comes with Samba (by default in <I CLASS="filename">
+/usr/local/samba/bin</I> ) to create your own SMB code pages, in the event that those listed earlier are not sufficient.</P></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch08-pgfId-965812" CLASS="title">
+8.3.2 character set</A></H3><P CLASS="para">
+The global <CODE CLASS="literal">
+character</CODE> <CODE CLASS="literal">
+set</CODE> option can be used to convert filenames offered through a DOS code page (see the previous section, <A HREF="#ch08-17721" CLASS="xref">
+Section 8.3.1, client code page</A>") to equivalents that can be represented by Unix character sets other than those in the United States. For example, if you want to convert the Western European MS-DOS character set on the client to a Western European Unix character set on the server, you can use the following in your configuration file:</P><PRE CLASS="programlisting">
+[global]
+	client code page = 850
+	character set = ISO8859-1</PRE><P CLASS="para">
+Note that you must include a <CODE CLASS="literal">
+client</CODE> <CODE CLASS="literal">
+code</CODE> <CODE CLASS="literal">
+page</CODE> option to specify the character set from which you are converting. The valid character sets (and their matching code pages) that Samba 2.0 accepts are listed in <A HREF="#ch08-14126" CLASS="xref">
+Table 8.5</A>: </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch08-14126" CLASS="title">
+Table 8.5: Valid Character Sets with Samba 2.0 </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Character Set</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Matching Code Page</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Definition</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+ISO8859-1</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+850</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">Western European Unix</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+ISO8859-2</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+852</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Eastern European Unix</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+ISO8859-5</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+866</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Russian Cyrillic Unix</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+KOI8-R</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+866</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Alternate Russian Cyrillic Unix</P></TD></TR></TBODY></TABLE><P CLASS="para">
+Normally, the <CODE CLASS="literal">
+character</CODE> <CODE CLASS="literal">
+set</CODE> option is disabled completely.</P></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch08-pgfId-958761" CLASS="title">
+8.3.3 coding system</A></H3><P CLASS="para">
+The <CODE CLASS="literal">
+coding</CODE> <CODE CLASS="literal">
+system</CODE> option is similar to the <CODE CLASS="literal">
+character</CODE> <CODE CLASS="literal">
+set</CODE> option. However, its purpose is to determine how to convert a Japanese Shift JIS code page into an appropriate Unix character set. In order to use this option, the <CODE CLASS="literal">
+client</CODE> <CODE CLASS="literal">
+code</CODE> <CODE CLASS="literal">
+page</CODE> option described previously must be set to page 932. The valid coding systems that Samba 2.0 accepts are listed in <A HREF="#ch08-57476" CLASS="xref">
+Table 8.6</A>. </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch08-57476" CLASS="title">
+Table 8.6: Valid Coding System Parameters with Samba 2.0 </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Character Set</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Definition</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+SJIS</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">Standard Shift JIS</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+JIS8</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Eight-bit JIS codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+J8BB</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Eight-bit JIS codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+J8BH</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Eight-bit JIS codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+J8@B</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Eight-bit JIS codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+J8@J</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Eight-bit JIS codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+J8@H</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Eight-bit JIS codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+JIS7</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Seven-bit JIS codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+J7BB</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Seven-bit JIS codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+J7BH</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Seven-bit JIS codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+J7@B</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Seven-bit JIS codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+J7@J</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Seven-bit JIS codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+J7@H</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Seven-bit JIS codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+JUNET</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+JUNET codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+JUBB</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+JUNET codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+JUBH</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+JUNET codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+JU@B</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+JUNET codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+JU@J</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+JUNET codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+JU@H</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+JUNET codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+EUC</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+EUC codes</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+HEX</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Three-byte hexidecimal code</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+CAP</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Three-byte hexidecimal code (Columbia Appletalk Program)</P></TD></TR></TBODY></TABLE></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch08-pgfId-958865" CLASS="title">
+8.3.4 valid chars</A></H3><P CLASS="para">
+The <CODE CLASS="literal">
+valid</CODE> <CODE CLASS="literal">
+chars</CODE> option is an older Samba feature that will add individual characters to a code page. However, this option is being phased out in favor of more modern coding systems. You can use this option as follows:</P><PRE CLASS="programlisting">
+valid chars = Î
+valid chars = 0450:0420 0x0A20:0x0A00
+valid chars = A:a</PRE><P CLASS="para">
+Each of the characters in the list specified should be separated by spaces. If there is a colon between two characters or their numerical equivalents, the data to the left of the colon is considered an uppercase character, while the data to the right is considered the lowercase character. You can represent characters both by literals (if you can type them) and by octal, hexidecimal, or decimal Unicode equivalents.</P><P CLASS="para">
+We recommend against using this option. Instead, go with one of the standard code pages listed earlier in this section. If you do use this option, however, it must be listed after the <CODE CLASS="literal">
+client</CODE> <CODE CLASS="literal">
+code</CODE> <CODE CLASS="literal">
+page</CODE> to which you wish to add the character. Otherwise, the characters will not be added.</P></DIV></DIV></BLOCKQUOTE>
+<DIV>
+<CENTER>
+<HR NOSHADE SIZE="1"><TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="8.2 Magic Scripts" HREF="ch08_02.html" CLASS="sect1">
+<IMG ALT="Previous: 8.2 Magic Scripts" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="" HREF="index.html" CLASS="book">
+<IMG ALT="" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txthome.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="8.4 WinPopup Messages" HREF="ch08_04.html" CLASS="sect1">
+<IMG ALT="Next: 8.4 WinPopup Messages" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR><TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">8.2 Magic Scripts</TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="Book Index" HREF="http://www.oreilly.com/catalog/samba/inx.html" CLASS="index">
+<IMG ALT="Book Index" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/index.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+8.4 WinPopup Messages</TD></TR></TABLE><HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+
+<!--  End of sample chapter -->
+<P><B>Back to: <A HREF="http://www.oreilly.com/catalog/samba/noframes.html">Using Samba</A></B>
+<CENTER>
+<HR NOSHADE SIZE="1">
+<FONT SIZE="1" FACE="Verdana, Arial, Helvetica">
+<A HREF="http://www.oreilly.com/">
+<B>O'Reilly Home</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/sales/bookstores">
+<B>O'Reilly Bookstores</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/order_new/">
+<B>How to Order</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/contact.html">
+<B>O'Reilly Contacts<BR></B></A>
+<A HREF="http://www.oreilly.com/international/">
+<B>International</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/about.html">
+<B>About O'Reilly</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/affiliates.html">
+<B>Affiliated Companies</B></A><P>
+<EM>&copy; 1999, O'Reilly &amp; Associates, Inc.</EM>
+</FONT>
+</CENTER>
+</BODY>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+</HTML>

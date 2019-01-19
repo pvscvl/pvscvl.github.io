@@ -1,0 +1,560 @@
+<!doctype html public "-//ORA//DTD CD HTML 3.2//EN">
+<html>
+<head>
+<title>[Chapter 3] Functions</TITLE>
+<meta name="author" content="Larry Wall, Tom Christiansen, and Randal Schwartz">
+<meta name="date" content="Mon Mar 17 13:06:41 1997">
+<meta name="form" content="html">
+<meta name="metadata" content="dublincore.0.1">
+<meta name="objecttype" content="book part">
+<meta name="otheragent" content="gmat dbtohtml">
+<meta name="publisher" content="O'Reilly &amp; Associates, Inc.">
+<meta name="source" content="SGML">
+<meta name="subject" content="Perl">
+<meta name="title" content="Programming Perl, Second Edition">
+<!-- JavaScript: pathcont.js -->
+
+</HEAD>
+<body bgcolor="#FFFFFF" text="#000000">
+
+<div class=htmlnav>
+<h1><img src="gifs/smbanner.gif" alt="Programming Perl, Second Edition"></H1>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><a href="ch02_09.htm"><img src="gifs/txtpreva.gif" alt="Previous" border=0></A></td>
+<td width=171 align=center valign=top><b>Chapter 3</b></td>
+<td width=172 align=right valign=top><a href="ch03_02.htm"><img src="gifs/txtnexta.gif" alt="Next" border=0></A></td>
+</tr>
+</table>
+<!-- JavaScript: prev.js -->
+&nbsp;
+<!-- JavaScript: next.js -->
+<hr align=left width=515>
+</DIV>
+<h1 class=chapter><a class="TITLE" name="PERL2-CH-3">Functions</A></H1>
+
+<div class=htmltoc>
+
+<p>
+<b>Contents:</b><br>
+Perl Functions by Category<br>
+<a href="ch03_02.htm">Perl Functions in Alphabetical Order</A><br>
+
+</DIV>
+
+<p class=para>
+This chapter describes each of the Perl functions.  They're presented
+one by one in alphabetical order.  (Well, actually, some related
+functions are presented in pairs, or even threes or fours.  This is
+usually the case when the Perl functions simply make UNIX system calls
+or C library calls.  In such cases, the presentation of the Perl
+function matches up with the corresponding UNIX manpage organization.)<a name="CH03.FUN"></A>
+
+<p class=para>
+Each function description begins with a brief presentation of the
+syntax for that function.  Parameters in
+<tt class=replaceable><i>ALL_CAPS</i></tt> represent placeholders for actual
+expressions, as described in the body of the function description.
+Some parameters are optional; the text describes the default values
+used when the parameter is not included.
+
+<p class=para>
+The functions described in this chapter can serve as terms in an
+expression, along with literals and variables.  (Or you can think of
+them as prefix operators.  We call them operators half the time
+anyway.)  Some of these operators, er, functions take a
+<tt class=replaceable><i>LIST</i></tt> as an argument.  Such a list can
+consist of any combination of scalar and list values, but any list
+values are interpolated as a sequence of scalar values; that is, the
+overall argument <tt class=replaceable><i>LIST</i></tt> remains a
+single-dimensional list value.  (To interpolate an array as a single
+element, you must explicitly create and interpolate a reference to the
+array instead.)  Elements of the <tt class=replaceable><i>LIST</i></tt>
+should be separated by commas (or by <tt class=literal>=&gt;</tt>, which
+is just a funny kind of comma).  Each element of the
+<tt class=replaceable><i>LIST</i></tt> is evaluated in a list context.
+
+<p class=para>
+The functions described in this chapter may be used either with or without
+parentheses around their arguments.  (The syntax descriptions omit the
+parentheses.) If you use the parentheses, the simple (but occasionally
+surprising) rule is this:  if it looks like a function, it is a
+function, and precedence doesn't matter.  Otherwise it's a list
+operator or unary operator, and precedence does matter.  And whitespace
+between the function and its left 
+parenthesis doesn't count--so you 
+need to be careful sometimes:
+
+<div class=programlisting>
+<p>
+<pre>
+print 1+2+3;       # Prints 6.
+print(1+2) + 3;    # Prints 3.
+print (1+2)+3;     # Also prints 3!
+print +(1+2)+3;    # Prints 6.
+print ((1+2)+3);   # Prints 6.
+</PRE>
+</DIV>
+
+<p class=para>
+If you run Perl with the <b>-w</B> switch it can warn you about this.  For
+example, the third line above produces:
+
+<div class=programlisting>
+<p>
+<pre>
+print (...) interpreted as function at - line 3.
+Useless use of integer addition in void context at - line 3.
+</PRE>
+</DIV>
+
+<p class=para>
+Some of the <tt class=replaceable><i>LIST</i></tt> operators impose special semantic
+significance on the first element or two of the list.  For example, the <a href="ch03_02.htm">chmod</A> function requires that the first element of
+the list be the new permission to apply to the files listed in the remaining
+elements.  Syntactically, however, the argument to <a href="ch03_02.htm">chmod</A> is really just a <tt class=replaceable><i>LIST</i></tt>, and
+you could say:
+
+<div class=programlisting>
+<p>
+<pre>
+unshift @array,0644;
+chmod @array;
+</PRE>
+</DIV>
+
+<p class=para>
+which is the same as:
+
+<div class=programlisting>
+<p>
+<pre>
+chmod 0644, @array;
+</PRE>
+</DIV>
+
+<p class=para>
+In these cases, the syntax summary at the top of the section mentions
+only the bare
+<tt class=replaceable><i>LIST</i></tt>,
+and any special initial arguments are documented in the description.
+
+<p class=para>
+On the other hand, if the syntax summary lists any arguments before the
+<tt class=replaceable><i>LIST</i></tt>, those arguments are syntactically distinguished (not
+just semantically distinguished), and may impose syntactic constraints
+on the actual arguments you pass to the function when you call it.
+For instance, the first argument to the <a href="ch03_02.htm">push</A>
+function must be an array name.
+(You may also put such syntactic constraints on your own subroutine
+declarations by the use of prototypes.  See "Prototypes" in <a href="ch02_01.htm">Chapter 2, <i>The Gory Details</i></A>.)
+
+<p class=para>
+Many of these operations are based directly on the C library's functions.
+If so, we do not attempt to duplicate the UNIX
+system documentation for that function, but refer you directly to the manual
+page.  Such references look like this:  "See
+<i class=emphasis>getlogin</I> (3)."  The number in parentheses tells you which section of
+the UNIX manual normally contains the given entry.  If you can't find a
+manual page (manpage for short) for a particular C function on your
+system, it's likely that the corresponding Perl function is unimplemented.
+For example, not all systems implement <i class=emphasis>socket</I> (2) calls.
+If you're running in the MS-DOS world, you may have <i class=emphasis>socket</I> calls, but
+you won't have <i class=emphasis>fork</I> (2).  (You probably won't
+have manpages either, come to think of it.)
+
+<p class=para>
+Occasionally you'll find that the documented C function has more arguments than
+the corresponding Perl function.  The missing arguments are almost always things
+that Perl already knows, such as the length of the previous argument, so you
+needn't supply them in Perl.  Any remaining disparities are due to different
+ways Perl and C specify their filehandles and their success/failure values.
+
+<p class=para>
+For functions that can be used in either scalar or list context,
+non-abortive failure is generally indicated in a scalar context by
+returning the undefined value, and in a list context by returning the
+null list.  Successful execution is generally indicated by returning
+a value that will evaluate to true (in context).
+
+<p class=para>
+Remember the following rule:  <i class=emphasis>there is no general rule for converting a
+list into a scalar!</I>
+
+<p class=para>
+Many operators can return a list in list context.
+Each such operator knows whether it is being called in scalar or
+list context, and in scalar context returns whichever sort of value
+it would be most appropriate to return.  Some operators return the
+length of the list that would have been returned in list context.  Some
+operators return the first value in the list.  Some operators return the
+last value in the list.  Some operators return the "other" value, when
+something can be looked up either by number or by name.  Some operators
+return a count of successful operations.  In general, Perl operators do
+exactly what you want, unless you want consistency.
+
+<div class=sect1>
+<h2 class=sect1><a class="TITLE" name="PERL2-CH-3-SECT-1">3.1 Perl Functions by Category</A></h2>
+
+<p class=para>
+Here are Perl's functions and function-like keywords, arranged by
+category.  Some functions appear under more than one heading.
+
+<p>
+<dl class=variablelist>
+<dt class=varlistentry>Scalar manipulation<dd>
+
+<p class=para>
+<a href="ch03_02.htm">chomp</A>,
+<a href="ch03_02.htm">chop</A>,
+<a href="ch03_02.htm">chr</A>,
+<a href="ch03_02.htm">crypt</A>,
+<a href="ch03_02.htm">hex</A>,
+<a href="ch03_02.htm">index</A>,
+<a href="ch03_02.htm">lc</A>,
+<a href="ch03_02.htm">lcfirst</A>,
+<a href="ch03_02.htm">length</A>,
+<a href="ch03_02.htm">oct</A>,
+<a href="ch03_02.htm">ord</A>,
+<a href="ch03_02.htm">pack</A>,
+<a href="ch03_02.htm">q//</A>,
+<a href="ch03_02.htm">qq//</A>,
+<a href="ch03_02.htm">reverse</A>,
+<a href="ch03_02.htm">rindex</A>,
+<a href="ch03_02.htm">sprintf</A>,
+<a href="ch03_02.htm">substr</A>,
+<a href="ch03_02.htm">tr///</A>,
+<a href="ch03_02.htm">uc</A>,
+<a href="ch03_02.htm">ucfirst</A>,
+<a href="ch03_02.htm">y///</A>
+
+<p>
+<dt class=varlistentry>Regular expressions and pattern matching<dd>
+
+<p class=para>
+<a href="ch03_02.htm">m//</A>,
+<a href="ch03_02.htm">pos</A>,
+<a href="ch03_02.htm">quotemeta</A>,
+<a href="ch03_02.htm">s///</A>,
+<a href="ch03_02.htm">split</A>,
+<a href="ch03_02.htm">study</A>
+
+<p>
+<dt class=varlistentry>Numeric functions<dd>
+
+<p class=para>
+<a href="ch03_02.htm">abs</A>,
+<a href="ch03_02.htm">atan2</A>,
+<a href="ch03_02.htm">cos</A>,
+<a href="ch03_02.htm">exp</A>,
+<a href="ch03_02.htm">hex</A>,
+<a href="ch03_02.htm">int</A>,
+<a href="ch03_02.htm">log</A>,
+<a href="ch03_02.htm">oct</A>,
+<a href="ch03_02.htm">rand</A>,
+<a href="ch03_02.htm">sin</A>,
+<a href="ch03_02.htm">sqrt</A>,
+<a href="ch03_02.htm">srand</A>
+
+<p>
+<dt class=varlistentry>Array processing<dd>
+
+<p class=para>
+<a href="ch03_02.htm">pop</A>,
+<a href="ch03_02.htm">push</A>,
+<a href="ch03_02.htm">shift</A>,
+<a href="ch03_02.htm">splice</A>,
+<a href="ch03_02.htm">unshift</A>
+
+<p>
+<dt class=varlistentry>List processing<dd>
+
+<p class=para>
+<a href="ch03_02.htm">grep</A>,
+<a href="ch03_02.htm">join</A>,
+<a href="ch03_02.htm">map</A>,
+<a href="ch03_02.htm">qw//</A>,
+<a href="ch03_02.htm">reverse</A>,
+<a href="ch03_02.htm">sort</A>,
+<a href="ch03_02.htm">unpack</A>
+
+<p>
+<dt class=varlistentry>Hash processing<dd>
+
+<p class=para>
+<a href="ch03_02.htm">delete</A>,
+<a href="ch03_02.htm">each</A>,
+<a href="ch03_02.htm">exists</A>,
+<a href="ch03_02.htm">keys</A>,
+<a href="ch03_02.htm">values</A>
+
+<p>
+<dt class=varlistentry>Input and output<dd>
+
+<p class=para>
+<a href="ch03_02.htm">binmode</A>,
+<a href="ch03_02.htm">close</A>,
+<a href="ch03_02.htm">closedir</A>,
+<a href="ch03_02.htm">dbmclose</A>,
+<a href="ch03_02.htm">dbmopen</A>,
+<a href="ch03_02.htm">die</A>,
+<a href="ch03_02.htm">eof</A>,
+<a href="ch03_02.htm">fileno</A>,
+<a href="ch03_02.htm">flock</A>,
+<a href="ch03_02.htm">format</A>,
+<a href="ch03_02.htm">getc</A>,
+<a href="ch03_02.htm">print</A>,
+<a href="ch03_02.htm">printf</A>,
+<a href="ch03_02.htm">read</A>,
+<a href="ch03_02.htm">readdir</A>,
+<a href="ch03_02.htm">rewinddir</A>,
+<a href="ch03_02.htm">seek</A>,
+<a href="ch03_02.htm">seekdir</A>,
+<a href="ch03_02.htm">select (ready file descriptors)</A>,
+<a href="ch03_02.htm">syscall</A>,
+<a href="ch03_02.htm">sysread</A>,
+<a href="ch03_02.htm">syswrite</A>,
+<a href="ch03_02.htm">tell</A>,
+<a href="ch03_02.htm">telldir</A>,
+<a href="ch03_02.htm">truncate</A>,
+<a href="ch03_02.htm">warn</A>,
+<a href="ch03_02.htm">write</A>
+
+<p>
+<dt class=varlistentry>Fixed-length data and records<dd>
+
+<p class=para>
+<a href="ch03_02.htm">pack</A>,
+<a href="ch03_02.htm">read</A>,
+<a href="ch03_02.htm">syscall</A>,
+<a href="ch03_02.htm">sysread</A>,
+<a href="ch03_02.htm">syswrite</A>,
+<a href="ch03_02.htm">unpack</A>,
+<a href="ch03_02.htm">vec</A>
+
+<p>
+<dt class=varlistentry>Filehandles,
+files,
+and directories<dd>
+
+<p class=para>
+<a href="ch03_02.htm">chdir</A>,
+<a href="ch03_02.htm">chmod</A>,
+<a href="ch03_02.htm">chown</A>,
+<a href="ch03_02.htm">chroot</A>,
+<a href="ch03_02.htm">fcntl</A>,
+<a href="ch03_02.htm">glob</A>,
+<a href="ch03_02.htm">ioctl</A>,
+<a href="ch03_02.htm">link</A>,
+<a href="ch03_02.htm">lstat</A>,
+<a href="ch03_02.htm">mkdir</A>,
+<a href="ch03_02.htm">open</A>,
+<a href="ch03_02.htm">opendir</A>,
+<a href="ch03_02.htm">readlink</A>,
+<a href="ch03_02.htm">rename</A>,
+<a href="ch03_02.htm">rmdir</A>,
+<a href="ch03_02.htm">stat</A>,
+<a href="ch03_02.htm">symlink</A>,
+<a href="ch03_02.htm">sysopen</A>,
+<a href="ch03_02.htm">umask</A>,
+<a href="ch03_02.htm">unlink</A>,
+<a href="ch03_02.htm">utime</A>
+
+<p>
+<dt class=varlistentry>Flow of program control<dd>
+
+<p class=para>
+<a href="ch03_02.htm">caller</A>,
+<a href="ch03_02.htm">die</A>,
+<a href="ch03_02.htm">do</A>,
+<a href="ch03_02.htm">dump</A>,
+<a href="ch03_02.htm">eval</A>,
+<a href="ch03_02.htm">exit</A>,
+<a href="ch03_02.htm">goto</A>,
+<a href="ch03_02.htm">last</A>,
+<a href="ch03_02.htm">next</A>,
+<a href="ch03_02.htm">redo</A>,
+<a href="ch03_02.htm">return</A>,
+<a href="ch03_02.htm">sub</A>,
+<a href="ch03_02.htm">wantarray</A>
+
+<p>
+<dt class=varlistentry>Scoping <dd>
+
+<p class=para>
+<a href="ch03_02.htm">caller</A>,
+<a href="ch03_02.htm">import</A>,
+<a href="ch03_02.htm">local</A>,
+<a href="ch03_02.htm">my</A>,
+<a href="ch03_02.htm">package</A>,
+<a href="ch03_02.htm">use</A>
+
+<p>
+<dt class=varlistentry>Miscellaneous<dd>
+
+<p class=para>
+<a href="ch03_02.htm">defined</A>,
+<a href="ch03_02.htm">dump</A>,
+<a href="ch03_02.htm">eval</A>,
+<a href="ch03_02.htm">formline</A>,
+<a href="ch03_02.htm">local</A>,
+<a href="ch03_02.htm">my</A>,
+<a href="ch03_02.htm">reset</A>,
+<a href="ch03_02.htm">scalar</A>,
+<a href="ch03_02.htm">undef</A>,
+<a href="ch03_02.htm">wantarray</A>
+
+<p>
+<dt class=varlistentry>Processes and process groups<dd>
+
+<p class=para>
+<a href="ch03_02.htm">alarm</A>,
+<a href="ch03_02.htm">exec</A>,
+<a href="ch03_02.htm">fork</A>,
+<a href="ch03_02.htm">getpgrp</A>,
+<a href="ch03_02.htm">getppid</A>,
+<a href="ch03_02.htm">getpriority</A>,
+<a href="ch03_02.htm">kill</A>,
+<a href="ch03_02.htm">pipe</A>,
+<a href="ch03_02.htm">qx//</A>,
+<a href="ch03_02.htm">setpgrp</A>,
+<a href="ch03_02.htm">setpriority</A>,
+<a href="ch03_02.htm">sleep</A>,
+<a href="ch03_02.htm">system</A>,
+<a href="ch03_02.htm">times</A>,
+<a href="ch03_02.htm">wait</A>,
+<a href="ch03_02.htm">waitpid</A>
+
+<p>
+<dt class=varlistentry>Library modules<dd>
+
+<p class=para>
+<a href="ch03_02.htm">do</A>,
+<a href="ch03_02.htm">import</A>,
+<a href="ch03_02.htm">no</A>,
+<a href="ch03_02.htm">package</A>,
+<a href="ch03_02.htm">require</A>,
+<a href="ch03_02.htm">use</A>
+
+<p>
+<dt class=varlistentry>Classes and objects<dd>
+
+<p class=para>
+<a href="ch03_02.htm">bless</A>,
+<a href="ch03_02.htm">dbmclose</A>,
+<a href="ch03_02.htm">dbmopen</A>,
+<a href="ch03_02.htm">package</A>,
+<a href="ch03_02.htm">ref</A>,
+<a href="ch03_02.htm">tie</A>,
+<a href="ch03_02.htm">tied</A>,
+<a href="ch03_02.htm">untie</A>,
+<a href="ch03_02.htm">use</A>
+
+<p>
+<dt class=varlistentry>Low-level socket access<dd>
+
+<p class=para>
+<a href="ch03_02.htm">accept</A>,
+<a href="ch03_02.htm">bind</A>,
+<a href="ch03_02.htm">connect</A>,
+<a href="ch03_02.htm">getpeername</A>,
+<a href="ch03_02.htm">getsockname</A>,
+<a href="ch03_02.htm">getsockopt</A>,
+<a href="ch03_02.htm">listen</A>,
+<a href="ch03_02.htm">recv</A>,
+<a href="ch03_02.htm">send</A>,
+<a href="ch03_02.htm">setsockopt</A>,
+<a href="ch03_02.htm">shutdown</A>,
+<a href="ch03_02.htm">socket</A>,
+<a href="ch03_02.htm">socketpair</A>
+
+<p>
+<dt class=varlistentry>System V interprocess communication<dd>
+
+<p class=para>
+<a href="ch03_02.htm">msgctl</A>,
+<a href="ch03_02.htm">msgget</A>,
+<a href="ch03_02.htm">msgrcv</A>,
+<a href="ch03_02.htm">msgsnd</A>,
+<a href="ch03_02.htm">semctl</A>,
+<a href="ch03_02.htm">semget</A>,
+<a href="ch03_02.htm">semop</A>,
+<a href="ch03_02.htm">shmctl</A>,
+<a href="ch03_02.htm">shmget</A>,
+<a href="ch03_02.htm">shmread</A>,
+<a href="ch03_02.htm">shmwrite</A>
+
+<p>
+<dt class=varlistentry>Fetching user and group information<dd>
+
+<p class=para>
+<a href="ch03_02.htm">endgrent</A>,
+<a href="ch03_02.htm">endhostent</A>,
+<a href="ch03_02.htm">endnetent</A>,
+<a href="ch03_02.htm">endpwent</A>,
+<a href="ch03_02.htm">getgrent</A>,
+<a href="ch03_02.htm">getgrgid</A>,
+<a href="ch03_02.htm">getgrnam</A>,
+<a href="ch03_02.htm">getlogin</A>,
+<a href="ch03_02.htm">getpwent</A>,
+<a href="ch03_02.htm">getpwnam</A>,
+<a href="ch03_02.htm">getpwuid</A>,
+<a href="ch03_02.htm">setgrent</A>,
+<a href="ch03_02.htm">setpwent</A>&gt;
+
+<p>
+<dt class=varlistentry>Fetching network information<dd>
+
+<p class=para>
+<a href="ch03_02.htm">endprotoent</A>,
+<a href="ch03_02.htm">endservent</A>,
+<a href="ch03_02.htm">gethostbyaddr</A>,
+<a href="ch03_02.htm">gethostbyname</A>,
+<a href="ch03_02.htm">gethostent</A>,
+<a href="ch03_02.htm">getnetbyaddr</A>,
+<a href="ch03_02.htm">getnetbyname</A>,
+<a href="ch03_02.htm">getnetent</A>,
+<a href="ch03_02.htm">getprotobyname</A>,
+<a href="ch03_02.htm">getprotobynumber</A>,
+<a href="ch03_02.htm">getprotoent</A>,
+<a href="ch03_02.htm">getservbyname</A>,
+<a href="ch03_02.htm">getservbyport</A>,
+<a href="ch03_02.htm">getservent</A>,
+<a href="ch03_02.htm">sethostent</A>,
+<a href="ch03_02.htm">setnetent</A>,
+<a href="ch03_02.htm">setprotoent</A>,
+<a href="ch03_02.htm">setservent</A>&gt;
+
+<p>
+<dt class=varlistentry>Time<dd>
+
+<p class=para>
+<a href="ch03_02.htm">gmtime</A>,
+<a href="ch03_02.htm">localtime</A>,
+<a href="ch03_02.htm">time</A>,
+<a href="ch03_02.htm">times</A></DL>
+</DIV>
+
+
+<div class=htmlnav>
+<p>
+<hr align=left width=515>
+<table width=515 border=0 cellpadding=0 cellspacing=0>
+<tr>
+<td width=172 align=left valign=top><a href="ch02_09.htm"><img src="gifs/txtpreva.gif" alt="Previous" border=0></A></td>
+<td width=171 align=center valign=top><a href="index.htm"><img src="gifs/txthome.gif" alt="Home" border=0></a></td>
+<td width=172 align=right valign=top><a href="ch03_02.htm"><img src="gifs/txtnexta.gif" alt="Next" border=0></A></td>
+</tr>
+<tr>
+<td width=172 align=left valign=top>Regular Expression Special Variables</td>
+<td width=171 align=center valign=top><a href="index/idx_0.htm">Book Index</a></td>
+<td width=172 align=right valign=top>Perl Functions in Alphabetical Order</td>
+</tr>
+</table>
+
+<!-- JavaScript: prev.js -->
+&nbsp;
+<!-- JavaScript: next.js -->
+</DIV>
+</BODY>
+</HTML>

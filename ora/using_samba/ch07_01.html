@@ -1,0 +1,597 @@
+<!DOCTYPE HTML PUBLIC "html.dtd">
+<HTML>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+<HEAD>
+<TITLE>
+[Chapter 7] Printing and Name Resolution</TITLE><META NAME="DC.title" CONTENT=""><META NAME="DC.creator" CONTENT=""><META NAME="DC.publisher" CONTENT="O'Reilly &amp; Associates, Inc."><META NAME="DC.date" CONTENT="1999-11-05T21:34:47Z"><META NAME="DC.type" CONTENT="Text.Monograph"><META NAME="DC.format" SCHEME="MIME" CONTENT="text/html"><META NAME="DC.source" SCHEME="ISBN" CONTENT=""><META NAME="DC.language" CONTENT="en-US"><META NAME="generator" CONTENT="Jade 1.1/O'Reilly DocBook 3.0 to HTML 4.0"></HEAD>
+<BODY VLINK="#0000CC" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#990000">
+<TABLE WIDTH="90%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD COLSPAN="2">
+<IMG WIDTH="515" ALT="Search the Catalog" SRC="http://www.oreilly.com/graphics_new/catalog_header_buttons.gif" HEIGHT="37" ISMAP ALIGN="BOTTOM" USEMAP="#catalog_header_buttons" BORDER="0">
+<MAP NAME="catalog_header_buttons">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/search.html" COORDS="407,17,512,32">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/catalog/prdindex.html" COORDS="431,3,512,18">
+</MAP>
+</TD>
+</TR>
+<TR>
+<TD WIDTH="25%" VALIGN="TOP">
+<A HREF="http://www.oreilly.com/catalog/samba/">
+<IMG ALT="Using Samba" VALIGN="top" VSPACE="10" HSPACE="10" SRC="http://www.oreilly.com/catalog/covers/samba.s.gif" ALIGN="left" BORDER="0">
+</A>
+</TD>
+<TD VALIGN="TOP" HEIGHT="105">
+<BR>
+<H2>Using Samba</H2>
+<FONT SIZE="-1">
+Robert Eckstein, David Collier-Brown, Peter Kelly
+<BR>1st Edition November 1999
+<BR>1-56592-449-5, Order Number: 4495
+<BR>416 pages, $34.95
+</FONT>
+</TD>
+</TR>
+</TABLE>
+<HR NOSHADE SIZE="1">
+<!-- sample chapter begins -->
+
+<CENTER>
+<DIV CLASS="htmlnav">
+<TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="6.6 Logon Scripts" HREF="ch06_06.html" CLASS="sect1">
+<IMG ALT="Previous: 6.6 Logon Scripts" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<B>
+<FONT SIZE="-1" FACE="ARIEL,HELVETICA,HELV,SANSERIF">
+Chapter 7</FONT></B></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="7.2 Printing to Windows Client Printers" HREF="ch07_02.html" CLASS="sect1">
+<IMG ALT="Next: 7.2 Printing to Windows Client Printers" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR></TABLE>&nbsp;<HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+<BLOCKQUOTE>
+<DIV CLASS="samplechapter">
+<H1 CLASS="chapter">
+<A NAME="ch07-98459" CLASS="title">
+7. Printing and Name Resolution</A></H1><DIV CLASS="htmltoc">
+<P>
+<B>
+Contents:</B><BR>
+<A TITLE="7.1 Sending Print Jobs to Samba" HREF="#ch07-61388" CLASS="sect1">
+Sending Print Jobs to Samba</A><BR>
+<A TITLE="7.2 Printing to Windows Client Printers" HREF="ch07_02.html" CLASS="sect1">
+Printing to Windows Client Printers</A><BR>
+<A TITLE="7.3 Name Resolution with Samba" HREF="ch07_03.html" CLASS="sect1">
+Name Resolution with Samba</A></P><P>
+</P></DIV><P CLASS="para">This chapter tackles two Samba topics: setting up printers for use with a Samba server and configuring Samba to use or become a Windows Internet Name Service (WINS) server. Samba allows client machines to send documents to printers connected to the Samba server. In addition, Samba can also assist you with printing Unix documents to a printer on a Windows machine. In the first part of this chapter, we will discuss how to get printers configured to work on either side.</P><P CLASS="para">
+In the second half of the chapter, we will introduce the Windows Internet Name Service, Microsoft's implementation of a NetBIOS Name Server (NBNS). As mentioned in <B>Chapter 1, <CITE CLASS="chapter">
+Learning the Samba</CITE></B>, an NBNS allows machines to perform name resolution on a NetBIOS network without having to rely on broadcasts. Instead, each machine knows exactly where the WINS server is and can query it for the IP addresses of other machines on the network.</P><DIV CLASS="sect1">
+<H2 CLASS="sect1">
+<A NAME="ch07-61388" CLASS="title">
+7.1 Sending Print Jobs to Samba</A></H2><P CLASS="para">A printer attached to the Samba server shows up in the list of shares offered in the Network Neighborhood. If the printer is registered on the client machine and the client has the correct printer driver installed, the client can effortlessly send print jobs to a printer attached to a Samba server. <A HREF="#ch07-35075" CLASS="xref">
+Figure 7.1</A> shows a Samba printer as it appears in the Network Neighborhood of a Windows client. </P><P CLASS="para">To administer printers with Samba, you should understand the basic process by which printing takes place on a network. Sending a print job to a printer on a Samba server involves four steps:</P><OL CLASS="orderedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-948964" CLASS="listitem">
+</A>Opening and authenticating a connection to the printer share</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-948965" CLASS="listitem">
+</A>Copying the file over the network</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-948966" CLASS="listitem">
+</A>Closing the connection</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-948967" CLASS="listitem">
+</A>Printing and deleting the copy of the file </P><H4 CLASS="figure">
+<A NAME="ch07-35075" CLASS="title">
+Figure 7.1: A Samba printer in the Network Neighborhood</A></H4><IMG ALT="Figure 7.1" CLASS="graphic" SRC="figs/sam.0701.gif"></LI></OL><P CLASS="para">
+When a print job arrives at a Samba server, the print data is temporarily written to disk in the directory specified by the <CODE CLASS="literal">
+path</CODE> option of the printer share. Samba then executes a Unix print command to send that data file to the printer. The job is printed as the authenticated user of the share. Note that this may be the guest user, depending on how the share is configured.</P><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch07-pgfId-951370" CLASS="title">
+7.1.1 Print Commands</A></H3><P CLASS="para">In order to print the document, you'll need to tell Samba what the command is to print and delete a file. On Linux, such a command is:</P><PRE CLASS="programlisting">
+lpr -r -P<CODE CLASS="replaceable">
+<I>
+printer</I></CODE> <CODE CLASS="replaceable">
+<I>
+file</I></CODE></PRE><P CLASS="para">
+This tells <CODE CLASS="literal">
+lpr</CODE> to copy the document to a spool area, usually <I CLASS="filename">
+/var/spool</I>, retrieve the name of the printer in the system configuration file (<I CLASS="filename">
+/etc/printcap</I>), and interpret the rules it finds there to decide how to process the data and which physical device to send it to. Note that because the <CODE CLASS="literal">
+-r</CODE> option has been listed, the file specified on the command line will be deleted after it has been printed. Of course, the file removed is just a copy stored on the Samba server; the original file on the client is unaffected.</P><P CLASS="para">
+Linux uses a Berkeley (BSD) style of printing. However, the process is similar on System V Unix. Here, printing and deleting becomes a compound command:</P><PRE CLASS="programlisting">
+lp -d<CODE CLASS="replaceable">
+<I>
+printer</I></CODE> -s <CODE CLASS="replaceable">
+<I>
+file</I></CODE>; rm <CODE CLASS="replaceable">
+<I>
+file</I></CODE></PRE><P CLASS="para">
+With System V, the <I CLASS="filename">
+/etc/printcap</I> file is replaced with different set of configuration files hiding in <I CLASS="filename">
+/usr/spool/lp</I>, and there is no option to delete the file. You have to do it yourself, which is why we have added the <CODE CLASS="literal">
+rm</CODE> command afterward.</P></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch07-pgfId-951469" CLASS="title">
+7.1.2 Printing Variables</A></H3><P CLASS="para">Samba provides four variables specifically for use with printing configuration options. They are shown in <A HREF="#ch07-29758" CLASS="xref">
+Table 7.1</A>. </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch07-29758" CLASS="title">
+Table 7.1: Printing Variables </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Variable</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Definition</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+%s</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+The full pathname of the file on the Samba server to be printed</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+%f</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+The name of the file itself (without the preceding path) on the Samba server to be printed</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+%p</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+The name of the Unix printer to use</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+%j</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+The number of the print job (for use with <CODE CLASS="literal">
+lprm</CODE>, <CODE CLASS="literal">
+lppause</CODE>, and <CODE CLASS="literal">
+lpresume</CODE>)</P></TD></TR></TBODY></TABLE></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch07-pgfId-943749" CLASS="title">
+7.1.3 A Minimal Printing Setup</A></H3><P CLASS="para">Let's start with a simple but illustrative printing share. Assuming that you're on a Linux system and you have a printer called <CODE CLASS="literal">
+lp</CODE> listed in the printer capabilities file, the following addition to your <I CLASS="filename">
+smb.conf</I> file will make the printer accessible through the network:</P><PRE CLASS="programlisting">
+[printer1]
+	printable = yes
+	print command = /usr/bin/lpr -r  %s
+	printer = lp
+	printing = BSD
+	read only = yes
+	guest ok = yes</PRE><P CLASS="para">
+This configuration allows anyone to send data to the printer, something we may want to change later. For the moment, what's important to understand is that the variable <CODE CLASS="literal">
+%s</CODE> in the <CODE CLASS="literal">
+print</CODE> <CODE CLASS="literal">
+command</CODE> option will be replaced with the name of the file to be printed when Samba executes the command. Changing the <CODE CLASS="literal">
+print command</CODE> to reflect a different style of Unix machine typically involves only replacing the right side of the <CODE CLASS="literal">
+print</CODE> <CODE CLASS="literal">
+command</CODE> option with whatever command you need for your system and changing the target of the <CODE CLASS="literal">
+printing</CODE> option.</P><P CLASS="para">
+Let's look at the commands for a System V Unix. With variable substitution, the System V Unix command becomes:</P><PRE CLASS="programlisting">
+print command = lp -d%p -s %s; rm %s</PRE><P CLASS="para">
+As mentioned earlier, the <CODE CLASS="literal">
+%p</CODE> variable resolves to the name of the printer, while the <CODE CLASS="literal">
+%s</CODE> variable resolves to the name of the file. After that, you can change the <CODE CLASS="literal">
+printing</CODE> option to reflect that you're using a System V architecture:</P><PRE CLASS="programlisting">
+printing = SYSV</PRE><P CLASS="para">
+If you are using share-level security, pay special attention to the guest account used by Samba. The typical setting, <CODE CLASS="literal">
+nobody</CODE>, may not be allowed to print by the operating system. If that's true for your operating system, you should place a <CODE CLASS="literal">
+guest</CODE> <CODE CLASS="literal">
+account</CODE> option under the printing share (or even perhaps the global share) specifying an account that can. A popular candidate with the Samba authors is the <CODE CLASS="literal">
+ftp</CODE> account, which is often preconfigured to be safe for untrusted guest users. You can set it with the following command:</P><PRE CLASS="programlisting">
+guest account = ftp</PRE><P CLASS="para">
+Another common printing issue is that clients may need to request the status of a print job sent to the Samba server. Samba will not reject a document from being sent to an already busy printer share. Consequently, Samba needs the ability to communicate not only the status of the current printing job to the client, but also which documents are currently waiting to be printed on that printer. Samba also has to provide the client the ability to pause print jobs, resume print jobs, and remove print jobs from the printing queue. Samba provides options for each of these tasks. As you might expect, they borrow functionality from existing Unix commands. The options are: </P><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-956989" CLASS="listitem">
+</A><CODE CLASS="literal">
+lpq command</CODE></P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-956990" CLASS="listitem">
+</A><CODE CLASS="literal">
+lprm command</CODE></P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-956991" CLASS="listitem">
+</A><CODE CLASS="literal">
+lppause command</CODE></P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-956992" CLASS="listitem">
+</A><CODE CLASS="literal">
+lpresume command</CODE></P></LI></UL><P CLASS="para">
+We will cover these options in more detail below. For the most part, however, the value of the <CODE CLASS="literal">
+printing</CODE> configuration option will determine their values, and you should not need to alter the default values of these options.</P><P CLASS="para">
+Here are a few important items to remember about printing shares:</P><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-951650" CLASS="listitem">
+</A>You must put <CODE CLASS="literal">
+printable</CODE> <CODE CLASS="literal">
+=</CODE> <CODE CLASS="literal">
+yes</CODE> in all printer shares (even <CODE CLASS="literal">
+[printers]</CODE>), so that Samba will know that they are printer shares. If you forget, the shares will not be usable for printing and will instead be treated as disk shares.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-951651" CLASS="listitem">
+</A>If you set the <CODE CLASS="literal">
+path</CODE> configuration option in the printer section, any files sent to the printer(s) will be copied to the directory you specify instead of to the default location of <I CLASS="filename">
+/tmp</I>. As the amount of disk space allocated to <I CLASS="filename">
+/tmp</I> can be relatively small in some Unix operating systems, many administrators opt to use <I CLASS="filename">
+/var/spool</I> or some other directory instead.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-951652" CLASS="listitem">
+</A>The <CODE CLASS="literal">
+read only</CODE> option is ignored for printer shares.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-951648" CLASS="listitem">
+</A>If you set <CODE CLASS="literal">
+guest</CODE> <CODE CLASS="literal">
+ok</CODE> <CODE CLASS="literal">
+=</CODE> <CODE CLASS="literal">
+yes</CODE> in a printer share and Samba is configured for share-level security, it will allow anyone to send data to the printer as the <CODE CLASS="literal">
+guest</CODE> <CODE CLASS="literal">
+account</CODE> user. </P></LI></UL><P CLASS="para">
+Using one or more Samba machines as a print server gives you a great deal of flexibility on your LAN. You can easily partition your available printers, restricting some to members of one department, or you can maintain a bank of printers available to all. In addition, you can restrict a printer to a selected few by adding the trusty <CODE CLASS="literal">
+valid</CODE> <CODE CLASS="literal">
+users</CODE> option to its share definition:</P><PRE CLASS="programlisting">
+[deskjet]
+	printable = yes
+	path = /var/spool/samba/print
+	valid users = gail sam</PRE><P CLASS="para">
+All of the other share accessibility options defined in the previous chapter should work for printing shares as well. Since the printers themselves are accessed through Samba by name, it's also simple to delegate print services among several servers using familiar Unix commands for tasks such as load balancing or maintenance. </P></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch07-pgfId-951458" CLASS="title">
+7.1.4 The [printers] Share</A></H3><P CLASS="para">
+<B>Chapter 4, <CITE CLASS="chapter">
+Disk Shares </CITE></B>, briefly introduced <CODE CLASS="literal">
+[printers]</CODE>, a special share for automatically creating printing services. Let's review how it works: if you create a share named <CODE CLASS="literal">
+[printers]</CODE> in the configuration file, Samba will automatically read in your printer capabilities file and create a printing share for each printer that appears in the file. For example, if the Samba server had <CODE CLASS="literal">
+lp</CODE>, <CODE CLASS="literal">
+pcl</CODE> and <CODE CLASS="literal">
+ps</CODE> printers in its printer capabilities file, Samba would provide three printer shares with those names, each configured with the options in the <CODE CLASS="literal">
+[printers]</CODE> share.</P><P CLASS="para">Recall that Samba obeys following rules when a client requests a share that has not been created through the <I CLASS="filename">
+smb.conf</I> file:</P><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-949501" CLASS="listitem">
+</A>If the share name matches a username in the system password file and a <CODE CLASS="literal">
+[homes]</CODE> share exists, a new share is created with the name of the user and is initialized using the values given in the <CODE CLASS="literal">
+[homes]</CODE> and <CODE CLASS="literal">
+[global]</CODE> sections.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-949506" CLASS="listitem">
+</A>Otherwise, if the name matches a printer in the system printer capabilities file, and a <CODE CLASS="literal">
+[printers]</CODE> share exists, a new share is created with the name of the printer and initialized using the values given in the <CODE CLASS="literal">
+[printers]</CODE> section. (Variables in the <CODE CLASS="literal">
+[global]</CODE> section do not apply here.) </P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-949507" CLASS="listitem">
+</A>If neither of those succeed, Samba looks for a <CODE CLASS="literal">
+default</CODE> <CODE CLASS="literal">
+service</CODE> share. If none is found, it returns an error.</P></LI></UL><P CLASS="para">
+This brings to light an important point: be careful that you do not give a printer the same name as a user. Otherwise, you will end up connecting to a disk share when you may have wanted a printer share instead.</P><P CLASS="para">
+Here is an example <CODE CLASS="literal">
+[printers]</CODE> share for a Linux (BSD) system. Some of these options are already defaults; however, we have listed them anyway for illustrative purposes:</P><PRE CLASS="programlisting">
+[global] 
+	printing = BSD
+	print command = /usr/bin/lpr -P%p -r %s 
+	printcap file = /etc/printcap 
+	min print space = 2000
+
+[printers] 
+	path = /usr/spool/public 
+	printable = true  
+	guest ok = true 
+	guest account = pcguest </PRE><P CLASS="para">
+Here, we've given Samba global options that specify the printing type (BSD), a print command to send data to the printer and remove a temporary file, our default printer capabilities file, and a minimum printing space of 2 megabytes.</P><P CLASS="para">
+In addition, we've created a <CODE CLASS="literal">
+[printers]</CODE> share for each of the system printers. Our temporary spooling directory is specified by the <CODE CLASS="literal">
+path</CODE> option: <I CLASS="filename">
+/usr/spool/public</I>. Each of the shares is marked as printable&nbsp;- this is necessary, even in the <CODE CLASS="literal">
+[printers]</CODE> section. The two <CODE CLASS="literal">
+guest</CODE> options are useful in the event that Samba is using share-level security: we allow guest access to the printer and we specify the guest user that Samba should use to execute print commands. </P></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch07-pgfId-943839" CLASS="title">
+7.1.5 Test Printing</A></H3><P CLASS="para">Here is how you can test printing from the Samba server. Let's assume the most complex case and use a guest account. First, run the Samba <EM CLASS="emphasis">
+testparm</EM> command on your configuration file that contains the print shares, as we did in <B>Chapter 2, <CITE CLASS="chapter">
+Installing Samba on a Unix System</CITE></B>. This will tell you if there are any syntactical problems with the configuration file. For example, here is what you would see if you left out the <CODE CLASS="literal">
+path</CODE> configuration option in the previous example:</P><PRE CLASS="programlisting">
+# testparm 
+Load smb config files from /usr/local/samba/lib/smb.conf 
+Processing configuration file &quot;/usr/local/samba/lib/smb.conf&quot; 
+Processing section &quot;[global]&quot; 
+Processing section &quot;[homes]&quot; 
+Processing section &quot;[data]&quot; 
+Processing section &quot;[printers]&quot; 
+No path in service printers - using /tmp 
+Loaded services file OK. 
+Press enter to see a dump of your service definitions
+Global parameters: 
+	load printers: Yes 
+	printcap name: /etc/printcap
+Default service parameters: 
+	guest account: ftp 
+	min print space: 0 
+	print command: lpr -r -P%p %s 
+	lpq command: lpq -P%p 
+	lprm command: lprm -P%p %j 
+lppause command: 
+	lpresume command: 
+ Service parameters [printers]: 
+	path: /tmp 	
+	print ok: Yes 
+	read only: true 
+	public: true </PRE><P CLASS="para">
+Second, try the command <CODE CLASS="literal">
+testprns</CODE> <CODE CLASS="replaceable">
+<I>
+printername</I></CODE>. This is a simple program that verifies that the specified printer is available in your <EM CLASS="emphasis">
+printcap</EM> file. If your <EM CLASS="emphasis">
+printcap</EM> file is not in the usual place, you can specify its full pathname as the second argument to the <EM CLASS="emphasis">
+testprns</EM> command:</P><PRE CLASS="programlisting">
+# testprns lp /etc/printcap
+Looking for printer lp in printcap file /etc/printcap
+Printer name lp is valid.</PRE><P CLASS="para">
+Next, log on as the guest user, go to the spooling directory, and ensure that you can print using the same command that <EM CLASS="emphasis">
+testparm</EM> says Samba will use. As mentioned before, this will tell you if you need to change the guest account, as the default account may not be allowed to print.</P><P CLASS="para">
+Finally, print something to the Samba server via <CODE CLASS="literal">
+smbclient</CODE>, and see if the following actions occur:</P><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-943874" CLASS="listitem">
+</A>The job appears (briefly) in the Samba spool directory specified by the path.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-943875" CLASS="listitem">
+</A>The job shows up in your print systems spool directory.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-943876" CLASS="listitem">
+</A>The job disappears from the spool directory that Samba used.</P></LI></UL><P CLASS="para">
+If <EM CLASS="emphasis">
+smbclient</EM> cannot print, you can reset the <CODE CLASS="literal">
+print</CODE> <CODE CLASS="literal">
+command</CODE> option to collect debugging information:</P><PRE CLASS="programlisting">
+print command = /bin/cat %s &gt;&gt;/tmp/printlog; rm %s</PRE><P CLASS="para">
+or:</P><PRE CLASS="programlisting">
+print command = echo &quot;printed %s on %p&quot; &gt;&gt;/tmp/printlog</PRE><P CLASS="para">
+A common problem with Samba printer configuration is forgetting to use the full pathnames for commands; simple commands often don't work because the guest account's PATH doesn't include them. Another frequent problem is not having the correct permissions on the spooling directory. </P><P CLASS="para">There is more information on debugging printers in the Samba documentation (<I CLASS="filename">
+Printing.txt</I>). In addition, the Unix print systems are covered in detail in AEleen Frisch's <EM CLASS="emphasis">
+Essential Systems Administration</EM> (published by O'Reilly).</P></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch07-pgfId-943883" CLASS="title">
+7.1.6 Setting Up and Testing a Windows Client</A></H3><P CLASS="para">Now that Samba is offering a workable printer, you need to set it up on a Windows client. Look at the Samba server in the Network Neighborhood. It should now show each of the printers that are available. For example, in <A HREF="#ch07-35075" CLASS="xref">
+Figure 7.1</A>, we saw a printer called <CODE CLASS="literal">
+lp</CODE>.</P><P CLASS="para">
+Next, you need to have the Windows client recognize the printer. Double-click on the printer icon to get started. If you try to select an uninstalled printer (as you just did), Windows will ask you if it should help configure it for the Windows system. Respond "Yes," which will open the Printer Wizard. </P><P CLASS="para">
+The first thing the wizard will ask is whether you need to print from DOS.  Let's assume you don't, so choose No and press the Next button to get to the manufacturer/model window as shown in <A HREF="#ch07-60084" CLASS="xref">
+Figure 7.2</A>. </P><H4 CLASS="figure">
+<A NAME="ch07-60084" CLASS="title">
+Figure 7.2: A printer in the Network Neighborhood</A></H4><IMG ALT="Figure 7.2" CLASS="graphic" SRC="figs/sam.0702.gif"><P CLASS="para">
+In this dialog box, you should see a large list of manufacturers and models for almost every printer imaginable. If you don't see your printer on the list, but you know it's a PostScript printer, select Apple as the manufacturer and Apple LaserWriter as the model. This will give you the most basic Postscript printer setup, and arguably one of the most reliable. If you already have any Postscript printers attached, you will be asked about replacing or reusing the existing driver. Be aware that if you replace it with a new one, you may make your other printers fail. Therefore, we recommend you keep using your existing printer drivers as long as they're working properly.</P><P CLASS="para">
+Following that, the Printer Wizard will ask you to name the printer. <A HREF="#ch07-69466" CLASS="xref">
+Figure 7.3</A> shows this example, where the name has defaulted to our second laserwriter. Here, you rename it from Apple Laserwriter (Copy 2) to "ps on Samba server," so you know where to look for the printouts. In reality, you can name the printer anything you want.  </P><H4 CLASS="figure">
+<A NAME="ch07-69466" CLASS="title">
+Figure 7.3: Printer manufacturers and models</A></H4><IMG ALT="Figure 7.3" CLASS="graphic" SRC="figs/sam.0703.gif"><P CLASS="para">
+Finally, the Printing Wizard asks if it should print a test page. Click on Yes, and you should be presented with the dialog in <A HREF="#ch07-43374" CLASS="xref">
+Figure 7.4</A>. </P><H4 CLASS="figure">
+<A NAME="ch07-43374" CLASS="title">
+Figure 7.4: Printing successfully completed</A></H4><IMG ALT="Figure 7.4" CLASS="graphic" SRC="figs/sam.0704.gif"><P CLASS="para">
+If the test printing was unsuccessful, press the No button in <A HREF="#ch07-43374" CLASS="xref">
+Figure 7.4</A> and the Printing Wizard will walk you through some debugging steps for the client side of the process. If the test printing does work, congratulations! The remote printer will now be available to all your PC applications through the File and Print menu items.</P></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch07-30008" CLASS="title">
+7.1.7 Automatically Setting Up Printer Drivers</A></H3><P CLASS="para">The previous section described how to manually configure a printer driver for your Windows system. As a system administrator, however, you can't always guarantee that users can perform such a process without making mistakes. Luckily, however, you can ask Samba to automatically set up the printer drivers for a specific printer.</P><P CLASS="para">
+Samba has three options that can be used to automatically set up printer drivers for clients who are connecting for the first time. These options are <CODE CLASS="literal">
+printer</CODE> <CODE CLASS="literal">
+driver</CODE>, <CODE CLASS="literal">
+printer</CODE> <CODE CLASS="literal">
+driver</CODE> <CODE CLASS="literal">
+file</CODE>, and <CODE CLASS="literal">
+printer</CODE> <CODE CLASS="literal">
+driver</CODE> <CODE CLASS="literal">
+location</CODE>. This section explains how to use these options to allow users to skip over the Manufacturer dialog in the Add Printer Wizard above.</P><P CLASS="para">
+For more information on how to do this, see the <I CLASS="filename">
+PRINTER_DRIVER.TXT</I> file in the Samba distribution documentation.</P><P CLASS="para">
+There are four major steps:</P><OL CLASS="orderedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-949602" CLASS="listitem">
+</A>Install the drivers for the printer on a Windows client (the printer need not be attached).</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-949746" CLASS="listitem">
+</A>Create a printer definition file from the information on a Windows machine.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-949600" CLASS="listitem">
+</A>Create a <CODE CLASS="literal">
+PRINTER$</CODE> share where the resulting driver files can be placed.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-949601" CLASS="listitem">
+</A>Modify the Samba configuration file accordingly.</P></LI></OL><P CLASS="para">
+Let's go over each of the four steps in greater detail.</P><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-949749" CLASS="title">
+7.1.7.1 Install the drivers on a windows client</A></H4><P CLASS="para">
+Use Windows 95/98 for this step. It doesn't matter which client you choose, as long as it has the ability to load the appropriate drivers for the printer. In fact, you don't even need to have the printer attached to the machine. All you're interested in here is getting the appropriate driver files into the Windows directory. First, go to the Printers window of My Computer and double-click on the Add Printer icon, as shown in <A HREF="#ch07-52397" CLASS="xref">
+Figure 7.5</A>. </P><H4 CLASS="figure">
+<A NAME="ch07-52397" CLASS="title">
+Figure 7.5: The Printers window</A></H4><IMG ALT="Figure 7.5" CLASS="graphic" SRC="figs/sam.0705.gif"><P CLASS="para">
+At this point, you can follow the Add Printer Wizard dialogs through to select the manufacturer and model of the printer in question. If it asks you if you want to print from MS-DOS, answer No. Windows should load the appropriate driver resources from its CD-ROM and ask you if you want to print a test page. Again, respond No and close the Add Printer Wizard dialog.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-949606" CLASS="title">
+7.1.7.2 Create a printer definition file</A></H4><P CLASS="para">
+You can create a printer definition file by using the <I CLASS="filename">
+make_ printerdef</I> script in the <I CLASS="filename">
+/usr/local/samba/bin</I> directory. In order to use this script, you need to copy over the following four files from a Windows client:[<A HREF="#ch07-pgfId-951615" CLASS="footnote">
+1</A>]</P><BLOCKQUOTE CLASS="footnote">
+<DIV CLASS="footnote">
+<P CLASS="para">
+<A NAME="ch07-pgfId-951615" CLASS="footnote">
+[1]</A> Older Windows 95 clients may have only the first two files.</P></DIV></BLOCKQUOTE><TABLE CLASS="simplelist" BORDER="0">
+<TR>
+<TD CLASS="member">
+<EM CLASS="emphasis">
+C:\WINDOWS\INF\MSPRINT.INF</EM></TD></TR><TR>
+<TD CLASS="member">
+<EM CLASS="emphasis">
+C:\WINDOWS\INF\MSPRINT2.INF</EM></TD></TR><TR>
+<TD CLASS="member">
+<EM CLASS="emphasis">
+C:\WINDOWS\INF\MSPRINT3.INF</EM></TD></TR><TR>
+<TD CLASS="member">
+<EM CLASS="emphasis">
+C:\WINDOWS\INF\MSPRINT4.INF</EM></TD></TR></TABLE><P CLASS="para">
+Once you have the four files, you can create a printer definition file using the appropriate printer driver and its .INF file. If the printer driver starts with the letters A-K, use either the <EM CLASS="emphasis">
+MSPRINT.INF</EM> file or the <EM CLASS="emphasis">
+MSPRINT3.INF</EM> file. If it begins with the letters L-Z, use the <EM CLASS="emphasis">
+MSPRINT2.INF</EM> file or the <EM CLASS="emphasis">
+MSPRINT4.INF</EM> file. You may need to <EM CLASS="emphasis">
+grep</EM> through each of the files to see where your specific driver is. For the following example, we have located our driver in <EM CLASS="emphasis">
+MSPRINT3.INF</EM> and created a printer definition file for a HP DeskJet 560C printer:</P><PRE CLASS="programlisting">
+$grep &quot;HP DeskJet 560C Printer&quot; MSPRINT.INF MSPRINT3.INF
+MSPRINT3.INF: &quot;HP DeskJet 560C Printer&quot;=DESKJETC.DRV,HP_DeskJet_ ...
+
+$make_printerdef MSPRINT3.INF &quot;HP DeskJet 560C Printer&quot; &gt;printers.def
+FOUND:DESKJETC.DRV
+End of section found
+CopyFiles: DESKJETC,COLOR_DESKJETC
+Datasection: (null)
+Datafile: DESKJETC.DRV
+Driverfile: DESKJETC.DRV
+Helpfile: HPVDJC.HLP
+LanguageMonitor: (null)
+
+Copy the following files to your printer$ share location:
+DESKJETC.DRV
+HPVCM.HPM
+HPVIOL.DLL
+HPVMON.DLL
+HPVRES.DLL
+HPCOLOR.DLL
+HPVUI.DLL
+HPVDJCC.HLP
+color\HPDESK.ICM</PRE><P CLASS="para">
+Note the files that the script asks you to copy. You'll need those for the next step.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-949683" CLASS="title">
+7.1.7.3 Create a PRINTER$ share</A></H4><P CLASS="para">This part is relatively easy. Create a share called <CODE CLASS="literal">
+[PRINTER$]</CODE> in your <I CLASS="filename">
+smb.conf</I> that points to an empty directory on the Samba server. Once that is done, copy over the files that the <I CLASS="filename">
+make_ printerdef</I> script requested of you into the location of the <CODE CLASS="literal">
+path</CODE> configuration option for the <CODE CLASS="literal">
+[PRINTER$]</CODE> share. For example, you can put the following in your configuration file:</P><PRE CLASS="programlisting">
+[PRINTER$]
+	path = /usr/local/samba/print
+	read only = yes
+	browsable = no
+	guest ok = yes</PRE><P CLASS="para">
+The files requested by the <I CLASS="filename">
+make_ printerdef</I> script are typically located in the <EM CLASS="emphasis">
+C:\WINDOWS\SYSTEM</EM> directory, although you can use the following commands to find out exactly where they are:</P><PRE CLASS="programlisting">
+cd C:\WINDOWS
+dir <CODE CLASS="replaceable">
+<I>
+filename</I></CODE> /s</PRE><P CLASS="para">
+In this case, each of the files needs to be copied to the <I CLASS="filename">
+/usr/local/samba/print</I> directory on the Samba server. In addition, copy the <I CLASS="filename">
+printers.def</I> file that you created over to that share as well. Once you've done that, you're almost ready to go. </P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-949694" CLASS="title">
+7.1.7.4 Modify the Samba configuration file</A></H4><P CLASS="para">
+<I CLASS="filename">
+</I>The last step is to modify the Samba configuration file by adding the following three options: </P><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-956995" CLASS="listitem">
+</A><CODE CLASS="literal">
+printer</CODE> <CODE CLASS="literal">
+driver</CODE></P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-956996" CLASS="listitem">
+</A><CODE CLASS="literal">
+printer</CODE> <CODE CLASS="literal">
+driver</CODE> <CODE CLASS="literal">
+file</CODE></P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-956997" CLASS="listitem">
+</A><CODE CLASS="literal">
+printer</CODE> <CODE CLASS="literal">
+driver</CODE> <CODE CLASS="literal">
+location</CODE></P></LI></UL><P CLASS="para">
+The <CODE CLASS="literal">
+printer</CODE> <CODE CLASS="literal">
+driver</CODE> <CODE CLASS="literal">
+file</CODE> is a global option that points to the <I CLASS="filename">
+printers.def</I> file; place that option in your <CODE CLASS="literal">
+[global]</CODE> section. The other options should be set in the printer share for which you wish to automatically configure the drivers. The value for <CODE CLASS="literal">
+printer</CODE> <CODE CLASS="literal">
+driver</CODE> should match the string that shows up in the Printer Wizard on the Windows system. The value of the <CODE CLASS="literal">
+printer</CODE> <CODE CLASS="literal">
+driver</CODE> <CODE CLASS="literal">
+location</CODE> is the pathname of the PRINTER$ share you set up, not the Unix pathname on the server. Thus, you could use the following:</P><PRE CLASS="programlisting">
+[global]
+	printer driver file = /usr/local/samba/print/printers.def
+[hpdeskjet]
+	path = /var/spool/samba/printers
+	printable = yes
+
+	printer driver = HP DeskJet 560C Printer
+	printer driver location = \\%L\PRINTER$</PRE><P CLASS="para">
+Now you're ready to test it out. At this point, remove the Windows printer that you "set up" in the first step from the list of printers in the Printers window of My Computer. If Samba asks you to delete unneeded files, do so. These files will be replaced shortly on the client, as they now exist on the Samba server.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-949710" CLASS="title">
+7.1.7.5 Testing the configuration</A></H4><P CLASS="para">
+Restart the Samba daemons and look for the <CODE CLASS="literal">
+[hpdeskjet]</CODE> share under the machine name in the Network Neighborhood. At this point, if you click on the printer icon, you should begin the printer setup process and come to the dialog shown in <A HREF="#ch07-60108" CLASS="xref">
+Figure 7.6</A>.</P><P CLASS="para">
+This is different from the dialog you saw earlier when setting up a printer. Essentially, the dialog is asking if you wish to accept the driver that is "already installed"&nbsp;- in other words, offered by Samba. Go ahead and keep the existing driver, and press the Next button. At this point, you can give the printer a name and print out a test page. If it works, the setup should be complete. You should be able to repeat the process now from any Windows client.  </P><H4 CLASS="figure">
+<A NAME="ch07-60108" CLASS="title">
+Figure 7.6: Automatically configuring the printer driver</A></H4><IMG ALT="Figure 7.6" CLASS="graphic" SRC="figs/sam.0706.gif"></DIV></DIV></DIV></DIV></BLOCKQUOTE>
+<DIV>
+<CENTER>
+<HR NOSHADE SIZE="1"><TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="6.6 Logon Scripts" HREF="ch06_06.html" CLASS="sect1">
+<IMG ALT="Previous: 6.6 Logon Scripts" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="" HREF="index.html" CLASS="book">
+<IMG ALT="" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txthome.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="7.2 Printing to Windows Client Printers" HREF="ch07_02.html" CLASS="sect1">
+<IMG ALT="Next: 7.2 Printing to Windows Client Printers" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR><TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+6.6 Logon Scripts</TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="Book Index" HREF="http://www.oreilly.com/catalog/samba/inx.html" CLASS="index">
+<IMG ALT="Book Index" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/index.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+7.2 Printing to Windows Client Printers</TD></TR></TABLE><HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+
+<!--  End of sample chapter -->
+<P><B>Back to: <A HREF="http://www.oreilly.com/catalog/samba/noframes.html">Using Samba</A></B>
+<CENTER>
+<HR NOSHADE SIZE="1">
+<FONT SIZE="1" FACE="Verdana, Arial, Helvetica">
+<A HREF="http://www.oreilly.com/">
+<B>O'Reilly Home</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/sales/bookstores">
+<B>O'Reilly Bookstores</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/order_new/">
+<B>How to Order</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/contact.html">
+<B>O'Reilly Contacts<BR></B></A>
+<A HREF="http://www.oreilly.com/international/">
+<B>International</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/about.html">
+<B>About O'Reilly</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/affiliates.html">
+<B>Affiliated Companies</B></A><P>
+<EM>&copy; 1999, O'Reilly &amp; Associates, Inc.</EM>
+</FONT>
+</CENTER>
+</BODY>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+</HTML>

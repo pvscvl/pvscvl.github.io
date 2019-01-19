@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "html.dtd">
+<HTML>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+<HEAD>
+<TITLE>
+[Chapter 2] Installing Samba on a Unix System</TITLE><META NAME="DC.title" CONTENT=""><META NAME="DC.creator" CONTENT=""><META NAME="DC.publisher" CONTENT="O'Reilly &amp; Associates, Inc."><META NAME="DC.date" CONTENT="1999-11-05T21:29:03Z"><META NAME="DC.type" CONTENT="Text.Monograph"><META NAME="DC.format" SCHEME="MIME" CONTENT="text/html"><META NAME="DC.source" SCHEME="ISBN" CONTENT=""><META NAME="DC.language" CONTENT="en-US"><META NAME="generator" CONTENT="Jade 1.1/O'Reilly DocBook 3.0 to HTML 4.0"></HEAD>
+<BODY VLINK="#0000CC" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#990000">
+<TABLE WIDTH="90%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD COLSPAN="2">
+<IMG WIDTH="515" ALT="Search the Catalog" SRC="http://www.oreilly.com/graphics_new/catalog_header_buttons.gif" HEIGHT="37" ISMAP ALIGN="BOTTOM" USEMAP="#catalog_header_buttons" BORDER="0">
+<MAP NAME="catalog_header_buttons">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/search.html" COORDS="407,17,512,32">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/catalog/prdindex.html" COORDS="431,3,512,18">
+</MAP>
+</TD>
+</TR>
+<TR>
+<TD WIDTH="25%" VALIGN="TOP">
+<A HREF="http://www.oreilly.com/catalog/samba/">
+<IMG ALT="Using Samba" VALIGN="top" VSPACE="10" HSPACE="10" SRC="http://www.oreilly.com/catalog/covers/samba.s.gif" ALIGN="left" BORDER="0">
+</A>
+</TD>
+<TD VALIGN="TOP" HEIGHT="105">
+<BR>
+<H2>Using Samba</H2>
+<FONT SIZE="-1">
+Robert Eckstein, David Collier-Brown, Peter Kelly
+<BR>1st Edition November 1999
+<BR>1-56592-449-5, Order Number: 4495
+<BR>416 pages, $34.95
+</FONT>
+</TD>
+</TR>
+</TABLE>
+<HR NOSHADE SIZE="1">
+<!-- sample chapter begins -->
+
+<CENTER>
+<DIV CLASS="htmlnav">
+<TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="1.8 And That's Not All..." HREF="ch01_08.html" CLASS="sect1">
+<IMG ALT="Previous: 1.8 And That's Not All..." SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<B>
+<FONT SIZE="-1" FACE="ARIEL,HELVETICA,HELV,SANSERIF">
+Chapter 2</FONT></B></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="2.2 Configuring Samba" HREF="ch02_02.html" CLASS="sect1">
+<IMG ALT="Next: 2.2 Configuring Samba" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR></TABLE>&nbsp;<HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+<BLOCKQUOTE>
+<DIV CLASS="samplechapter">
+<H1 CLASS="chapter">
+<A NAME="ch02-46174" CLASS="title">
+2. Installing Samba on a Unix System</A></H1><DIV CLASS="htmltoc">
+<P>
+<B>
+Contents:</B><BR>
+<A TITLE="2.1 Downloading the Samba Distribution" HREF="#ch02-85028" CLASS="sect1">
+Downloading the Samba Distribution</A><BR>
+<A TITLE="2.2 Configuring Samba" HREF="ch02_02.html" CLASS="sect1">
+Configuring Samba</A><BR>
+<A TITLE="2.3 Compiling and Installing Samba" HREF="ch02_03.html" CLASS="sect1">
+Compiling and Installing Samba</A><BR>
+<A TITLE="2.4 A Basic Samba Configuration File" HREF="ch02_04.html" CLASS="sect1">
+A Basic Samba Configuration File</A><BR>
+<A TITLE="2.5 Starting the Samba Daemons" HREF="ch02_05.html" CLASS="sect1">
+Starting the Samba Daemons</A><BR>
+<A TITLE="2.6 Testing the Samba Daemons" HREF="ch02_06.html" CLASS="sect1">
+Testing the Samba Daemons</A></P><P>
+</P></DIV><P CLASS="para">Now that you know what Samba can do for you and your users, it's time to get your own network set up. Let's start with the installation of Samba itself on a Unix system. When dancing the samba, one learns by taking small steps. It's just the same when installing Samba; we need to teach it step by step. This chapter will help you to start off on the right foot. </P><P CLASS="para">
+For illustrative purposes, we will be installing the 2.0.4 version of the Samba server on a Linux[<A HREF="#ch02-pgfId-939741" CLASS="footnote">
+1</A>] system running version 2.0.31 of the kernel. However, the installation steps are the same for all of the platforms that Samba supports. A typical installation will take about an hour to complete, including downloading the source files and compiling them, setting up the configuration files, and testing the server. </P><BLOCKQUOTE CLASS="footnote">
+<DIV CLASS="footnote">
+<P CLASS="para">
+<A NAME="ch02-pgfId-939741" CLASS="footnote">
+[1]</A> If you haven't heard of Linux yet, then you're in for a treat. Linux is a freely distributed Unix-like operating system that runs on the Intel x86, Motorola PowerPC, and Sun Sparc platforms. The operating system is relatively easy to configure, extremely robust, and is gaining in popularity. You can get more information on the Linux operating system at <EM CLASS="emphasis">
+http://www.linux.org /.</EM></P></DIV></BLOCKQUOTE><P CLASS="para">Here is an overview of the steps:</P><OL CLASS="orderedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch02-pgfId-938543" CLASS="listitem">
+</A>Download the source or binary files.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch02-pgfId-938544" CLASS="listitem">
+</A>Read the installation documentation.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch02-pgfId-938545" CLASS="listitem">
+</A>Configure a makefile.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch02-pgfId-938546" CLASS="listitem">
+</A>Compile the server code.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch02-pgfId-938547" CLASS="listitem">
+</A>Install the server files.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch02-pgfId-938548" CLASS="listitem">
+</A>Create a Samba configuration file.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch02-pgfId-938549" CLASS="listitem">
+</A>Test the configuration file.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch02-pgfId-938550" CLASS="listitem">
+</A>Start the Samba daemons.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch02-pgfId-938551" CLASS="listitem">
+</A>Test the Samba daemons.</P></LI></OL><DIV CLASS="sect1">
+<H2 CLASS="sect1">
+<A NAME="ch02-85028" CLASS="title">
+2.1 Downloading the Samba Distribution</A></H2><P CLASS="para">If you want to get started quickly, the CD-ROM packaged with this book contains both the sources and binaries of Samba that were available as this book went to print. The CD is a mirror image of the files and directories on the Samba download server: <EM CLASS="emphasis">
+ftp.samba.org</EM>.</P><P CLASS="para">
+On the other hand, if you want to download the latest version, the primary web site for the Samba software is <A HREF="http://www.samba.org/" CLASS="systemitem.url">http://www.samba.org</A>. Once connected to this page, you'll see links to several Samba mirror sites across the world, both for the standard Samba web pages and sites devoted exclusively to downloading Samba. For the best performance, choose a site that is closest to your own geographic location.</P><P CLASS="para">
+The standard Samba web sites have Samba documentation and tutorials, mailing list archives, and the latest Samba news, as well as source and binary distributions of Samba. The download sites (sometimes called <EM CLASS="emphasis">
+F T P sites</EM>) have only the source and binary distributions. Unless you specifically want an older version of the Samba server or are going to install a binary distribution, download the latest source distribution from the closest mirror site. This distribution is always named:</P><PRE CLASS="programlisting">
+samba-latest.tar.gz</PRE><P CLASS="para">
+If you choose to use the version of Samba that is located on the CD-ROM packaged with this book, you should find the latest Samba distribution in the base directory.</P><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch02-pgfId-938556" CLASS="title">
+2.1.1 Binary or Source?</A></H3><P CLASS="para">Precompiled packages are also available for a large number of Unix platforms. These packages contain binaries for each of the Samba executables as well as the standard Samba documentation. Note that while installing a binary distribution can save you a fair amount of trouble and time, there are a couple of issues that you should keep in mind when deciding whether to use the binary or compile the source yourself:</P><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch02-pgfId-938558" CLASS="listitem">
+</A>The binary packages can lag behind the latest version of the software by one or two (maybe more) minor releases, especially after a series of small changes and for less popular platforms. Compare the release notes for the source and binary packages to make sure that there aren't any new features that you need on your platform. This is especially true of the sources and binaries on the CD-ROM: at the time this book went to print, they were from the latest production release of Samba. However, development is ongoing, so the beta-test versions on the Internet will be newer.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch02-pgfId-938560" CLASS="listitem">
+</A>If you use a precompiled binary, you will need to ensure that you have the correct libraries required by the executables. On some platforms the executables are statically linked so this isn't an issue, but on modern Unix operating systems (e.g., Linux, SGI Irix, Solaris, HP-UX, etc.), libraries are often dynamically linked. This means that the binary looks for the right version of each library on your system, so you may have to install a new version of a library. The <I CLASS="filename">
+README</I> file or <I CLASS="filename">
+makefile</I> that accompanies the binary distribution should list any special requirements.[<A HREF="#ch02-pgfId-943622" CLASS="footnote">
+2</A>]</P><BLOCKQUOTE CLASS="footnote">
+<DIV CLASS="footnote">
+<P CLASS="para">
+<A NAME="ch02-pgfId-943622" CLASS="footnote">
+[2]</A> This is especially true with programs that use <EM CLASS="emphasis">
+glibc-2.1</EM> (which comes standard with Red Hat Linux 6). This library caused quite a consternation in the development community when it was released because it was incompatable with previous versions of <EM CLASS="emphasis">
+g</EM><I CLASS="filename">
+libc</I>.</P></DIV></BLOCKQUOTE><P CLASS="para">
+Many machines with shared libraries come with a nifty tool called <EM CLASS="emphasis">
+ldd</EM>. This tool will tell you which libraries a specific binary requires and which libraries on the system satisfy that requirement. For example, checking the <EM CLASS="emphasis">
+smbd</EM> program on our test machine gave us:</P></LI></UL><PRE CLASS="programlisting">
+<B CLASS="emphasis.bold">
+<CODE CLASS="literal">
+$</CODE> ldd smbd</B>
+</PRE><PRE CLASS="programlisting">
+libreadline.so.3 =&gt; /usr/lib/libreadline.so.3
+libdl.so.2 =&gt; /lib/libdl.so.2
+libcrypt.so.1 =&gt; /lib/libcrypt.so.1
+libc.so.6 =&gt; /lib/libc.so.6
+libtermcap.so.2 =&gt; /lib/libtermcap.so.2
+/lib/ld-linux.so.2 =&gt; /lib/ld-linux.so.2</PRE><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+If there are any incompatibilities between Samba and specific libraries on your machine, the distribution-specific documentation should highlight those.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch02-pgfId-938567" CLASS="listitem">
+</A>Keep in mind that each binary distribution carries preset values about the target platform, such as default directories and configuration option values. Again, check the documentation and the makefile included in the source directory to see which directives and variables were used when the binary was compiled. In some cases, these will not be appropriate for your situation. </P><P CLASS="para">
+A few configuration items can be reset with command-line options at runtime instead of at compile time. For example, if your binary tries to place any log, lock, or status files in the "wrong" place (for example, in <I CLASS="filename">
+/usr/local</I>  ), you can override this without recompiling. </P></LI></UL><P CLASS="para">
+One point worth mentioning is that the Samba source requires an ANSI C compiler. If you are on a platform with a non-ANSI compiler, such as the <EM CLASS="emphasis">
+cc</EM> compiler on SunOS version 4, you'll have to install an ANSI-compliant compiler such as <EM CLASS="emphasis">
+gcc </EM>before you do anything else.[<A HREF="#ch02-pgfId-939049" CLASS="footnote">
+3</A>] If installing a compiler isn't something you want to wrestle with, you can start off with a binary package. However, for the most flexibility and compatibility on your system, we always recommend compiling from the latest source.</P><BLOCKQUOTE CLASS="footnote">
+<DIV CLASS="footnote">
+<P CLASS="para">
+<A NAME="ch02-pgfId-939049" CLASS="footnote">
+[3]</A> <EM CLASS="emphasis">
+gcc</EM> binaries are available for almost every modern machine. See <A HREF="http://www.gnu.org/" CLASS="systemitem.url">
+http://www.gnu.org/</A> for a list of sites with <EM CLASS="emphasis">
+gcc</EM> and other GNU software.</P></DIV></BLOCKQUOTE></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch02-pgfId-938574" CLASS="title">
+2.1.2 Read the Documentation</A></H3><P CLASS="para">This sounds like an obvious thing to say, but there have probably been times where you have uncompressed a package, blindly typed <CODE CLASS="literal">
+configure</CODE>, <CODE CLASS="literal">
+make</CODE>, and <CODE CLASS="literal">
+make</CODE> <CODE CLASS="literal">
+install</CODE>, and walked away to get another cup of coffee. We'll be the first to admit that we do that, many more times than we should. It's a bad idea&nbsp;- especially when planning a network with Samba.</P><P CLASS="para">
+Samba 2.0 automatically configures itself prior to compilation. This reduces the likelihood of a machine-specific problem, but there may be an option mentioned in the <I CLASS="filename">
+README</I> file that you end up wishing for after Samba's been installed. With both source and binary packages you'll find a large number of documents in the <I CLASS="filename">
+docs</I> directory, in a variety of formats. The most important files to look at in the distribution are:</P><PRE CLASS="programlisting">
+WHATSNEW.txt
+docs/textdocs/UNIX_INSTALL.txt</PRE><P CLASS="para">
+These files tell you what features you can expect in your Samba distribution, and will highlight common installation problems that you're likely to face. Be sure to look over both of them before you start the compilation process. </P></DIV></DIV></DIV></BLOCKQUOTE>
+<DIV>
+<CENTER>
+<HR NOSHADE SIZE="1"><TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="1.8 And That's Not All..." HREF="ch01_08.html" CLASS="sect1">
+<IMG ALT="Previous: 1.8 And That's Not All..." SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="" HREF="index.html" CLASS="book">
+<IMG ALT="" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txthome.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="2.2 Configuring Samba" HREF="ch02_02.html" CLASS="sect1">
+<IMG ALT="Next: 2.2 Configuring Samba" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR><TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+1.8 And That's Not All...</TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="Book Index" HREF="http://www.oreilly.com/catalog/samba/inx.html" CLASS="index">
+<IMG ALT="Book Index" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/index.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+2.2 Configuring Samba</TD></TR></TABLE><HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+
+<!--  End of sample chapter -->
+<P><B>Back to: <A HREF="http://www.oreilly.com/catalog/samba/noframes.html">Using Samba</A></B>
+<CENTER>
+<HR NOSHADE SIZE="1">
+<FONT SIZE="1" FACE="Verdana, Arial, Helvetica">
+<A HREF="http://www.oreilly.com/">
+<B>O'Reilly Home</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/sales/bookstores">
+<B>O'Reilly Bookstores</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/order_new/">
+<B>How to Order</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/contact.html">
+<B>O'Reilly Contacts<BR></B></A>
+<A HREF="http://www.oreilly.com/international/">
+<B>International</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/about.html">
+<B>About O'Reilly</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/affiliates.html">
+<B>Affiliated Companies</B></A><P>
+<EM>&copy; 1999, O'Reilly &amp; Associates, Inc.</EM>
+</FONT>
+</CENTER>
+</BODY>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+</HTML>

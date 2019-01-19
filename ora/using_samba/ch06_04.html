@@ -1,0 +1,764 @@
+<!DOCTYPE HTML PUBLIC "html.dtd">
+<HTML>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+<HEAD>
+<TITLE>
+[Chapter 6] 6.4 Passwords</TITLE><META NAME="DC.title" CONTENT=""><META NAME="DC.creator" CONTENT=""><META NAME="DC.publisher" CONTENT="O'Reilly &amp; Associates, Inc."><META NAME="DC.date" CONTENT="1999-11-05T21:33:50Z"><META NAME="DC.type" CONTENT="Text.Monograph"><META NAME="DC.format" SCHEME="MIME" CONTENT="text/html"><META NAME="DC.source" SCHEME="ISBN" CONTENT=""><META NAME="DC.language" CONTENT="en-US"><META NAME="generator" CONTENT="Jade 1.1/O'Reilly DocBook 3.0 to HTML 4.0"></HEAD>
+<BODY VLINK="#0000CC" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#990000">
+<TABLE WIDTH="90%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD COLSPAN="2">
+<IMG WIDTH="515" ALT="Search the Catalog" SRC="http://www.oreilly.com/graphics_new/catalog_header_buttons.gif" HEIGHT="37" ISMAP ALIGN="BOTTOM" USEMAP="#catalog_header_buttons" BORDER="0">
+<MAP NAME="catalog_header_buttons">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/search.html" COORDS="407,17,512,32">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/catalog/prdindex.html" COORDS="431,3,512,18">
+</MAP>
+</TD>
+</TR>
+<TR>
+<TD WIDTH="25%" VALIGN="TOP">
+<A HREF="http://www.oreilly.com/catalog/samba/">
+<IMG ALT="Using Samba" VALIGN="top" VSPACE="10" HSPACE="10" SRC="http://www.oreilly.com/catalog/covers/samba.s.gif" ALIGN="left" BORDER="0">
+</A>
+</TD>
+<TD VALIGN="TOP" HEIGHT="105">
+<BR>
+<H2>Using Samba</H2>
+<FONT SIZE="-1">
+Robert Eckstein, David Collier-Brown, Peter Kelly
+<BR>1st Edition November 1999
+<BR>1-56592-449-5, Order Number: 4495
+<BR>416 pages, $34.95
+</FONT>
+</TD>
+</TR>
+</TABLE>
+<HR NOSHADE SIZE="1">
+<!-- sample chapter begins -->
+
+<CENTER>
+<DIV CLASS="htmlnav">
+<TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="6.3 Authentication Security" HREF="ch06_03.html" CLASS="sect1">
+<IMG ALT="Previous: 6.3 Authentication Security" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<B>
+<FONT SIZE="-1" FACE="ARIEL,HELVETICA,HELV,SANSERIF">
+<A TITLE="6. Users, Security, and Domains " REL="up" HREF="ch06_01.html" CLASS="chapter">
+Chapter 6<BR>
+Users, Security, and Domains </A></FONT></B></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="6.5 Windows Domains" HREF="ch06_05.html" CLASS="sect1">
+<IMG ALT="Next: 6.5 Windows Domains" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR></TABLE>&nbsp;<HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+<BLOCKQUOTE>
+<DIV>
+<H2 CLASS="sect1">
+<A NAME="ch06-61393" CLASS="title">
+6.4 Passwords</A></H2><P CLASS="para">Passwords are a thorny issue with Samba. So much so, in fact, that they are almost always the first major problem that users encounter when they install Samba, and generate by far the most questions sent to Samba support groups. In previous chapters, we've gotten around the need for passwords by placing the <CODE CLASS="literal">
+guest</CODE> <CODE CLASS="literal">
+ok</CODE> option in each of our configuration files, which allows connections without authenticating passwords. However, at this point, we need to delve deeper into Samba to discover what is happening on the network.</P><P CLASS="para">Passwords sent from individual clients can be either encrypted or non-encrypted. Encrypted passwords are, of course, more secure. A non-encrypted password can be easily read with a packet sniffing program, such as the modified <EM CLASS="emphasis">
+tcpdump</EM> program for Samba that we used in <B>Chapter 3, <CITE CLASS="chapter">
+Configuring Windows Clients</CITE></B>. Whether passwords are encrypted depends on the operating system that the client is using to connect to the Samba server. <A HREF="#ch06-75183" CLASS="xref">
+Table 6.5</A> lists which Windows operating systems encrypt their passwords before sending them to the primary domain controller for authentication. If your client is not Windows, check the system documentation to see if SMB passwords are encrypted.   </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch06-75183" CLASS="title">
+Table 6.5: Windows Operating Systems with Encrypted Passwords </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Operating System</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Encrypted or Non-encrypted</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+</CODE>Windows 95</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Non-encrypted</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Windows 95 with SMB Update</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Encrypted</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Windows 98</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Encrypted</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Windows NT 3.<EM CLASS="emphasis">
+x</EM></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Non-encrypted</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Windows NT 4.0 before SP<CODE CLASS="literal">
+ 3</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Non-encrypted</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Windows NT 4.0 after SP 3</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Encrypted</P></TD></TR></TBODY></TABLE><P CLASS="para">
+There are actually two different encryption methods used: one for Windows 95 and 98 clients that reuses Microsoft's LAN Manager encryption style, and a separate one for Windows NT clients and servers. Windows 95 and 98 use an older encryption system inherited from the LAN Manager network software, while Windows NT clients and servers use a newer encryption system.</P><P CLASS="para">
+If encrypted passwords are supported, Samba stores the encrypted passwords in a file called <I CLASS="filename">
+smbpasswd</I>. By default, this file is located in the <I CLASS="filename">
+private</I> directory of the Samba distribution ( <I CLASS="filename">
+/usr/local/samba/private</I>). At the same time, the client stores an encrypted version of a user's password on its own system. The plaintext password is never stored on either system. Each system encrypts the password automatically using a known algorithm when the password is set or changed.</P><P CLASS="para">
+When a client requests a connection to an SMB server that supports encrypted passwords (such as Samba or Windows NT), the two computers undergo the following negotiations:</P><OL CLASS="orderedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-957427" CLASS="listitem">
+</A>The client attempts to negotiate a protocol with the server.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-957428" CLASS="listitem">
+</A>The server responds with a protocol and indicates that it supports encrypted passwords. At this time, it sends back a randomly-generated 8-byte challenge string.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-957433" CLASS="listitem">
+</A>The client uses the challenge string as a key to encrypt its already encrypted password using an algorithm predefined by the negotiated protocol. It then sends the result to the server.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-957436" CLASS="listitem">
+</A>The server does the same thing with the encrypted password stored in its database. If the results match, the passwords are equivalent and the user is authenticated.</P></LI></OL><P CLASS="para">
+Note that even though the original passwords are not involved in the authentication process, you need to be very careful that the encrypted passwords located inside of the <I CLASS="filename">
+smbpasswd</I> file are guarded from unauthorized users. If they are compromised, an unauthorized user can break into the system by replaying the steps of the previous algorithm. The encrypted passwords are just as sensitive as the plaintext passwords&nbsp;- this is known as <I CLASS="firstterm">
+plaintext-equivalent</I> data in the cryptography world. Of course, you should also ensure that the clients safeguard their plaintext-equivalent passwords as well.</P><P CLASS="para">
+You can configure Samba to accept encrypted passwords with the following global additions to <I CLASS="filename">
+smb.conf</I>. Note that we explicitly name the location of the Samba password file:</P><PRE CLASS="programlisting">
+[global]
+	security = user
+	encrypt passwords = yes
+	smb passwd file = /usr/local/samba/private/smbpasswd</PRE><P CLASS="para">
+Samba, however, will not accept any users until the <I CLASS="filename">
+smbpasswd</I> file has been initialized.</P><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch06-pgfId-959309" CLASS="title">
+6.4.1 Disabling encrypted passwords on the client</A></H3><P CLASS="para">While Unix authentication has been in use for decades, including the use of <EM CLASS="emphasis">
+telnet</EM> and <EM CLASS="emphasis">
+rlogin</EM> access across the Internet, it embodies well-known security risks. Plaintext passwords are sent over the Internet and can be retrieved from TCP packets by malicious snoopers. However, if you feel that your network is secure and you wish to use standard Unix <I CLASS="filename">
+/etc/passwd</I> authentication for all clients, you can do so, but you must disable encrypted passwords on those Windows clients that default to using them. </P><P CLASS="para">
+In order to do this, you must modify the Windows registry by installing two files on each system. Depending on the platform involved, the files are either <I CLASS="filename">
+NT4_PlainPassword.reg</I> or <I CLASS="filename">
+Win95_PlainPassword.reg</I>. You can perform this installation by copying the appropriate <I CLASS="filename">
+.reg</I> files from the Samba distribution's <I CLASS="filename">
+/docs</I> directory to a DOS floppy, and running it from the Run menu item on the client's Start Menu button. Incidentally, the Windows 95 <I CLASS="filename">
+.reg</I> file works fine on Windows 98 as well.</P><P CLASS="para">
+After you reboot the machine, the client will not encrypt its hashed passwords before sending them to the server. This means that the plaintext-equivalent passwords can been seen in the TCP packets that are broadcast across the network. Again, we encourage you not to do this unless you are absolutely sure that your network is secure.</P><P CLASS="para">
+If passwords are not encrypted, you can indicate as much in your Samba configuration file:</P><PRE CLASS="programlisting">
+[global]
+	security = user
+	encrypt passwords = no</PRE></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch06-17782" CLASS="title">
+6.4.2 The smbpasswd File</A></H3><P CLASS="para">
+<I CLASS="filename">
+</I>Samba stores its encrypted passwords in a file called <I CLASS="filename">
+smbpasswd</I>, which by default resides in the <I CLASS="filename">
+/usr/local/samba/private</I> directory. The <I CLASS="filename">
+smbpasswd</I> file should be guarded as closely as the <I CLASS="filename">
+passwd</I> file; it should be placed in a directory to which only the root user has read/write access. All other users should not be able to read from the directory at all. In addition, the file should have all access closed off to all users except for root.</P><P CLASS="para">
+Before you can use encrypted passwords, you will need to create an entry for each Unix user in the <I CLASS="filename">
+smbpasswd</I> file. The structure of the file is somewhat similar to a Unix <I CLASS="filename">
+passwd</I> file, but has different fields. <A HREF="#ch06-54128" CLASS="xref">
+Figure 6.3</A> illustrates the layout of the <I CLASS="filename">
+smbpasswd</I> file; the entry shown is actually one line in the file. </P><H4 CLASS="figure">
+<A NAME="ch06-54128" CLASS="title">
+Figure 6.3: Structure of the smbpasswd file entry (actually one line)</A></H4><IMG ALT="Figure 6.3" CLASS="graphic" SRC="figs/sam.0603.gif"><P CLASS="para">
+Here is a breakdown of the individual fields:</P><DL CLASS="variablelist">
+<DT CLASS="term">
+Username</DT><DD CLASS="listitem">
+<P CLASS="para">
+This is the username of the account. It is taken directly from the system password file.</P></DD><DT CLASS="term">
+UID</DT><DD CLASS="listitem">
+<P CLASS="para">
+This is the user ID of the account. Like the username, it is taken directly from the system password file and must match the user it represents there.</P></DD><DT CLASS="term">
+LAN Manager Password Hash</DT><DD CLASS="listitem">
+<P CLASS="para">
+This is a 32-bit hexadecimal sequence that represents the password Windows 95 and 98 clients will use. It is derived by encrypting the string <CODE CLASS="literal">
+KGS!@#$%</CODE> with a 56-bit DES algorithm using the user's password (forced to 14 bytes and converted to capital letters) twice repeated as the key. If there is currently no password for this user, the first 11 characters of the hash will consist of the sequence <CODE CLASS="literal">
+NO</CODE> <CODE CLASS="literal">
+PASSWORD</CODE> followed by <CODE CLASS="literal">
+X</CODE> characters for the remainder. Anyone can access the share with no password. On the other hand, if the password has been disabled, it will consist of 32 <CODE CLASS="literal">
+X</CODE> characters. Samba will not grant access to a user without a password unless the <CODE CLASS="literal">
+null</CODE> <CODE CLASS="literal">
+passwords</CODE> option has been set.</P></DD><DT CLASS="term">
+NT Password Hash</DT><DD CLASS="listitem">
+<P CLASS="para">
+This is a 32-bit hexadecimal sequence that represents the password Windows NT clients will use. It is derived by hashing the user's password (represented as a 16-bit little-endian Unicode sequence) with an MD4 hash. The password is not converted to uppercase letters first.</P></DD><DT CLASS="term">
+Account Flags</DT><DD CLASS="listitem">
+<P CLASS="para">
+This field consists of 11 characters between two braces ( [ ] ). Any of the following characters can appear in any order; the remaining characters should be spaces:</P><P CLASS="para">
+U</P><P CLASS="para">
+This account is a standard user account.</P><P CLASS="para">
+D</P><P CLASS="para">
+This account is currently disabled and Samba should not allow any logins.</P><P CLASS="para">
+N</P><P CLASS="para">
+This account has no password associated with it.</P><P CLASS="para">
+W</P><P CLASS="para">
+This is a workstation trust account that can be used to configure Samba as a primary domain controller (PDC) when allowing Windows NT machines to join its domain.</P></DD></DL><DL CLASS="variablelist">
+<DT CLASS="term">
+Last Change Time</DT><DD CLASS="listitem">
+<P CLASS="para">
+This code consists of the characters <CODE CLASS="literal">
+LCT-</CODE> followed by a hexidecimal representation of the amount of seconds since the epoch (midnight on January 1, 1970) that the entry was last changed.</P></DD></DL><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-957988" CLASS="title">
+6.4.2.1 Adding entries to smbpasswd</A></H4><P CLASS="para">
+<I CLASS="filename">
+</I>There are a few ways you can add a new entry to the <I CLASS="filename">
+smbpasswd</I> file:</P><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-961684" CLASS="listitem">
+</A>You can use the <I CLASS="firstterm">
+smbpasswd</I> program with the <CODE CLASS="literal">
+-a</CODE> option to automatically add any user that currently has a standard Unix system account on the server. This program resides in the <I CLASS="filename">
+/usr/local/samba/bin</I> directory.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-957867" CLASS="listitem">
+</A>You can use the <I CLASS="firstterm">
+addtosmbpass</I> executable inside the <I CLASS="firstterm">
+/usr/local/samba/bin</I> directory. This is actually a simple <EM CLASS="emphasis">
+awk</EM> script that parses a system password file and extracts the username and UID of each entry you wish to add to the SMB password file. It then adds default fields for the remainder of the user's entry, which can be updated using the <I CLASS="filename">
+smbpasswd</I> program later. In order to use this program, you will probably need to edit the first line of the file to correctly point to <EM CLASS="emphasis">
+awk</EM> on your system.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-957870" CLASS="listitem">
+</A>In the event that the neither of those options work for you, you can create a default entry by hand in the <I CLASS="filename">
+smbpasswd</I> file. The entry should be entirely on one line. Each field should be colon-separated and should look similar to the following:</P></LI></UL><PRE CLASS="programlisting">
+dave:500:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:[U          ]:LCT-00000000:</PRE><P CLASS="para">
+This consists of the username and the UID as specified in the system password file, followed by two sets of exactly 32 <CODE CLASS="literal">
+X</CODE> characters, followed by the account flags and last change time as it appears above. After you've added this entry, you must use the <I CLASS="firstterm">
+smbpasswd</I> program to change the password for the user.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-958012" CLASS="title">
+6.4.2.2 Changing the encrypted password</A></H4><P CLASS="para">If you need to change the encrypted password in the <I CLASS="filename">
+smbpasswd</I> file, you can also use the <I CLASS="filename">
+smbpasswd</I> program. Note that this program shares the same name as the encrypted password file itself, so be sure not to accidentally confuse the password file with the password-changing program.</P><P CLASS="para">
+The <I CLASS="filename">
+smbpasswd</I> program is almost identical to the <I CLASS="filename">
+passwd</I> program that is used to change Unix account passwords. The program simply asks you to enter your old password (unless you're the root user), and duplicate entries of your new password. No password characters are shown on the screen. </P><PRE CLASS="programlisting">
+<B CLASS="emphasis.bold">
+<CODE CLASS="literal">
+#</CODE> smbpasswd dave</B>
+</PRE><PRE CLASS="programlisting">
+Old SMB password:
+New SMB password:
+Retype new SMB password:
+Password changed for user dave</PRE><P CLASS="para">
+You can look at the <I CLASS="filename">
+smbpasswd</I> file after this command completes to verify that both the LAN Manager and the NT hashes of the passwords have been stored in their respective positions. Once users have encrypted password entries in the database, they should be able to connect to shares using encrypted passwords!<I CLASS="filename">
+</I> </P></DIV></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch06-97004" CLASS="title">
+6.4.3 Password Synchronization</A></H3><P CLASS="para">Having a regular password and an encrypted version of the same password can be troublesome when you need to change both of them. Luckily, Samba affords you a limited ability to keep your passwords synchronized. Samba has a pair of configuration options that can be used to automatically update a user's regular Unix password when the encrypted password is changed on the system. The feature can be activated by specifying the <CODE CLASS="literal">
+unix</CODE> <CODE CLASS="literal">
+password</CODE> <CODE CLASS="literal">
+sync</CODE> global configuration option:</P><PRE CLASS="programlisting">
+[global]
+	encrypt passwords = yes
+	smb passwd file = /usr/local/samba/private/smbpasswd
+
+	unix password sync = yes</PRE><P CLASS="para">
+With this option enabled, Samba will attempt to change the user's regular password (as <CODE CLASS="literal">
+root</CODE>) when the encrypted version is changed with <I CLASS="filename">
+smbpasswd</I>. However, there are two other options that have to be set correctly in order for this to work.</P><P CLASS="para">
+The easier of the two is <CODE CLASS="literal">
+passwd</CODE> <CODE CLASS="literal">
+program</CODE>. This option simply specifies the Unix command used to change a user's standard system password. It is set to <CODE CLASS="literal">
+/bin/passw</CODE>d <CODE CLASS="literal">
+%u</CODE> by default. With some Unix systems, this is sufficient and you do not need to change anything. Others, such as Red Hat Linux, use <I CLASS="filename">
+/usr/bin/passwd</I> instead. In addition, you may want to change this to another program or script at some point in the future. For example, let's assume that you want to use a script called <CODE CLASS="literal">
+changepass</CODE> to change a user's password. Recall that you can use the variable <CODE CLASS="literal">
+%u</CODE> to represent the current Unix username. So the example becomes:</P><PRE CLASS="programlisting">
+[global]
+	encrypt passwords = yes
+	smb passwd file = /usr/local/samba/private/smbpasswd
+
+	unix password sync = yes
+	passwd program = changepass %u</PRE><P CLASS="para">
+Note that this program will be called as the <CODE CLASS="literal">
+root</CODE> user when the <CODE CLASS="literal">
+unix</CODE> <CODE CLASS="literal">
+password</CODE> <CODE CLASS="literal">
+sync</CODE> option is set to <CODE CLASS="literal">
+yes</CODE>. This is because Samba does not necessarily have the plaintext old password of the user. </P><P CLASS="para">
+The harder option to configure is <CODE CLASS="literal">
+passwd</CODE> <CODE CLASS="literal">
+chat</CODE>. The <CODE CLASS="literal">
+passwd</CODE> <CODE CLASS="literal">
+chat</CODE> option works like a Unix chat script. It specifies a series of strings to send as well as responses to expect from the program specified by the <CODE CLASS="literal">
+passwd</CODE> <CODE CLASS="literal">
+program</CODE> option. For example, this is what the default <CODE CLASS="literal">
+passwd</CODE> <CODE CLASS="literal">
+chat</CODE> looks like. The delimiters are the spaces between each groupings of characters:</P><PRE CLASS="programlisting">
+passwd chat = *old*password* %o\n *new*password* %n\n *new*password* %n\n *changed*</PRE><P CLASS="para">
+The first grouping represents a response expected from the password-changing program. Note that it can contain wildcards (*), which help to generalize the chat programs to be able to handle a variety of similar outputs. Here, <CODE CLASS="literal">
+*old*password*</CODE> indicates that Samba is expecting any line from the password program containing the letters <CODE CLASS="literal">
+old</CODE> followed by the letters <CODE CLASS="literal">
+password</CODE>, without regard for what comes on either side or between them. Once instructed to, Samba will wait indefinitely for such a match. Is Samba does not receive the expected response, the password will fail.</P><P CLASS="para">
+The second grouping indicates what Samba should send back once the data in the first grouping has been matched. In this case, you see <CODE CLASS="literal">
+%o\n</CODE>. This response is actually two items: the variable <CODE CLASS="literal">
+%o</CODE> represents the old password, while the <CODE CLASS="literal">
+\n</CODE> is a newline character. So, in effect, this will "type" the old password into the standard input of the password changing program, and then "press" Enter.</P><P CLASS="para">
+Following that is another response grouping, followed by data that will be sent back to the password changing program. (In fact, this response/send pattern continues indefinitely in any standard Unix <EM CLASS="emphasis">
+chat</EM> script.) The script continues until the final pattern is matched.[<A HREF="#ch06-pgfId-969009" CLASS="footnote">
+2</A>]</P><BLOCKQUOTE CLASS="footnote">
+<DIV CLASS="footnote">
+<P CLASS="para">
+<A NAME="ch06-pgfId-969009" CLASS="footnote">
+[2]</A> This may not work under Red Hat Linux, as the password program typically responds "All authentication tokens updated successfully," instead of "Password changed." We provide a fix for this later in this section.</P></DIV></BLOCKQUOTE><P CLASS="para">
+You can help match the response strings sent from the password program with the characters listed in <A HREF="#ch06-77246" CLASS="xref">
+Table 6.6</A>. In addition, you can use the characters listed in <A HREF="#ch06-38512" CLASS="xref">
+Table 6.7</A> to help formulate your response.     </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch06-77246" CLASS="title">
+Table 6.6: Password Chat Response Characters </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Character</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Definition</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+*</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">Zero or more occurrences of any character.</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+&quot; &quot;</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Allows you to include matching strings that contain spaces. Asterisks are still considered wildcards even inside of quotes, and you can represent a null response with empty quotes.</P></TD></TR></TBODY></TABLE><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch06-38512" CLASS="title">
+Table 6.7: Password Chat Send Characters </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Character</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Definition</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+%o</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+The user's old password</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+%n</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+The user's new password</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+\n</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+The linefeed character</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+\r</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+The carriage-return character</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+\t</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+The tab character</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+\s</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+A space</P></TD></TR></TBODY></TABLE><P CLASS="para">
+For example, you may want to change your password chat to the following entry. This will handle scenarios in which you do not have to enter the old password. In addition, this will also handle the new <CODE CLASS="literal">
+all</CODE> <CODE CLASS="literal">
+tokens</CODE> <CODE CLASS="literal">
+updated</CODE> <CODE CLASS="literal">
+successfully</CODE> string that Red Hat Linux sends:</P><PRE CLASS="programlisting">
+passwd chat = *new password* %n\n *new password* %n\n *success*</PRE><P CLASS="para">
+Again, the default chat should be sufficient for many Unix systems. If it isn't, you can use the <CODE CLASS="literal">
+passwd</CODE> <CODE CLASS="literal">
+chat</CODE> <CODE CLASS="literal">
+debug</CODE> global option to set up a new chat script for the password change program. The <CODE CLASS="literal">
+passwd</CODE> <CODE CLASS="literal">
+chat</CODE> <CODE CLASS="literal">
+debug</CODE> option logs everything during a password chat. This option is a simple boolean, as shown below:</P><PRE CLASS="programlisting">
+[global]
+    encrypted passwords = yes
+    smb passwd file = /usr/local/samba/private/smbpasswd
+
+    unix password sync = yes
+    passwd chat debug = yes
+    log level = 100</PRE><P CLASS="para">
+After you activate the password chat debug feature, all I/O received by Samba through the password chat will be sent to the Samba logs with a debug level of 100, which is why we entered a new log level option as well. As this can often generate multitudes of error logs, it may be more efficient to use your own script, by setting the <CODE CLASS="literal">
+passwd</CODE> <CODE CLASS="literal">
+program</CODE> option, in place of <I CLASS="filename">
+/bin/passwd</I> to record what happens during the exchange. Also, make sure to protect your log files with strict file permissions and to delete them as soon as you've grabbed the information you need, because they contain the passwords in plaintext.</P><P CLASS="para">
+The operating system on which Samba is running may have strict requirements for valid passwords in order to make them more impervious to dictionary attacks and the like. Users should be made aware of these restrictions when changing their passwords.</P><P CLASS="para">
+Earlier we said that password synchronization is limited. This is because there is no reverse synchronization of the encrypted <I CLASS="filename">
+smbpasswd</I> file when a standard Unix password is updated by a user. There are various strategies to get around this, including NIS and freely available implementations of the pluggable authentication modules (PAM) standard, but none of them really solve all the problems yet. In the future, when Windows 2000 emerges, we will see more compliance with the Lightweight Directory Access Protocol (LDAP), which promises to make password synchronization a thing of the past. </P></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch06-pgfId-958652" CLASS="title">
+6.4.4 Password Configuration Options</A></H3><P CLASS="para">
+The options in <A HREF="#ch06-68460" CLASS="xref">
+Table 6.8</A> will help you work with passwords in Samba.   </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch06-68460" CLASS="title">
+Table 6.8: Password Configuration Options </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Option</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Parameters</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Function</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Default</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Scope</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+encrypt passwords</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+boolean</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">Turns on encrypted passwords.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+no</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+unix password sync </CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+boolean</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+If <CODE CLASS="literal">
+yes</CODE>, Samba updates the standard Unix password database when a user changes his or her encrypted password.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+no</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+passwd chat</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (chat commands)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets a sequence of commands that will be sent to the password program.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+See earlier section on this option</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+passwd chat debug</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+boolean</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sends debug logs of the password-change process to the log files with a level of 100.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+no</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+passwd program</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (Unix command)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the program to be used to change passwords.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+/bin/passwd %u</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+password level</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+numeric</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the number of capital letter permutations to attempt when matching a client's password.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+update encrypted</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+boolean</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+If <CODE CLASS="literal">
+yes</CODE>, Samba updates the encrypted password file when a client connects to a share with a plaintext password.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+no</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+null passwords</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+boolean</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+If <CODE CLASS="literal">
+yes</CODE>, Samba allows access for users with null passwords.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+no</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+smb passwd file</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (fully-qualified pathname)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Specifies the name of the encrypted password file.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+/usr/local/samba/private/smbpasswd</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+hosts equiv</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (fully-qualified pathname)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Specifies the name of a file that contains hosts and users that can connect without using a password.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+use rhosts</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (fully-qualified pathname)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Specifies the name of an .<EM CLASS="emphasis">
+rhosts</EM> file that allows users to connect without using a password.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR></TBODY></TABLE><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-968072" CLASS="title">
+6.4.4.1 unix password sync</A></H4><P CLASS="para">
+The <CODE CLASS="literal">
+unix</CODE> <CODE CLASS="literal">
+password</CODE> <CODE CLASS="literal">
+sync</CODE> global option allows Samba to update the standard Unix password file when a user changes his or her encrypted password. The encrypted password is stored on a Samba server in the <I CLASS="filename">
+smbpasswd</I> file, which is located in <I CLASS="filename">
+/usr/local/samba/private</I> by default. You can activate this feature as follows:</P><PRE CLASS="programlisting">
+[global]
+	unix password sync = yes</PRE><P CLASS="para">
+If this option is enabled, Samba changes the encrypted password and, in addition, attempts to change the standard Unix password by passing the username and new password to the program specified by the <CODE CLASS="literal">
+passwd</CODE> <CODE CLASS="literal">
+program</CODE> option (described earlier). Note that Samba does not necessarily have access to the plaintext password for this user, so the password changing program must be invoked as <CODE CLASS="literal">
+root</CODE>.[<A HREF="#ch06-pgfId-959675" CLASS="footnote">
+3</A>] If the Unix password change does not succeed, for whatever reason, the SMB password will not be changed either.</P><BLOCKQUOTE CLASS="footnote">
+<DIV CLASS="footnote">
+<P CLASS="para">
+<A NAME="ch06-pgfId-959675" CLASS="footnote">
+[3]</A> This is because the Unix <EM CLASS="emphasis">
+passwd</EM> program, which is the usual target for this operation, allows <CODE CLASS="literal">
+root</CODE> to change a user's password without the security restriction that requests the old password of that user.</P></DIV></BLOCKQUOTE></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-958684" CLASS="title">
+6.4.4.2 encrypt passwords</A></H4><P CLASS="para">The <CODE CLASS="literal">
+encrypt</CODE> <CODE CLASS="literal">
+passwords</CODE> global option switches Samba from using plaintext passwords to encrypted passwords for authentication. Encrypted passwords will be expected from clients if the option is set to <CODE CLASS="literal">
+yes</CODE>:</P><PRE CLASS="programlisting">
+encrypt passwords = yes</PRE><P CLASS="para">
+By default, Windows NT 4.0 with Service Pack 3 or above and Windows 98 transmit encrypted passwords over the network. If you are enabling encrypted passwords, you must have a valid <I CLASS="filename">
+smbpasswd</I> file in place and populated with usernames that will authenticate with encrypted passwords. (See the section <A HREF="#ch06-17782" CLASS="xref">
+Section 6.4.2, The smbpasswd File</A>," earlier in this chapter.) In addition, Samba must know the location of the <I CLASS="filename">
+smbpasswd</I> file; if it is not in the default location (typically <I CLASS="filename">
+/usr/local/samba/private/smbpasswd</I>), you can explicitly name it using the <CODE CLASS="literal">
+smb</CODE> <CODE CLASS="literal">
+passwd</CODE> <CODE CLASS="literal">
+file</CODE> option.</P><P CLASS="para">
+If you wish, you can use the <CODE CLASS="literal">
+update</CODE> <CODE CLASS="literal">
+encrypted</CODE> to force Samba to update the <I CLASS="filename">
+smbpasswd</I> file with encrypted passwords each time a client connects to a non-encrypted password.</P><P CLASS="para">
+A common strategy to ensure that hosts who need encrypted password authentication indeed receive it is with the <CODE CLASS="literal">
+include</CODE> option. With this, you can create individual configuration files that will be read in based on OS-type (<CODE CLASS="literal">
+%a</CODE>) or client name (<CODE CLASS="literal">
+%m</CODE>). These host-specific or OS-specific configuration files can contain an <CODE CLASS="literal">
+encrypted</CODE> <CODE CLASS="literal">
+passwords</CODE> <CODE CLASS="literal">
+=</CODE> <CODE CLASS="literal">
+yes</CODE> option that will activate only when those clients are connecting to the server.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-954367" CLASS="title">
+6.4.4.3 passwd program</A></H4><P CLASS="para">
+The <CODE CLASS="literal">
+passwd</CODE> <CODE CLASS="literal">
+program</CODE> is used to specify a program on the Unix Samba server that Samba can use to update the standard system password file when the encrypted password file is updated. This option defaults to the standard<EM CLASS="emphasis">
+ passwd</EM> program, usually located in the <I CLASS="filename">
+/bin</I> directory. The <CODE CLASS="literal">
+%u</CODE> variable is typically used here as the requesting user when the command is executed. The actual handling of input and output to this program during execution is handled through the <CODE CLASS="literal">
+passwd</CODE> <CODE CLASS="literal">
+chat</CODE> option. The "Password Synchronization" section, earlier in this chapter, covers this option in detail.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-954372" CLASS="title">
+6.4.4.4 passwd chat</A></H4><P CLASS="para">
+This option specifies a series of send/response strings similar to a Unix chat script, which are used to interface with the password-changing program on the Samba server. The "Password Synchronization" section, earlier in this chapter, covers this option in detail.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-954442" CLASS="title">
+6.4.4.5 passwd chat debug</A></H4><P CLASS="para">
+If set to <CODE CLASS="literal">
+yes</CODE>, the <CODE CLASS="literal">
+passwd</CODE> <CODE CLASS="literal">
+chat</CODE> <CODE CLASS="literal">
+debug</CODE> global option logs everything sent or received by Samba during a password chat. All the I/O received by Samba through the password chat is sent to the Samba logs with a debug level of 100; you will need to specify <CODE CLASS="literal">
+log</CODE> <CODE CLASS="literal">
+level</CODE> <CODE CLASS="literal">
+=</CODE> <CODE CLASS="literal">
+100</CODE> in order for the information to be recorded. The "Password Synchronization" section<EM CLASS="emphasis">
+,</EM> earlier in this chapter, describes this option in more detail. Be aware that if you do set this option, the plaintext passwords will be visible in the debugging logs, which could be a security hazard if they are not properly secured.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-958069" CLASS="title">
+6.4.4.6 password level</A></H4><P CLASS="para">
+With SMB, non-encrypted (or plaintext) passwords are sent with capital letters, just like the usernames mentioned previously. Many Unix users, however, choose passwords with both uppercase and lowercase letters. Samba, by default, only attempts to match the password entirely in lowercase letters, and not capitalizing the first letter.</P><P CLASS="para">
+Like <CODE CLASS="literal">
+username</CODE> <CODE CLASS="literal">
+level</CODE>, there is a <CODE CLASS="literal">
+password</CODE> <CODE CLASS="literal">
+level</CODE> option that can be used to attempt various permutations of the password with capital letters. This option takes an integer value that specifies how many letters in the password should be capitalized when attempting to connect to a share. You can specify this options as follows:</P><PRE CLASS="programlisting">
+[global]
+	password level = 3</PRE><P CLASS="para">
+In this case, Samba will then attempt all permutations of the password it can compute having three capital letters. The larger the number, the more computations Samba will have to perform to match the password, and the longer a connection to a specific share may take. </P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-954452" CLASS="title">
+6.4.4.7 update encrypted</A></H4><P CLASS="para">
+For sites switching over to the encrypted password format, Samba provides an option that should help with the transition. The <CODE CLASS="literal">
+update</CODE> <CODE CLASS="literal">
+encrypted</CODE> option allows a site to ease into using encrypted passwords from plaintext passwords. You can activate this option as follows:</P><PRE CLASS="programlisting">
+[global]
+    update encrypted = yes</PRE><P CLASS="para">
+This instructs Samba to create an encrypted version of each user's Unix password in the <I CLASS="filename">
+smbpasswd</I> file each time he or she connects to a share. When this option is enabled, you must have the <CODE CLASS="literal">
+encrypt</CODE> <CODE CLASS="literal">
+passwords</CODE> option set to <CODE CLASS="literal">
+no</CODE> so that the client will pass plaintext passwords to Samba to use to update the files. Once each user has connected at least once, you can set <CODE CLASS="literal">
+encrypted</CODE> <CODE CLASS="literal">
+passwords</CODE> <CODE CLASS="literal">
+=</CODE> <CODE CLASS="literal">
+yes</CODE>, allowing you to use only the encrypted passwords. The user must already have a valid entry in the <I CLASS="filename">
+smbpasswd</I> file for this option to work.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-958716" CLASS="title">
+6.4.4.8 null passwords</A></H4><P CLASS="para">
+This global option tells Samba whether or not to allow access from users that have null passwords (encrypted or non-encrypted) set in their accounts. The default value is <CODE CLASS="literal">
+no</CODE>. You can override it as follows:</P><PRE CLASS="programlisting">
+null passwords = yes</PRE><P CLASS="para">
+We highly recommend against doing so unless you are familiar with the security risks this option can present to your system, including inadvertent access to system users (such as <I CLASS="filename">
+bin</I>) in the system password file who have null passwords set.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-959357" CLASS="title">
+6.4.4.9 smb passwd file</A></H4><P CLASS="para">This global option identifies the location of the encrypted password database. By default, it is set to <I CLASS="filename">
+/usr/local/samba/private/smbpasswd</I>. You can override it as follows:</P><PRE CLASS="programlisting">
+[global]
+	smb passwd file = /etc/smbpasswd</PRE><P CLASS="para">
+This location, for example, is common on many Red Hat distributions.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-969088" CLASS="title">
+6.4.4.10 hosts equiv</A></H4><P CLASS="para">
+This global option specifies the name of a standard Unix <I CLASS="filename">
+hosts.equiv</I> file that will allow hosts or users to access shares without specifying a password. You can specify the location of such a file as follows:</P><PRE CLASS="programlisting">
+[global]
+	hosts equiv = /etc/hosts.equiv</PRE><P CLASS="para">
+The default value for this option does not specify any <I CLASS="filename">
+hosts.equiv</I> file. Because using such a file is essentially a huge security risk, we highly recommend that you do not use this option unless you are confident in the security of your network.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-959358" CLASS="title">
+6.4.4.11 use rhosts</A></H4><P CLASS="para">
+This global option specifies the name of a standard Unix user's <I CLASS="filename">
+.rhosts</I> file that will allow foreign hosts to access shares without specifying a password. You can specify the location of such a file as follows:</P><PRE CLASS="programlisting">
+[global]
+	use rhosts = /home/dave/.rhosts</PRE><P CLASS="para">
+The default value for this option does not specify any <I CLASS="filename">
+.rhosts</I> file. Like the <CODE CLASS="literal">
+hosts</CODE> <CODE CLASS="literal">
+equiv</CODE> option above, using such a file is a security risk. We highly recommend that you do use this option unless you are confident in the security of your network. </P></DIV></DIV></DIV></BLOCKQUOTE>
+<DIV>
+<CENTER>
+<HR NOSHADE SIZE="1"><TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="6.3 Authentication Security" HREF="ch06_03.html" CLASS="sect1">
+<IMG ALT="Previous: 6.3 Authentication Security" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="" HREF="index.html" CLASS="book">
+<IMG ALT="" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txthome.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="6.5 Windows Domains" HREF="ch06_05.html" CLASS="sect1">
+<IMG ALT="Next: 6.5 Windows Domains" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR><TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+6.3 Authentication Security</TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="Book Index" HREF="http://www.oreilly.com/catalog/samba/inx.html" CLASS="index">
+<IMG ALT="Book Index" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/index.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+6.5 Windows Domains</TD></TR></TABLE><HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+
+<!--  End of sample chapter -->
+<P><B>Back to: <A HREF="http://www.oreilly.com/catalog/samba/noframes.html">Using Samba</A></B>
+<CENTER>
+<HR NOSHADE SIZE="1">
+<FONT SIZE="1" FACE="Verdana, Arial, Helvetica">
+<A HREF="http://www.oreilly.com/">
+<B>O'Reilly Home</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/sales/bookstores">
+<B>O'Reilly Bookstores</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/order_new/">
+<B>How to Order</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/contact.html">
+<B>O'Reilly Contacts<BR></B></A>
+<A HREF="http://www.oreilly.com/international/">
+<B>International</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/about.html">
+<B>About O'Reilly</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/affiliates.html">
+<B>Affiliated Companies</B></A><P>
+<EM>&copy; 1999, O'Reilly &amp; Associates, Inc.</EM>
+</FONT>
+</CENTER>
+</BODY>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+</HTML>

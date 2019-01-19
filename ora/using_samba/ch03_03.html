@@ -1,0 +1,600 @@
+<!DOCTYPE HTML PUBLIC "html.dtd">
+<HTML>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+<HEAD>
+<TITLE>
+[Chapter 3] 3.3 An Introduction to SMB/CIFS</TITLE><META NAME="DC.title" CONTENT=""><META NAME="DC.creator" CONTENT=""><META NAME="DC.publisher" CONTENT="O'Reilly &amp; Associates, Inc."><META NAME="DC.date" CONTENT="1999-11-05T21:31:30Z"><META NAME="DC.type" CONTENT="Text.Monograph"><META NAME="DC.format" SCHEME="MIME" CONTENT="text/html"><META NAME="DC.source" SCHEME="ISBN" CONTENT=""><META NAME="DC.language" CONTENT="en-US"><META NAME="generator" CONTENT="Jade 1.1/O'Reilly DocBook 3.0 to HTML 4.0"></HEAD>
+<BODY VLINK="#0000CC" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#990000">
+<TABLE WIDTH="90%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD COLSPAN="2">
+<IMG WIDTH="515" ALT="Search the Catalog" SRC="http://www.oreilly.com/graphics_new/catalog_header_buttons.gif" HEIGHT="37" ISMAP ALIGN="BOTTOM" USEMAP="#catalog_header_buttons" BORDER="0">
+<MAP NAME="catalog_header_buttons">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/search.html" COORDS="407,17,512,32">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/catalog/prdindex.html" COORDS="431,3,512,18">
+</MAP>
+</TD>
+</TR>
+<TR>
+<TD WIDTH="25%" VALIGN="TOP">
+<A HREF="http://www.oreilly.com/catalog/samba/">
+<IMG ALT="Using Samba" VALIGN="top" VSPACE="10" HSPACE="10" SRC="http://www.oreilly.com/catalog/covers/samba.s.gif" ALIGN="left" BORDER="0">
+</A>
+</TD>
+<TD VALIGN="TOP" HEIGHT="105">
+<BR>
+<H2>Using Samba</H2>
+<FONT SIZE="-1">
+Robert Eckstein, David Collier-Brown, Peter Kelly
+<BR>1st Edition November 1999
+<BR>1-56592-449-5, Order Number: 4495
+<BR>416 pages, $34.95
+</FONT>
+</TD>
+</TR>
+</TABLE>
+<HR NOSHADE SIZE="1">
+<!-- sample chapter begins -->
+
+<CENTER>
+<DIV CLASS="htmlnav">
+<TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="3.2 Setting Up Windows NT 4.0 Computers" HREF="ch03_02.html" CLASS="sect1">
+<IMG ALT="Previous: 3.2 Setting Up Windows NT 4.0 Computers" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<B>
+<FONT SIZE="-1" FACE="ARIEL,HELVETICA,HELV,SANSERIF">
+<A TITLE="3. Configuring Windows Clients" REL="up" HREF="ch03_01.html" CLASS="chapter">
+Chapter 3<BR>
+Configuring Windows Clients</A></FONT></B></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="4. Disk Shares " HREF="ch04_01.html" CLASS="chapter">
+<IMG ALT="Next: 4. Disk Shares " SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR></TABLE>&nbsp;<HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+<BLOCKQUOTE>
+<DIV>
+<H2 CLASS="sect1">
+<A NAME="ch03-64069" CLASS="title">
+3.3 An Introduction to SMB/CIFS</A></H2><P CLASS="para">We'll wrap up this chapter with a short tutorial on SMB/CIFS. SMB/CIFS is the protocol that Windows 95/98 and NT machines use to communicate with the Samba server and each other. At a high level, the SMB protocol suite is relatively simple. It includes commands for all of the file and print operations that you might do on a local disk or printer, such as:</P><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-pgfId-942445" CLASS="listitem">
+</A> Opening and closing a file</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-pgfId-942446" CLASS="listitem">
+</A> Creating and deleting files and directories</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-pgfId-942447" CLASS="listitem">
+</A> Reading and writing a file</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-pgfId-942853" CLASS="listitem">
+</A> Searching for files</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-pgfId-942448" CLASS="listitem">
+</A> Queueing and dequeueing files to a print spool</P></LI></UL><P CLASS="para">
+Each of these operations can be encoded into an SMB message and transmitted to and from a server. The original name SMB comes from their data format: these are versions of the standard DOS system-call data structures, or <I CLASS="firstterm">
+Server Message Blocks</I>, redesigned for transmitting to another machine across a network.</P><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch03-pgfId-942451" CLASS="title">
+3.3.1 SMB Format</A></H3><P CLASS="para">Richard Sharpe of the Samba team defines SMB as a "request-response" protocol.[<A HREF="#ch03-pgfId-942928" CLASS="footnote">
+4</A>] In effect, this means that a client sends an SMB request to a server, and the server sends an SMB response back to the client. Rarely does a server send a message that is not in response to a client.</P><BLOCKQUOTE CLASS="footnote">
+<DIV CLASS="footnote">
+<P CLASS="para">
+<A NAME="ch03-pgfId-942928" CLASS="footnote">
+[4]</A> See <I CLASS="filename">
+http://anu.samba.org/cifs/docs/what-is-smb.html</I> for Richard's excellent summary of SMB.</P></DIV></BLOCKQUOTE><P CLASS="para">
+An SMB message is not as complex as you might think. Let's take a closer look at the internal structure of such a message. It can be broken down into two parts: the <I CLASS="firstterm">
+header</I>, which is a fixed size, and the <I CLASS="firstterm">
+command string</I>, whose size can vary dramatically based on the contents of the message.</P><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch03-pgfId-942453" CLASS="title">
+3.3.1.1 SMB header format</A></H4><P CLASS="para">
+<A HREF="#ch03-31015" CLASS="xref">
+Table 3.1</A> shows the format of an SMB header. SMB commands are not required to use all the fields in the SMB header. For example, when a client first attempts to connect to a server, it does not yet have a tree identifier (TID) value&nbsp;- one is assigned after it successfully connects&nbsp;- so a null TID (0xFFFF) is placed in its header field. Other fields may be padded with zeros when not used. </P><P CLASS="para">
+The fields of the SMB header are listed in <A HREF="#ch03-31015" CLASS="xref">
+Table 3.1</A>. </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch03-31015" CLASS="title">
+Table 3.1: SMB Header Fields  </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Field</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Size (bytes)</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Description</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+0xFF 'SMB'</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+1</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">Protocol identifier</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+COM</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+1</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Command code, from 0x00 to 0xFF</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+RCLS</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+1</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Error class</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+REH</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+1</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Reserved</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+ERR</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+2</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Error code</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+REB</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+1</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Reserved</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+RES</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+14</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Reserved</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+TID</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+2</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Tree identifier; a unique ID for a resource in use by client</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+PID</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+2</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Caller process ID</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+UID</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+2</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+User identifier</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+MID</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+2</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Multiplex identifier; used to route requests inside a process</P></TD></TR></TBODY></TABLE></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch03-pgfId-942527" CLASS="title">
+3.3.1.2 SMB command format</A></H4><P CLASS="para">
+<I CLASS="firstterm">
+</I>Immediately after the header is a variable number of bytes that constitute an SMB command or reply. Each command, such as Open File (COM field identifier: <CODE CLASS="literal">
+SMBopen</CODE>) or Get Print Queue (<CODE CLASS="literal">
+SMBsplretq </CODE>), has its own set of parameters and data. Like the SMB header fields, not all of the command fields need to be filled, depending on the specific command. For example, the Get Server Attributes (<CODE CLASS="literal">
+SMBdskattr</CODE>) command sets the WCT and BCC fields to zero. The fields of the command segment are shown in <A HREF="#ch03-38178" CLASS="xref">
+Table 3.2</A>.   </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch03-38178" CLASS="title">
+Table 3.2: SMB Command Contents </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Field</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Size in Bytes</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Description</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+WCT</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+1</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<I CLASS="firstterm">
+</I>Word count</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+VWV</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Variable</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Parameter words (size given by WCT)</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+BCC</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+2</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Parameter byte count</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+DATA</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Variable</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Data (size given by BCC)</P></TD></TR></TBODY></TABLE><P CLASS="para">
+Don't worry if you don't understand each of these fields; they are not necessary for using Samba at an administrator level. However, they do come in handy when debugging system messages. We will show you some of the more common SMB messages that clients and servers send using a modified version of <I CLASS="filename">
+tcpdump</I> later in this section. (If you would like an SMB sniffer with a graphical interface, try "ethereal," which uses the GTK libraries; see the Samba homepage for more information on this tool.)</P><P CLASS="para">
+If you would like more information on each of the commands for the SMB protocol, see the SMB/CIFS documentation at <I CLASS="filename">
+ftp://ftp.microsoft.com/developr/drg/CIFS/</I>.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch03-pgfId-942573" CLASS="title">
+3.3.1.3 SMB variations</A></H4><P CLASS="para">
+The SMB protocol has been extended with new commands several times since its inception. Each new version is backwards compatible with the previous versions. This makes it quite possible for a LAN to have various clients and servers running different versions of the SMB protocol at once.</P><P CLASS="para">
+<A HREF="#ch03-67366" CLASS="xref">
+Table 3.3</A> outlines the major versions of the SMB protocol. Within each "dialect" of SMB are many sub-versions that include commands supporting particular releases of major operating systems. The ID string is used by clients and servers to determine what level of the protocol they will speak to each other. </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch03-67366" CLASS="title">
+Table 3.3: SMB Protocol Dialects </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Protocol Name</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+ID String</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Used By</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Core</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+PC NETWORK PROGRAM 1.0</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Core Plus </P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+MICROSOFT NETWORKS 1.03 </CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+LAN Manager 1.0 </P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+LANMAN1.0</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+LAN Manager 2.0 </P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+LM1.2X002</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+LAN Manager 2.1 </P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+LANMAN2.1</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+NT LAN Manager 1.0</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+NT LM 0.12</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Windows NT 4.0</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Samba's NT LM 0.12</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+Samba</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Samba</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Common Internet File System</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+CIFS 1.0</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Windows 2000</P></TD></TR></TBODY></TABLE><P CLASS="para">
+Samba implements the <CODE CLASS="literal">
+NT</CODE> <CODE CLASS="literal">
+LM</CODE> <CODE CLASS="literal">
+0.12</CODE> specification for NT LAN Manager 1.0. It is backwards compatible with all of the other SMB variants. The CIFS specification is, in reality, LAN Manager 0.12 with a few specific additions.</P></DIV></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch03-pgfId-942627" CLASS="title">
+3.3.2 SMB Clients and Servers</A></H3><P CLASS="para">
+As mentioned earlier, SMB is a client/server protocol. In the purest sense, this means that a client sends a request to a server, which acts on the request and returns a reply. However, the client/server roles can often be reversed, sometimes within the context of a single SMB session. For example, consider the two Windows 95/98 computers in <A HREF="#ch03-69480" CLASS="xref">
+Figure 3.28</A>. The computer named WIZZIN shares a printer to the network, and the computer named ESCRIME shares a disk directory. WIZZIN is in the client role when accessing ESCRIME's network drive, and in the server role when printing a job for ESCRIME. </P><H4 CLASS="figure">
+<A NAME="ch03-69480" CLASS="title">
+Figure 3.28: Two computers that both have resources to share</A></H4><IMG ALT="Figure 3.28" CLASS="graphic" SRC="figs/sam.0328.gif"><P CLASS="para">
+This brings out an important point in Samba terminology:</P><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-server-defined-in-Samba-terminology" CLASS="listitem">
+</A>A <I CLASS="firstterm">
+server</I> is a machine with a resource to share.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-client-defined-in-Samba-terminology" CLASS="listitem">
+</A>A <I CLASS="firstterm">
+client</I> is a machine that wishes to use that resource.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-pgfId-943256" CLASS="listitem">
+</A>A server can be a client (of another computer's resource) at any given time.</P></LI></UL><P CLASS="para">
+Note that there are no implications as to the amount of resources that make up a server, or whether it has a large disk space or fast processor. A server could be an old 486 with a printer attached to it, or it could be an UltraSparc station with a 10 gigabyte disk service.</P><P CLASS="para">
+Microsoft Windows products have both the SMB client and server built in to the operating system. Wndows NT 4.0 uses a newer SMB protocol than Windows for Workgroups, and it offers an enhanced form of network security which will be discussed in <B>Chapter 6</B>. In addition, there are a large number of commercial SMB server products available from companies such as Sun, Compaq, SCO, Hewlett-Packard, Syntax, and IBM. Unfortunately, on the client side there are far fewer offerings, limited mainly to Digital Equipment's Pathworks product, and of course, Samba.</P></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch03-pgfId-942638" CLASS="title">
+3.3.3 A Simple SMB Connection</A></H3><P CLASS="para">Before we close this chapter, let's take a look at a simple SMB connection. This is some pretty technical data&nbsp;- which isn't really necessary to administer Samba&nbsp;- so you can skip over it if you like. We present this information largely as a way to help you get familiar with how the SMB protocol negotiates connections with other computers on the network. </P><P CLASS="para">
+There are four steps that the client and server must complete in order to establish a connection to a resource:</P><OL CLASS="orderedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-pgfId-942687" CLASS="listitem">
+</A> Establish a virtual connection.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-pgfId-942688" CLASS="listitem">
+</A> Negotiate the protocol variant to speak.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-pgfId-942689" CLASS="listitem">
+</A> Set session parameters.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-pgfId-942690" CLASS="listitem">
+</A> Make a tree connection to a resource.</P></LI></OL><P CLASS="para">
+We will examine each of these steps through the eyes of a useful tool that we mentioned earlier: the modified <I CLASS="filename">
+tcpdump</I> that is available from the Samba web site.</P><P CLASS="para">
+You can download this program at <I CLASS="filename">
+samba.org</I> in the <I CLASS="filename">
+samba/ftp/tcpdump-smb</I> directory; the latest version as of this writing is 3.4-5. Use this program as you would use the standard <I CLASS="filename">
+tcpdump</I> application, but add the <CODE CLASS="literal">
+-s 1500</CODE> switch to ensure that you get the whole packet and not just the first few bytes.</P><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch03-pgfId-942691" CLASS="title">
+3.3.3.1 Establishing a virtual connection</A></H4><P CLASS="para">When a user first makes a request to access a network disk or send a print job to a remote printer, NetBIOS takes care of making a connection at the session layer. The result is a bidirectional virtual channel between the client and server. In reality, there are only two messages that the client and server need to establish this connection. This is shown in the following example session request and response, as captured by <I CLASS="filename">
+tcpdump</I> :</P><PRE CLASS="programlisting">
+&gt;&gt;&gt; NBT Packet
+NBT Session Request
+Flags=0x81000044
+Destination=ESCRIME      NameType=0x20 (Server)
+Source=WIZZIN            NameType=0x00 (Workstation)
+
+&gt;&gt;&gt; NBT Packet
+NBT Session Granted
+Flags=0x82000000</PRE></DIV></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch03-pgfId-942713" CLASS="title">
+3.3.4 Negotiating the Protocol Variant</A></H3><P CLASS="para">At this point, there is an open channel between the client and server. Next, the client sends a message to the server to negotiate an SMB protocol. As mentioned earlier, the client sets its tree identifier (TID) field to zero, since it does not yet know what TID to use. A <EM CLASS="emphasis">
+tree identifier</EM> is a number that represents a connection to a share on a server.</P><P CLASS="para">
+The command in the message is <CODE CLASS="literal">
+SMBnegprot</CODE>, a request to negotiate a protocol variant that will be used for the entire session. Note that the client sends to the server a list of all of the variants that it can speak, not vice versa.</P><P CLASS="para">
+The server responds to the <CODE CLASS="literal">
+SMBnegprot</CODE> request with an index into the list of variants that the client offered, starting with index 0, or with the value 0xFF if none of the protocol variants are acceptable. Continuing this example, the server responds with the value 5, which indicates that the <CODE CLASS="literal">
+NT</CODE> <CODE CLASS="literal">
+LM</CODE> <CODE CLASS="literal">
+0.12</CODE> dialect will be used for the remainder of the session:</P><PRE CLASS="programlisting">
+&gt;&gt;&gt; NBT Packet
+NBT Session Packet
+Flags=0x0
+Length=154
+
+SMB PACKET: SMBnegprot (REQUEST)
+SMB Command   =  0x72
+Error class   =  0x0
+Error code    =  0
+Flags1        =  0x0
+Flags2        =  0x0
+Tree ID       =  0
+Proc ID       =  5371
+UID           =  0
+MID           =  385
+Word Count    =  0
+Dialect=PC NETWORK PROGRAM 1.0
+Dialect=MICROSOFT NETWORKS 3.0
+Dialect=DOS LM1.2X002
+Dialect=DOS LANMAN2.1
+Dialect=Windows for Workgroups 3.1a
+Dialect=NT LM 0.12
+
+&gt;&gt;&gt; NBT Packet
+NBT Session Packet
+Flags=0x0
+Length=69
+
+SMB PACKET: SMBnegprot (REPLY)
+SMB Command   =  0x72
+Error class   =  0x0
+Error code    =  0
+Flags1        =  0x0
+Flags2        =  0x1
+Tree ID       =  0
+Proc ID       =  5371
+UID           =  0
+MID           =  385
+Word Count    =  02
+[000] 05 00</PRE></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch03-pgfId-942762" CLASS="title">
+3.3.5 Set Session and Login Parameters</A></H3><P CLASS="para">The next step is to transmit session and login parameters for the session. This includes the account name and password (if there is one), the workgroup name, the maximum size of data that can be transferred, and the number of pending requests that may be in the queue at any one time.</P><P CLASS="para">
+In the following example, the Session Setup command presented allows for an additional SMB command to be piggybacked onto it. The letter X at the end of the command name indicates this, and the hexadecimal code of the second command is given in the <CODE CLASS="literal">
+Com2</CODE> field. In this case the command is <CODE CLASS="literal">
+0x75</CODE>, which is the Tree Connect and X command. The <CODE CLASS="literal">
+SMBtconX</CODE> message looks for the name of the resource in the <KBD CLASS="command">
+smb_buf</KBD> buffer. (This is the last field listed in the following request.) In this example, <KBD CLASS="command">
+smb_buf</KBD> contains the string <CODE CLASS="literal">
+\\ESCRIME\PUBLIC</CODE>, which is the full pathname to a shared directory on node ESCRIME. Using the "and X" commands like this speeds up each transaction, since the server doesn't have to wait on the client to make a second request.</P><P CLASS="para">
+Note that the TID is still zero. The server will provide a TID to the client once the session has been established and a connection has been made to the requested resource. In addition, note that the password is sent in the open. We can change this later using encrypted passwords:</P><PRE CLASS="programlisting">
+&gt;&gt;&gt; NBT Packet
+NBT Session Packet
+Flags=0x0
+Length=139
+
+SMB PACKET: SMBsesssetupX (REQUEST)
+SMB Command   =  0x73
+Error class   =  0x0
+Error code    =  0
+Flags1        =  0x10
+Flags2        =  0x0
+Tree ID       =  0
+Proc ID       =  5371
+UID           =  1
+MID           =  385
+Word Count    =  13
+Com2=0x75
+Res1=0x0
+Off2=106
+MaxBuffer=2920
+MaxMpx=2
+VcNumber=0
+SessionKey=0x1FF2
+CaseInsensitivePasswordLength=1
+CaseSensitivePasswordLength=1
+Res=0x0
+Capabilities=0x1
+Pass1&amp;Pass2&amp;Account&amp;Domain&amp;OS&amp;LanMan=  
+  KRISTIN PARKSTR Windows 4.0 Windows 4.0
+PassLen=2
+Passwd&amp;Path&amp;Device=
+smb_bcc=22
+smb_buf[]=\\ESCRIME\PUBLIC</PRE></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch03-pgfId-942801" CLASS="title">
+3.3.6 Making Connection to a Resource</A></H3><P CLASS="para">For the final step, the server returns a TID to the client, indicating that the user has been authorized access and that the resource is ready to be used. It also sets the <KBD CLASS="command">
+ServiceType</KBD> field to "A" to indicate that this is a file service. Available service types are:</P><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-pgfId-942803" CLASS="listitem">
+</A> "A" for a disk or file</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-pgfId-942804" CLASS="listitem">
+</A> "LPT1" for a spooled output</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-pgfId-942805" CLASS="listitem">
+</A> "COMM" for a direct-connect printer or modem</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch03-pgfId-942806" CLASS="listitem">
+</A> "IPC" for a named pipe</P></LI></UL><P CLASS="para">
+The output is:</P><PRE CLASS="programlisting">
+&gt;&gt;&gt; NBT Packet
+NBT Session Packet
+Flags=0x0
+Length=78
+
+SMB PACKET: SMBsesssetupX (REPLY)
+SMB Command   =  0x73
+Error class   =  0x0
+Error code    =  0
+Flags1        =  0x80
+Flags2        =  0x1
+Tree ID       =  121
+Proc ID       =  5371
+UID           =  1
+MID           =  385
+Word Count    =  3
+Com2=0x75
+Off2=68
+Action=0x1
+[000] Unix Samba 1.9.1
+[010] PARKSTR
+
+SMB PACKET: SMBtconX (REPLY) (CHAINED)
+smbvwv[]=
+Com2=0xFF
+Off2=78
+smbbuf[]=
+ServiceType=A:</PRE><P CLASS="para">
+Now that a TID has been assigned, the client may issue any sort of command that it would use on a local disk drive. It can open files, read and write to them, delete them, create new files, search for filenames, and so on. </P></DIV></DIV></BLOCKQUOTE>
+<DIV>
+<CENTER>
+<HR NOSHADE SIZE="1"><TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="3.2 Setting Up Windows NT 4.0 Computers" HREF="ch03_02.html" CLASS="sect1">
+<IMG ALT="Previous: 3.2 Setting Up Windows NT 4.0 Computers" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="" HREF="index.html" CLASS="book">
+<IMG ALT="" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txthome.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="4. Disk Shares " HREF="ch04_01.html" CLASS="chapter">
+<IMG ALT="Next: 4. Disk Shares " SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR><TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+3.2 Setting Up Windows NT 4.0 Computers</TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="Book Index" HREF="http://www.oreilly.com/catalog/samba/inx.html" CLASS="index">
+<IMG ALT="Book Index" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/index.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+4. Disk Shares </TD></TR></TABLE><HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+
+<!--  End of sample chapter -->
+<P><B>Back to: <A HREF="http://www.oreilly.com/catalog/samba/noframes.html">Using Samba</A></B>
+<CENTER>
+<HR NOSHADE SIZE="1">
+<FONT SIZE="1" FACE="Verdana, Arial, Helvetica">
+<A HREF="http://www.oreilly.com/">
+<B>O'Reilly Home</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/sales/bookstores">
+<B>O'Reilly Bookstores</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/order_new/">
+<B>How to Order</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/contact.html">
+<B>O'Reilly Contacts<BR></B></A>
+<A HREF="http://www.oreilly.com/international/">
+<B>International</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/about.html">
+<B>About O'Reilly</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/affiliates.html">
+<B>Affiliated Companies</B></A><P>
+<EM>&copy; 1999, O'Reilly &amp; Associates, Inc.</EM>
+</FONT>
+</CENTER>
+</BODY>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+</HTML>

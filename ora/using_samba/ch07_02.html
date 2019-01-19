@@ -1,0 +1,777 @@
+<!DOCTYPE HTML PUBLIC "html.dtd">
+<HTML>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+<HEAD>
+<TITLE>
+[Chapter 7] 7.2 Printing to Windows Client Printers</TITLE><META NAME="DC.title" CONTENT=""><META NAME="DC.creator" CONTENT=""><META NAME="DC.publisher" CONTENT="O'Reilly &amp; Associates, Inc."><META NAME="DC.date" CONTENT="1999-11-05T21:34:58Z"><META NAME="DC.type" CONTENT="Text.Monograph"><META NAME="DC.format" SCHEME="MIME" CONTENT="text/html"><META NAME="DC.source" SCHEME="ISBN" CONTENT=""><META NAME="DC.language" CONTENT="en-US"><META NAME="generator" CONTENT="Jade 1.1/O'Reilly DocBook 3.0 to HTML 4.0"></HEAD>
+<BODY VLINK="#0000CC" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#990000">
+<TABLE WIDTH="90%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD COLSPAN="2">
+<IMG WIDTH="515" ALT="Search the Catalog" SRC="http://www.oreilly.com/graphics_new/catalog_header_buttons.gif" HEIGHT="37" ISMAP ALIGN="BOTTOM" USEMAP="#catalog_header_buttons" BORDER="0">
+<MAP NAME="catalog_header_buttons">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/search.html" COORDS="407,17,512,32">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/catalog/prdindex.html" COORDS="431,3,512,18">
+</MAP>
+</TD>
+</TR>
+<TR>
+<TD WIDTH="25%" VALIGN="TOP">
+<A HREF="http://www.oreilly.com/catalog/samba/">
+<IMG ALT="Using Samba" VALIGN="top" VSPACE="10" HSPACE="10" SRC="http://www.oreilly.com/catalog/covers/samba.s.gif" ALIGN="left" BORDER="0">
+</A>
+</TD>
+<TD VALIGN="TOP" HEIGHT="105">
+<BR>
+<H2>Using Samba</H2>
+<FONT SIZE="-1">
+Robert Eckstein, David Collier-Brown, Peter Kelly
+<BR>1st Edition November 1999
+<BR>1-56592-449-5, Order Number: 4495
+<BR>416 pages, $34.95
+</FONT>
+</TD>
+</TR>
+</TABLE>
+<HR NOSHADE SIZE="1">
+<!-- sample chapter begins -->
+
+<CENTER>
+<DIV CLASS="htmlnav">
+<TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="7.1 Sending Print Jobs to Samba" HREF="ch07_01.html" CLASS="sect1">
+<IMG ALT="Previous: 7.1 Sending Print Jobs to Samba" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<B>
+<FONT SIZE="-1" FACE="ARIEL,HELVETICA,HELV,SANSERIF">
+<A TITLE="7. Printing and Name Resolution" REL="up" HREF="ch07_01.html" CLASS="chapter">
+Chapter 7<BR>
+Printing and Name Resolution</A></FONT></B></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="7.3 Name Resolution with Samba" HREF="ch07_03.html" CLASS="sect1">
+<IMG ALT="Next: 7.3 Name Resolution with Samba" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR></TABLE>&nbsp;<HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+<BLOCKQUOTE>
+<DIV>
+<H2 CLASS="sect1">
+<A NAME="ch07-31526" CLASS="title">
+7.2 Printing to Windows Client Printers</A></H2><P CLASS="para">If you have printers connected to clients running Windows 95/98 or NT 4.0, those printers can also be accessed from Samba. Samba comes equipped with a tool called <EM CLASS="emphasis">
+smbprint</EM> that can be used to spool print jobs to Windows-based printers. In order to use this, however, you need to set up the printer as a shared resource on the client machine. If you haven't already done this, you can reset this from the Printers window, reached from the Start button, as shown in <A HREF="#ch07-32814" CLASS="xref">
+Figure 7.7</A>. </P><H4 CLASS="figure">
+<A NAME="ch07-32814" CLASS="title">
+Figure 7.7: The Printers window</A></H4><IMG ALT="Figure 7.7" CLASS="graphic" SRC="figs/sam.0707.gif"><P CLASS="para">
+Select a printer that's locally connected (for example, ours is the Canon printer), press the right mouse button to bring up a menu, and select Sharing. This will give you the Sharing tab of the Printer Properties frame, as shown in <A HREF="#ch07-92021" CLASS="xref">
+Figure 7.8</A>. If you want it available to everybody on your LAN as the Windows guest user, enter a blank password. </P><H4 CLASS="figure">
+<A NAME="ch07-92021" CLASS="title">
+Figure 7.8: The Sharing tab of the printer</A></H4><IMG ALT="Figure 7.8" CLASS="graphic" SRC="figs/sam.0708.gif"><P CLASS="para">
+Once you've got this working, you can add your printer to the list of standard printers and Samba can make it available to all the other PCs in the workgroup. To make installation on Unix easier, the Samba distribution provides two sample scripts: <I CLASS="filename">
+smbprint</I> and <I CLASS="filename">
+smbprint.sysv</I>. The first works with BSD-style printers; the second is designed for System V printers.</P><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch07-pgfId-949813" CLASS="title">
+7.2.1 BSD printers</A></H3><P CLASS="para">There are two steps you need to have a BSD Unix recognize a remote printer:</P><OL CLASS="orderedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-949817" CLASS="listitem">
+</A>Place an entry for the printer in the <I CLASS="filename">
+/etc/printcap</I> file (or equivalent).</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-949818" CLASS="listitem">
+</A>Place a configuration file in the <I CLASS="filename">
+/var/spool</I> directory for the printer.</P></LI></OL><P CLASS="para">
+First, edit your <I CLASS="filename">
+/etc/printcap</I> file and add an entry for the remote printer. Note that the input filter (<CODE CLASS="literal">
+if</CODE>) entry needs to point to the <EM CLASS="emphasis">
+smbprint</EM> program if the machine is on Windows 95/98. The following set of lines will accomplish on a Linux machine, for example:</P><PRE CLASS="programlisting">
+laserjet:\
+  :sd=/var/spool/lpd/laser:\         <CODE CLASS="replaceable">
+<I>
+# spool directory</I></CODE>
+  :mx#0:\                            <CODE CLASS="replaceable">
+<I>
+# maximum file size (none)</I></CODE>
+  :sh:\                              <CODE CLASS="replaceable">
+<I>
+# surpress burst header (no)</I></CODE>
+  :if=/usr/local/samba/bin/smbprint: <CODE CLASS="replaceable">
+<I>
+# text filter</I></CODE></PRE><P CLASS="para">
+After that, you need to create a configuration file in the spool directory that you specified with the <CODE CLASS="literal">
+sd</CODE> parameter above. (You may need to create that directory.) The file must have the name <EM CLASS="emphasis">
+.config</EM> and should contain the following information: </P><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-954773" CLASS="listitem">
+</A>The NetBIOS name of the Windows machine with the printer</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-954774" CLASS="listitem">
+</A>The service name that represents the printer</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-954775" CLASS="listitem">
+</A>The password used to access that service</P></LI></UL><P CLASS="para">
+The last two parameters were set up in the Sharing dialog for the requested resource on the Windows machine. In this case, the <EM CLASS="emphasis">
+.config</EM> file would have three lines:</P><PRE CLASS="programlisting">
+server = phoenix
+service = CANON
+password = &quot;&quot;</PRE><P CLASS="para">
+After you've done that, reset the Samba server machine and try printing to it using any standard Unix program.</P></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch07-pgfId-949855" CLASS="title">
+7.2.2 System V printers</A></H3><P CLASS="para">Sending print jobs from a System V Unix system is a little easier. Here, you need to get obtain the <I CLASS="filename">
+smbprint.sysv</I> script in the <I CLASS="filename">
+/usr/local/samba/examples/printing</I> directory and do the following:</P><OL CLASS="orderedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-949865" CLASS="listitem">
+</A>Change the <CODE CLASS="literal">
+server</CODE>, <CODE CLASS="literal">
+service</CODE>, and <CODE CLASS="literal">
+password</CODE> parameters in the script to match the NetBIOS machine, its shared printer service, and its password, respectively. For example, the following entries would be correct for the service in the previous example:</P></LI></OL><PRE CLASS="programlisting">
+server = phoenix
+service = CANON
+password = &quot;&quot;</PRE><OL CLASS="orderedlist" START="2">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch07-pgfId-949876" CLASS="listitem">
+</A>Run the following commands, which create a reference for the printer in the printer capabilities file. Note that the new Unix printer entry <CODE CLASS="literal">
+canon_  printer</CODE> is named:</P></LI></OL><PRE CLASS="programlisting">
+# lpadmin -p canon_printer -v /dev/null -i./smbprint.sysv
+# enable canon_printer
+# accept canon_printer</PRE><P CLASS="para">
+After you've done that, restart the Samba daemons and try printing to it using any standard Unix program. You should now be able to send data to a printer on a Windows client across the network.</P></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch07-pgfId-950287" CLASS="title">
+7.2.3 Samba Printing Options</A></H3><P CLASS="para">
+<A HREF="#ch07-19361" CLASS="xref">Table 7.2</A> summarizes the Samba printing options. </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch07-19361" CLASS="title">
+Table 7.2: Printing Configuration Options </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Option</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Parameters</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Function</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Default</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Scope</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+printing</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+bsd</CODE>, <CODE CLASS="literal">
+sysv</CODE>, <CODE CLASS="literal">
+hpux</CODE>, <CODE CLASS="literal">
+aix</CODE>, <CODE CLASS="literal">
+qnx</CODE>, <CODE CLASS="literal">
+plp</CODE>, <CODE CLASS="literal">
+softq</CODE>, or <CODE CLASS="literal">
+lprng</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the print system type for your Unix system.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+System dependent</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+printable (print ok)</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+boolean</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Marks a share as a printing share.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+no</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+printer (printer name)</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (Unix printer name)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the name of the printer to be shown to clients.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+System dependent</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+printer driver</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (printer driver name)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the driver name that should be used by the client to send data to the printer.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+printer driver file</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (fully-qualified pathname)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the name of the printer driver file.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+printer driver location</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (network pathname)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Specifies the pathname of the share for the printer driver file.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+lpq cache time</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+numeric (time in seconds)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the amount of time in seconds that Samba will cache the lpq status.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+10</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+postscript</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+boolean</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Treats all print jobs sent as postscript by prepending <CODE CLASS="literal">
+%!</CODE> at the beginning of each file.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+no</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+load printers</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+boolean</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Automatically loads each of the printers in the <EM CLASS="emphasis">
+printcap</EM> file as printing shares.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+no</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+print command</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (shell command)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the Unix command to perform printing.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+See below</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+lpq command</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (shell command)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the Unix command to return the status of the printing queue.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+See below</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+lprm command</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (shell command)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the Unix command to remove a job from the printing queue.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+See below</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+lppause command</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (shell command)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the Unix command to pause a job on the printing queue.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+See below</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+lpresume command</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (shell command)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the Unix command to resume a paused job on the printing queue.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+See below</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+printcap name</CODE></P><P CLASS="para">
+<CODE CLASS="literal">
+(printcap)</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (fully-qualified pathname)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Specifies the location of the printer capabilities file.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+System dependent</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+min print space</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+numeric (size in kilobytes)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the minimum amount of disk free space that must be present to print.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+0</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+queuepause command</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (shell command)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the Unix command to pause a queue.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+See below</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+queueresume command</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (shell command)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Sets the Unix command to resume a queue.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+See below</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR></TBODY></TABLE><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-950502" CLASS="title">
+7.2.3.1 printing</A></H4><P CLASS="para">
+The <CODE CLASS="literal">
+printing</CODE> configuration option tells Samba a little about your Unix printing system, in this case which printing parser to use. With Unix, there are several different families of commands to control printing and print statusing. Samba supports seven different types, as shown in <A HREF="#ch07-28758" CLASS="xref">
+Table 7.3</A>. </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch07-28758" CLASS="title">
+Table 7.3: Printing Types </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Variable</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Definition</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+BSD</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">Berkeley Unix system</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+SYSV</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+System V</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+AIX</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+AIX Operating System (IBM)</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+HPUX</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Hewlett-Packard Unix </P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+QNX</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+QNX Realtime Operating System (QNX)</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+LPRNG</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+LPR Next Generation (Powell)</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+SOFTQ</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+SOFTQ system</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+PLP</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Portable Line Printer (Powell)</P></TD></TR></TBODY></TABLE><P CLASS="para">
+The value for this optio.n will be one of these seven options. For example:</P><PRE CLASS="programlisting">
+printing = SYSV</PRE><P CLASS="para">
+The default value of this option is system dependent and is configured when Samba is first compiled. For most systems, the <I CLASS="filename">
+configure</I> script will automatically detect the printing system to be used and configure it properly in the Samba makefile. However, if your system is a PLP, LPRNG, or QNX printing system, you will need to explicitly specify this in the makefile or the printing share.</P><P CLASS="para">
+The most common system types are BSD and SYSV. Each of the printers on a BSD Unix server are described in the printer capabilities file&nbsp;- normally <I CLASS="filename">
+/etc/printcap</I>.</P><P CLASS="para">
+Setting the <CODE CLASS="literal">
+printing</CODE> configuration option automatically sets at least three other printing options for the service in question: <CODE CLASS="literal">
+print</CODE> <CODE CLASS="literal">
+command</CODE>, <CODE CLASS="literal">
+lpq</CODE> <CODE CLASS="literal">
+command</CODE>, and <CODE CLASS="literal">
+lprm</CODE> <CODE CLASS="literal">
+command</CODE>. If you are running Samba on a system that doesn't support any of these printing styles, simply set the commands for each of these manually.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-950507" CLASS="title">
+7.2.3.2 printable</A></H4><P CLASS="para">
+The printable option must be set to <CODE CLASS="literal">
+yes</CODE> in order to flag a share as a printing service. If this option is not set, the share will be treated as a disk share instead. You can set the option as follows:</P><PRE CLASS="programlisting">
+[printer1]
+	printable = yes</PRE></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-950511" CLASS="title">
+7.2.3.3 printer</A></H4><P CLASS="para">The option, sometimes called <CODE CLASS="literal">
+printer</CODE> <CODE CLASS="literal">
+name</CODE>, specifies the name of the printer on the server to which the share points. This option has no default and should be set explicitly in the configuration file, even though Unix systems themselves often recognize a default name such as <CODE CLASS="literal">
+lp</CODE> for a printer. For example:</P><PRE CLASS="programlisting">
+[deskjet]
+	printer = hpdkjet1</PRE></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-950515" CLASS="title">
+7.2.3.4 printer driver</A></H4><P CLASS="para">
+The <CODE CLASS="literal">
+printer</CODE> <CODE CLASS="literal">
+driver</CODE> option sets the string that Samba uses to tell Windows what the printer is. If this option is set correctly, the Windows Printer Wizard will already know what the printer is, making installation easier for end users by giving them one less dialog to worry about. The string given should match the string that shows up in the Printer Wizard, as shown in <A HREF="#ch07-46183" CLASS="xref">
+Figure 7.9</A>. For example, an Apple LaserWriter typically uses <CODE CLASS="literal">
+Apple</CODE> <CODE CLASS="literal">
+LaserWriter</CODE>; a Hewlett Packard Deskjet 560C uses <CODE CLASS="literal">
+HP</CODE> <CODE CLASS="literal">
+DeskJet</CODE> <CODE CLASS="literal">
+560C</CODE> <CODE CLASS="literal">
+Printer</CODE>. </P><H4 CLASS="figure">
+<A NAME="ch07-46183" CLASS="title">
+Figure 7.9: The Add Printer Wizard dialog box in Windows 98</A></H4><IMG ALT="Figure 7.9" CLASS="graphic" SRC="figs/sam.0709.gif"><P CLASS="para">
+Automatically configuring printer drivers with Samba is explained in greater detail in the section <A HREF="ch07_01.html#ch07-30008" CLASS="xref">
+Section 7.1.7, Automatically Setting Up Printer Drivers</A>," earlier in this chapter.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-954814" CLASS="title">
+7.2.3.5 printer driver file</A></H4><P CLASS="para">
+This global option gives the location of the Windows 95/98 printer driver definition file, which is needed to give printer drivers to clients using a Samba printer. The default value of this option is <I CLASS="filename">
+/usr/local/samba/lib/printers.def</I>. You can override this default as shown below:</P><PRE CLASS="programlisting">
+[deskjet]
+	printer driver file = /var/printers/printers.def</PRE><P CLASS="para">
+This option is explained in greater detail in the section <A HREF="ch07_01.html#ch07-30008" CLASS="xref">
+Section 7.1.7</A>," earlier in this chapter.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-950552" CLASS="title">
+7.2.3.6 printer driver location</A></H4><P CLASS="para">
+This option specifies a specific share that contains Windows 95 and 98 printer driver and definition files. There is no default parameter for this value. You can specify the location as a network pathname. A frequent approach is to use a share on your own machine, as shown here:</P><PRE CLASS="programlisting">
+[deskjet]
+	printer driver location = \\%L\PRINTER$</PRE><P CLASS="para">
+This option is also explained in greater detail in the section <A HREF="ch07_01.html#ch07-30008" CLASS="xref">
+Section 7.1.7</A>," earlier in this chapter. </P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-950560" CLASS="title">
+7.2.3.7 lpq cache time</A></H4><P CLASS="para">The global <CODE CLASS="literal">
+lpq</CODE> <CODE CLASS="literal">
+cache</CODE> <CODE CLASS="literal">
+time</CODE> option allows you to set the number of seconds that Samba will remember the current printer status. After this time elapses, Samba will issue an <EM CLASS="emphasis">
+lpq</EM> command (or whatever command you specify with the <CODE CLASS="literal">
+lpq</CODE> <CODE CLASS="literal">
+command</CODE> option) to get a more up-to-date status. This defaults to 10 seconds, but can be increased if your <CODE CLASS="literal">
+lpq</CODE> <CODE CLASS="literal">
+command</CODE> takes an unusually long time to run or you have lots of clients. The following example resets the time to 30 seconds:</P><PRE CLASS="programlisting">
+[deskjet]
+	lpq cache time = 30</PRE></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-950564" CLASS="title">
+7.2.3.8 postscript</A></H4><P CLASS="para">
+The <CODE CLASS="literal">
+postscript</CODE> option forces the printer to treat all data sent to it as Postscript. It does this by prepending the characters <CODE CLASS="literal">
+%!</CODE> at the beginning of the first line of each job. It is normally used with PCs that insert a <CODE CLASS="literal">
+^D</CODE> (control-D or "end-of-file mark) in front of the first line of a PostScript file. It will not, obviously, turn a non-PostScript printer into a PostScript one. The default value of this options is <CODE CLASS="literal">
+no</CODE>. You can override it as follows:</P><PRE CLASS="programlisting">[deskjet]
+	postscript = yes</PRE></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-950568" CLASS="title">
+7.2.3.9 print command, lpq command, lprm command, lppause command, lpresume command</A></H4><P CLASS="para">These options tell Samba which Unix commands used to control and send data to the printer. The Unix commands involved are: <EM CLASS="emphasis">
+lpr</EM> (send to Line PRinter), <EM CLASS="emphasis">
+lpq</EM> (List Printer Queue), <EM CLASS="emphasis">
+lprm</EM> (Line printer ReMove), and optionally <EM CLASS="emphasis">
+lppause</EM> and <EM CLASS="emphasis">
+lpresume</EM>. Samba provides an option named after each of these commands, in case you need to override any of the system defaults. For example, consider:</P><PRE CLASS="programlisting">
+lpq command = /usr/ucb/lpq %p</PRE><P CLASS="para">
+This would set the <CODE CLASS="literal">
+lpq command</CODE> to use <I CLASS="filename">
+/usr/ucb/lpq</I>. Similarly:</P><PRE CLASS="programlisting">
+lprm command = /usr/local/lprm -P%p %j</PRE><P CLASS="para">
+would set the Samba printer remove command to <I CLASS="filename">
+/usr/local/lprm</I>, and provide it the print job number using the <CODE CLASS="literal">
+%j</CODE> variable.</P><P CLASS="para">
+The default values for each of these options are dependent on the value of the <CODE CLASS="literal">
+printing</CODE> option. <A HREF="#ch07-82964" CLASS="xref">
+Table 7.4</A> shows the default commands for each of the printing options. The most popular printing system is BSD. </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch07-82964" CLASS="title">
+Table 7.4: Default Commands for Various Printing Commands </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Option</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+BSD, AIX, PLP, LPRNG</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+SYSV, HPUX</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+QNX</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+SOFTQ</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+print command</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+lpr -r -P%p %s</CODE></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">lp -c -d%p %s; rm %s</CODE></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+lp -r -P%p %s</CODE></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+lp -d%p -s %s; rm %s</CODE></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+lpq command</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+lpq -P%p</CODE></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+lpstat -o%p</CODE></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+lpq -P%p</CODE></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+lpstat -o%p</CODE></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+lprm command</CODE></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+lprm -P%p %j</CODE></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+cancel %p-%j</CODE></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+cancel %p-%j</CODE></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+cancel %p-%j</CODE></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+lppause command</CODE></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+lp -i %p-%j -H hold </CODE>(SYSV only)</TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+None</TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+None</TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+None</TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+lpresume command</CODE></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+lp -i %p-%j -H resume</CODE>(SYSV only)</TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+None</TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+None</TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<CODE CLASS="literal">
+qstat -s -j%j -r</CODE>
+</TD></TR></TBODY></TABLE><P CLASS="para">
+It is typically not necessary to reset these options in Samba, with the possible exception of <CODE CLASS="literal">
+print</CODE> <CODE CLASS="literal">
+command</CODE>. This option may need to be explicitly set if your printing system doesn't have a <CODE CLASS="literal">
+-r</CODE> (remove after printing) option on the printing command. For example: </P><PRE CLASS="programlisting">
+/usr/local/lpr -P%p %s; /bin/rm %s</PRE><P CLASS="para">
+With a bit of judicious programming, these <I CLASS="filename">
+smb.conf</I> options can also used for debugging:</P><PRE CLASS="programlisting">
+print command = cat %s &gt;&gt;/tmp/printlog; lpr -r -P%p %s</PRE><P CLASS="para">
+For example, this configuration can verify that files are actually being delivered to the Samba server. If they are, their contents will show up in the <I CLASS="filename">
+/tmp/printlog</I> file.</P><P CLASS="para">
+After BSD, the next most popular kind of printing system is SYSV (or System V) printing, plus some SYSV variants for IBM's AIX and Hewlett-Packard's HP-UX. These system do not have an <I CLASS="filename">
+/etc/printcap</I> file. Instead, the <CODE CLASS="literal">
+printcap</CODE> <CODE CLASS="literal">
+file</CODE> option can be set to an appropriate <EM CLASS="emphasis">
+lpstat</EM> command for the system. This tells Samba to get a list of printers from the <EM CLASS="emphasis">
+lpstat</EM> command. Alternatively, you can set the global configuration option <CODE CLASS="literal">
+printcap</CODE> <CODE CLASS="literal">
+name</CODE> to the name of a dummy <I CLASS="filename">
+printcap</I> file you provide. In the latter case, the file must contain a series of lines such as:</P><PRE CLASS="programlisting">
+lp|print1|My Printer 1
+print2|My Printer 2
+print3|My Printer 3</PRE><P CLASS="para">
+Each line names a printer, and provides aliases for it. In this example, the first printer is called <CODE CLASS="literal">
+lp</CODE>, <CODE CLASS="literal">
+print1</CODE>, or <CODE CLASS="literal">
+My</CODE> <CODE CLASS="literal">
+Printer</CODE> <CODE CLASS="literal">
+1</CODE>, whichever the user prefers to use. The first name will be used in place of <CODE CLASS="literal">
+%p</CODE> in any command Samba executes for that printer.</P><P CLASS="para">
+Two additional printer types are also supported by Samba: LPRNG (LPR New Generation) and PLP (Public Line Printer). These are public domain and Open Source printing systems, and are used by many sites to overcome problems with vendor-supplied software. In addition, the SOFTQ and QNX realtime operating systems are supported by Samba.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-950650" CLASS="title">
+7.2.3.10 load printers</A></H4><P CLASS="para">The <CODE CLASS="literal">
+load</CODE> <CODE CLASS="literal">
+printers</CODE> option tells Samba to create shares for all known printer names and load those shares into the browse list. Samba will create and list a printer share for each printer name in <I CLASS="filename">
+/etc/printcap</I> (or system equivalent). For example, if your <I CLASS="filename">
+printcap</I> file looks like this:[<A HREF="#ch07-pgfId-950654" CLASS="footnote">
+2</A>]</P><BLOCKQUOTE CLASS="footnote">
+<DIV CLASS="footnote">
+<P CLASS="para">
+<A NAME="ch07-pgfId-950654" CLASS="footnote">
+[2]</A> We have placed annotated comments off to the side in case you've never dealt with this file before.</P></DIV></BLOCKQUOTE><PRE CLASS="programlisting">
+lp:\
+  :sd=/var/spool/lpd/lp:\            <CODE CLASS="replaceable">
+<I>
+# spool directory</I></CODE>
+  :mx#0:\                            <CODE CLASS="replaceable">
+<I>
+# maximum file size (none)</I></CODE>
+  :sh:\                              <CODE CLASS="replaceable">
+<I>
+# surpress burst header (no)</I></CODE>
+  :lp=/dev/lp1:\                     <CODE CLASS="replaceable">
+<I>
+# device name for output</I></CODE>
+  :if=/var/spool/lpd/lp/filter:      <CODE CLASS="replaceable">
+<I>
+# text filter</I></CODE>
+
+laser:\
+  :sd=/var/spool/lpd/laser:\         <CODE CLASS="replaceable">
+<I>
+# spool directory</I></CODE>
+  :mx#0:\                            <CODE CLASS="replaceable">
+<I>
+# maximum file size (none)</I></CODE>
+  :sh:\                              <CODE CLASS="replaceable">
+<I>
+# surpress burst header (no)</I></CODE>
+  :lp=/dev/laser:\                   <CODE CLASS="replaceable">
+<I>
+# device name for output</I></CODE>
+  :if=/var/spool/lpd/lp/filter:      <CODE CLASS="replaceable">
+<I>
+# text filter</I></CODE></PRE><P CLASS="para">
+and you specify:</P><PRE CLASS="programlisting">
+load printers = yes</PRE><P CLASS="para">
+the shares <CODE CLASS="literal">
+[lp]</CODE> and <CODE CLASS="literal">
+[laser]</CODE> will automatically be created as valid print shares when Samba is started. Both shares will borrow the configuration options specified in the <CODE CLASS="literal">
+[printers]</CODE> section to configure themselves, and will be available in the browse list for the Samba server.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-950671" CLASS="title">
+7.2.3.11 printcap name</A></H4><P CLASS="para">
+If the <CODE CLASS="literal">
+printcap</CODE> <CODE CLASS="literal">
+name</CODE> option (also called <CODE CLASS="literal">
+printcap</CODE>) appears in a printing share, Samba will use the file specified as the system printer capabilities file. This is normally <I CLASS="filename">
+/etc/printcap</I>. However, you can reset it to a file consisting of only the printers you want to share over the network. The value must be a fully-qualified filename of a printer capabilities file on the server:</P><PRE CLASS="programlisting">
+[deskjet]
+	printcap name = /usr/local/printcap</PRE></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-950678" CLASS="title">
+7.2.3.12 min print space</A></H4><P CLASS="para">
+The <CODE CLASS="literal">
+min</CODE> <CODE CLASS="literal">
+print</CODE> <CODE CLASS="literal">
+space</CODE> option sets the amount of spool space that must be available on the disk before printing is allowed. Setting it to zero (the default) turns the check off; setting it to any other number sets the amount of free space in kilobytes required. This option helps avoid having print jobs fill up the remaining disk space on the server, which may cause other processes to fail:</P><PRE CLASS="programlisting">
+[deskjet]
+	min print space = 4000</PRE></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-950682" CLASS="title">
+7.2.3.13 queuepause command</A></H4><P CLASS="para">
+This configuration option specifies a command that tells Samba how to pause a print queue entirely, as opposed to a single job on the queue. The default value depends on the printing type chosen. You should not need to alter this option.</P></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch07-pgfId-950684" CLASS="title">
+7.2.3.14 queueresume command</A></H4><P CLASS="para">
+This configuration option specifies a command that tells Samba how to resume a paused print queue, as opposed to resuming a single job on the print queue. The default value depends on the printing type chosen. You should not need to alter this option. </P></DIV></DIV></DIV></BLOCKQUOTE>
+<DIV>
+<CENTER>
+<HR NOSHADE SIZE="1"><TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="7.1 Sending Print Jobs to Samba" HREF="ch07_01.html" CLASS="sect1">
+<IMG ALT="Previous: 7.1 Sending Print Jobs to Samba" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="" HREF="index.html" CLASS="book">
+<IMG ALT="" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txthome.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="7.3 Name Resolution with Samba" HREF="ch07_03.html" CLASS="sect1">
+<IMG ALT="Next: 7.3 Name Resolution with Samba" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR><TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+7.1 Sending Print Jobs to Samba</TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="Book Index" HREF="http://www.oreilly.com/catalog/samba/inx.html" CLASS="index">
+<IMG ALT="Book Index" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/index.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+7.3 Name Resolution with Samba</TD></TR></TABLE><HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+
+<!--  End of sample chapter -->
+<P><B>Back to: <A HREF="http://www.oreilly.com/catalog/samba/noframes.html">Using Samba</A></B>
+<CENTER>
+<HR NOSHADE SIZE="1">
+<FONT SIZE="1" FACE="Verdana, Arial, Helvetica">
+<A HREF="http://www.oreilly.com/">
+<B>O'Reilly Home</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/sales/bookstores">
+<B>O'Reilly Bookstores</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/order_new/">
+<B>How to Order</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/contact.html">
+<B>O'Reilly Contacts<BR></B></A>
+<A HREF="http://www.oreilly.com/international/">
+<B>International</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/about.html">
+<B>About O'Reilly</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/affiliates.html">
+<B>Affiliated Companies</B></A><P>
+<EM>&copy; 1999, O'Reilly &amp; Associates, Inc.</EM>
+</FONT>
+</CENTER>
+</BODY>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+</HTML>

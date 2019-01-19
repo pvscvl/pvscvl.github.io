@@ -1,0 +1,401 @@
+<!DOCTYPE HTML PUBLIC "html.dtd">
+<HTML>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+<HEAD>
+<TITLE>
+[Chapter 6] 6.3 Authentication Security</TITLE><META NAME="DC.title" CONTENT=""><META NAME="DC.creator" CONTENT=""><META NAME="DC.publisher" CONTENT="O'Reilly &amp; Associates, Inc."><META NAME="DC.date" CONTENT="1999-11-05T21:33:44Z"><META NAME="DC.type" CONTENT="Text.Monograph"><META NAME="DC.format" SCHEME="MIME" CONTENT="text/html"><META NAME="DC.source" SCHEME="ISBN" CONTENT=""><META NAME="DC.language" CONTENT="en-US"><META NAME="generator" CONTENT="Jade 1.1/O'Reilly DocBook 3.0 to HTML 4.0"></HEAD>
+<BODY VLINK="#0000CC" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#990000">
+<TABLE WIDTH="90%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD COLSPAN="2">
+<IMG WIDTH="515" ALT="Search the Catalog" SRC="http://www.oreilly.com/graphics_new/catalog_header_buttons.gif" HEIGHT="37" ISMAP ALIGN="BOTTOM" USEMAP="#catalog_header_buttons" BORDER="0">
+<MAP NAME="catalog_header_buttons">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/search.html" COORDS="407,17,512,32">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/catalog/prdindex.html" COORDS="431,3,512,18">
+</MAP>
+</TD>
+</TR>
+<TR>
+<TD WIDTH="25%" VALIGN="TOP">
+<A HREF="http://www.oreilly.com/catalog/samba/">
+<IMG ALT="Using Samba" VALIGN="top" VSPACE="10" HSPACE="10" SRC="http://www.oreilly.com/catalog/covers/samba.s.gif" ALIGN="left" BORDER="0">
+</A>
+</TD>
+<TD VALIGN="TOP" HEIGHT="105">
+<BR>
+<H2>Using Samba</H2>
+<FONT SIZE="-1">
+Robert Eckstein, David Collier-Brown, Peter Kelly
+<BR>1st Edition November 1999
+<BR>1-56592-449-5, Order Number: 4495
+<BR>416 pages, $34.95
+</FONT>
+</TD>
+</TR>
+</TABLE>
+<HR NOSHADE SIZE="1">
+<!-- sample chapter begins -->
+
+<CENTER>
+<DIV CLASS="htmlnav">
+<TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="6.2 Controlling Access to Shares" HREF="ch06_02.html" CLASS="sect1">
+<IMG ALT="Previous: 6.2 Controlling Access to Shares" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<B>
+<FONT SIZE="-1" FACE="ARIEL,HELVETICA,HELV,SANSERIF">
+<A TITLE="6. Users, Security, and Domains " REL="up" HREF="ch06_01.html" CLASS="chapter">
+Chapter 6<BR>
+Users, Security, and Domains </A></FONT></B></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="6.4 Passwords" HREF="ch06_04.html" CLASS="sect1">
+<IMG ALT="Next: 6.4 Passwords" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR></TABLE>&nbsp;<HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+<BLOCKQUOTE>
+<DIV>
+<H2 CLASS="sect1">
+<A NAME="ch06-88596" CLASS="title">
+6.3 Authentication Security</A></H2><P CLASS="para">At this point, we should discuss how Samba authenticates users. Each user who attempts to connect to a share that does not allow guest access must provide a password to make a successful connection. What Samba does with that password&nbsp;- and consequently the strategy Samba will use to handle user authentication&nbsp;- is the arena of the <CODE CLASS="literal">
+security</CODE> configuration option. There are currently four security levels that Samba supports on its network: <I CLASS="firstterm">
+share</I>, <I CLASS="firstterm">
+user</I>, <I CLASS="firstterm">
+server</I>, and <I CLASS="firstterm">
+domain</I>.</P><DL CLASS="variablelist">
+<DT CLASS="term">Share-level security</DT><DD CLASS="listitem">
+<P CLASS="para">
+Each share in the workgroup has one or more passwords associated with it. Anyone who knows a valid password for the share can access it.</P></DD><DT CLASS="term">User-level security</DT><DD CLASS="listitem">
+<P CLASS="para">
+Each share in the workgroup is configured to allow access from certain users. With each initial tree connection, the Samba server verifies users and their passwords to allow them access to the share.</P></DD><DT CLASS="term">
+Server-level security</DT><DD CLASS="listitem">
+<P CLASS="para">
+This is the same as user-level security, except that the Samba server uses a separate SMB server to validate users and their passwords before granting access to the share.</P></DD><DT CLASS="term">Domain-level security</DT><DD CLASS="listitem">
+<P CLASS="para">
+Samba becomes a member of a Windows domain and uses the domain's primary domain controller (PDC) to perform authentication. Once authenticated, the user is given a special token that allows him or her access to any share with appropriate access rights. With this token, the PDC will not have to revalidate the user's password each time he or she attempts to access another share within the domain.</P></DD></DL><P CLASS="para">
+Each of these security policies can be implemented with the global <CODE CLASS="literal">
+security</CODE> option, as shown in <A HREF="#ch06-73905" CLASS="xref">
+Table 6.3</A>. </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch06-73905" CLASS="title">
+Table 6.3: Security Option </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Option</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Parameters</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Function</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Default</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Scope</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+security</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">domain</CODE>, <CODE CLASS="literal">
+server</CODE>, <CODE CLASS="literal">
+share</CODE>, or <CODE CLASS="literal">
+user</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Indicates the type of security that the Samba server will use.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+user</CODE> (Samba 2.0) or <CODE CLASS="literal">
+share</CODE> (Samba 1.9)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Global</P></TD></TR></TBODY></TABLE><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch06-pgfId-957225" CLASS="title">
+6.3.1 Share-level Security</A></H3><P CLASS="para">With share-level security, each share has one or more passwords associated with it. This differs from the other modes of security in that there are no restrictions as to whom can access a share, as long as that individual knows the correct password. Shares often have multiple passwords. For example, one password may grant read-only access, while another may grant read-write access, and so on. Security is maintained as long as unauthorized users do not discover the password for a share to which they shouldn't have access.</P><P CLASS="para">OS/2 and Window 95/98 both support share-level security on their resources. You can set up share-level security with Windows 95/98 by first enabling share-level security using the Access Control tab of the Network Control Panel dialog. Then select the Share-level Access Control radio button (which deselects the user-level access control radio button), as shown in <A HREF="#ch06-33100" CLASS="xref">
+Figure 6.1</A>, and press the OK button. </P><H4 CLASS="figure">
+<A NAME="ch06-33100" CLASS="title">
+Figure 6.1: Selecting share-level security on a Windows machine</A></H4><IMG ALT="Figure 6.1" CLASS="graphic" SRC="figs/sam.0601.gif"><P CLASS="para">
+Next, right click on a resource&nbsp;- such as a hard drive or a CD-ROM&nbsp;- and select the Properties menu item. This will bring up the Resource Properties dialog box. Select the Sharing tab at the top of the dialog box and enable the resource as Shared As. From here, you can configure how the shared resource will appear to individual users, as well as assigning whether the resource will appear as read-only, read-write, or a mix, depending on the password that is supplied.</P><P CLASS="para">
+You might be thinking that this security model is not a good fit for Samba&nbsp;- and you would be right. In fact, if you set the <CODE CLASS="literal">
+security</CODE> <CODE CLASS="literal">
+=</CODE> <CODE CLASS="literal">
+share</CODE> option in the Samba configuration file, Samba will still reuse the username/passwords combinations in the system password files to authenticate access. More precisely, Samba will take the following steps when a client requests a connection using share-level security:</P><OL CLASS="orderedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-957239" CLASS="listitem">
+</A>When a connection is requested, Samba will accept the password and (if sent) the username of the client.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-958140" CLASS="listitem">
+</A>If the share is <CODE CLASS="literal">
+guest</CODE> <CODE CLASS="literal">
+only </CODE>, the user is immediately granted access to the share with the rights of the user specified by the <CODE CLASS="literal">
+guest</CODE> <CODE CLASS="literal">
+account</CODE> parameter; no password checking is performed.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-957243" CLASS="listitem">
+</A>For other shares, Samba appends the username to a list of users who are allowed access to the share. It then attempts to validate the password given in association with that username. If successful, Samba grants the user access to the share with the rights assigned to that user. The user will not need to authenticate again unless a <CODE CLASS="literal">
+revalidate</CODE> <CODE CLASS="literal">
+=</CODE> <CODE CLASS="literal">
+yes</CODE> option has been set inside the share.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-957257" CLASS="listitem">
+</A>If the authentication is unsuccessful, Samba will attempt to validate the password against the list of users it has previously compiled throughout the attempted connections, as well as any specified under the share in the configuration file. If the password does not match any usernames (as specified in the system password file, typically <I CLASS="filename">
+/etc/passwd </I>), the user is not granted access to the share under that username.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-958141" CLASS="listitem">
+</A>However, if the share has a <CODE CLASS="literal">
+guest</CODE> <CODE CLASS="literal">
+ok</CODE> or <CODE CLASS="literal">
+public</CODE> option set, the user will default to access with the rights of the user specified by the <CODE CLASS="literal">
+guest</CODE> <CODE CLASS="literal">
+account</CODE> option.</P></LI></OL><P CLASS="para">
+You can indicate in the configuration file which users should be initially placed on the share-level security user list by using the <CODE CLASS="literal">
+username</CODE> configuration option, as shown below:</P><PRE CLASS="programlisting">
+[global]
+	security = share
+[accounting1]
+	path = /home/samba/accounting1
+	guest ok = no
+	writable = yes
+	username = davecb, pkelly, andyo</PRE><P CLASS="para">
+Here, when a user attempts to connect to a share, Samba will verify the password that was sent against each of the users in its own list, in addition to the passwords of users <CODE CLASS="literal">
+davecb</CODE>, <CODE CLASS="literal">
+pkelly</CODE>, and <CODE CLASS="literal">
+andyo</CODE>. If any of the passwords match, the connection will be verified and the user will be allowed. Otherwise, connection to the specific share will fail.</P><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-960345" CLASS="title">
+6.3.1.1 Share Level Security Options</A></H4><P CLASS="para">
+<A HREF="#ch06-80998" CLASS="xref">
+Table 6.4</A> shows the options typically associated with share-level security. </P><BR>
+<TABLE CLASS="table" CELLPADDING="3" BORDER="1">
+<CAPTION CLASS="table">
+<A NAME="ch06-80998" CLASS="title">
+Table 6.4: Share-Level Access Options </A></CAPTION><THEAD CLASS="thead">
+<TR VALIGN="TOP" CLASS="row">
+<TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Option</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Parameters</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Function</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Default</P></TH><TH COLSPAN="1" CLASS="entry" ROWSPAN="1" ALIGN="LEFT">
+<P CLASS="para">
+Scope</P></TH></TR></THEAD><TBODY CLASS="tbody">
+<TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+only user</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+boolean</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Indicates whether usernames specified by <CODE CLASS="literal">
+username</CODE> will be the only ones allowed.</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+no</CODE></P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR><TR VALIGN="TOP" CLASS="row">
+<TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+<CODE CLASS="literal">
+username </CODE>(user or users)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+string (list of usernames)</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Specifies a list of users against which a client's password will be tested.  </P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+None</P></TD><TD COLSPAN="1" CLASS="entry" ROWSPAN="1">
+<P CLASS="para">
+Share</P></TD></TR></TBODY></TABLE></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-960350" CLASS="title">
+6.3.1.2 only user</A></H4><P CLASS="para">
+This boolean option indicates whether Samba will allow connections to a share using share-level security based solely on the individuals specified in the <CODE CLASS="literal">
+username</CODE> option, instead of those users compiled on Samba's internal list. The default value for this option is <CODE CLASS="literal">
+no</CODE>. You can override it per share as follows:</P><PRE CLASS="programlisting">
+[global]
+    security = share
+[data]
+    username = andy, peter, valerie
+    only user = yes</PRE></DIV><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-960355" CLASS="title">
+6.3.1.3 username</A></H4><P CLASS="para">
+This option presents a list of users against which Samba will test a connection password to allow access. It is typically used with clients that have share-level security to allow connections to a particular service based solely on a qualifying password&nbsp;- in this case, one that matches a password set up for a specific user:</P><PRE CLASS="programlisting">
+[global]
+    security = share
+[data]
+     username = andy, peter, terry</PRE><P CLASS="para">
+We recommend against using this option unless you are implementing a Samba server with share-level security. </P></DIV></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch06-pgfId-957260" CLASS="title">
+6.3.2 User-level Security</A></H3><P CLASS="para">The preferred mode of security with Samba is <I CLASS="firstterm">
+user-level security</I>. With this method, each share is assigned specific users that can access it. When a user requests a connection to a share, Samba authenticates by validating the given username and password with the authorized users in the configuration file and the passwords in the password database of the Samba server. As mentioned earlier in the chapter, one way to isolate which users are allowed access to a specific share is by using the <CODE CLASS="literal">
+valid</CODE> <CODE CLASS="literal">
+users</CODE> option for each share:</P><PRE CLASS="programlisting">
+[global]
+	security = user
+[accounting1]
+	writable = yes
+	valid users = bob, joe, sandy</PRE><P CLASS="para">
+Each of the users listed will be allowed to connect to the share if the password provided matches the password stored in the system password database on the server. Once the initial authentication succeeds, the user will not need to re-enter a password again to access that share unless the <CODE CLASS="literal">
+revalidate</CODE> <CODE CLASS="literal">
+=</CODE> <CODE CLASS="literal">
+yes</CODE> option has been set.</P><P CLASS="para">Passwords can be sent to the Samba server in either an encrypted or a non-encrypted format. If you have both types of systems on your network, you should ensure that the passwords represented by each user are stored both in a traditional account database and Samba's encrypted password database. This way, authorized users can gain access to their shares from any type of client.[<A HREF="#ch06-pgfId-968956" CLASS="footnote">
+1</A>] However, we recommend that you move your system to encrypted passwords and abandon non-encrypted passwords if security is an issue. The <A HREF="ch06_04.html" CLASS="xref">
+Section 6.4</A>" section of this chapter explains how to use encrypted as well as non-encrypted passwords.</P><BLOCKQUOTE CLASS="footnote">
+<DIV CLASS="footnote">
+<P CLASS="para">
+<A NAME="ch06-pgfId-968956" CLASS="footnote">
+[1]</A> Having both encrypted and non-encrypted password clients on your network is another reason why Samba allows you to include (or not include) various options in the Samba configuration file based on the client operating system or machine name variables. </P></DIV></BLOCKQUOTE></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch06-pgfId-957282" CLASS="title">
+6.3.3 Server-level Security</A></H3><P CLASS="para">Server-level security is similar to user-level security. However, with server-level security, Samba delegates password authentication to another SMB password server, typically another Samba server or a Windows NT Server acting as a PDC on the network. Note that Samba still maintains its list of shares and their configuration in its <I CLASS="filename">
+smb.conf</I> file. When a client attempts to make a connection to a particular share, Samba validates that the user is indeed authorized to connect to the share. Samba will then attempt to validate the password by contacting the SMB password server through a known protocol and presenting the username and password to the SMB password server. If the password is accepted, a session will be established with the client. See <A HREF="#ch06-89929" CLASS="xref">
+Figure 6.2</A> for an illustration of this setup.  </P><H4 CLASS="figure">
+<A NAME="ch06-89929" CLASS="title">
+Figure 6.2: A typical system setup using server level security</A></H4><IMG ALT="Figure 6.2" CLASS="graphic" SRC="figs/sam.0602.gif"><P CLASS="para">
+You can configure Samba to use a separate password server under server-level security with the use of the <CODE CLASS="literal">
+password</CODE> <CODE CLASS="literal">
+server</CODE> global configuration option, as follows:</P><PRE CLASS="programlisting">
+[global]
+	security = server
+	password server = PHOENIX120 HYDRA134</PRE><P CLASS="para">
+Note that you can specify more than one machine as the target of the <CODE CLASS="literal">
+password</CODE> <CODE CLASS="literal">
+server </CODE>; Samba will move down the list of servers in the event that its first choice is unreachable. The servers identified by the <CODE CLASS="literal">
+password</CODE> <CODE CLASS="literal">
+server</CODE> option are given as NetBIOS names, not their DNS names or equivalent IP addresses. Also, if any of the servers reject the given password, the connection will automatically fail&nbsp;- Samba will not attempt another server.</P><P CLASS="para">
+One caveat: when using this option, you will still need an account representing that user on the regular Samba server. This is because the Unix operating system needs a username to perform various I/O operations. The preferable method of handling this is to give the user an account on the Samba server but disable the account's password by replacing it in the system password file (e.g., <I CLASS="filename">
+/etc/passwd  </I>) with an asterisk (*).</P></DIV><DIV CLASS="sect2">
+<H3 CLASS="sect2">
+<A NAME="ch06-pgfId-957298" CLASS="title">
+6.3.4 Domain-level Security</A></H3><P CLASS="para">Domain-level security is similar to server-level security. However, with domainlevel security, the Samba server is acting as a member of a Windows domain. Recall from Chapter 1 that each domain has a <I CLASS="firstterm">
+domain controller</I>, which is usually a Windows NT server offering password authentication. Including these controllers provides the workgroup with a definitive password server. The domain controllers keep track of users and passwords in their own security authentication module (SAM), and authenticates each user when he or she first logs on and wishes to access another machine's shares.</P><P CLASS="para">
+As mentioned earlier in this chapter, Samba has a similar ability to offer user-level security, but this option is Unix-centric and assumes that the authentication occurs via Unix password files. If the Unix machine is part of a NIS or NIS+ domain, Samba will authenticate the users transparently against a shared password file, in typical Unix fashion. Samba then provides access to the NIS or NIS+ domain from Windows. There is, of course, no relationship between the NIS concept of a domain and the Windows concept of a domain.</P><P CLASS="para">With domain-level security, we now have the option of using the native NT mechanism. This has a number of advantages:</P><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963199" CLASS="listitem">
+</A>It provides far better integration with NT: there are fewer "kludges" in the <I CLASS="filename">
+smb.conf</I> options dealing with domains than with most Windows features. This allows more extensive use of NT management tools, such as the User Manager for Domains tool allowing PC support individuals to treat Samba servers as if they were large NT machines.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963200" CLASS="listitem">
+</A>With the better integration comes protocol and code cleanups, allowing the Samba team to track the evolving NT implementation. NT Service Pack 4 corrects several problems in the protocol, and Samba's better integration makes it easier to track and adapt to these changes.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963202" CLASS="listitem">
+</A>There is less overhead on the PDC because there is one less permanent network connection between it and the Samba server. Unlike the protocol used by the <CODE CLASS="literal">
+security</CODE> <CODE CLASS="literal">
+=</CODE> <CODE CLASS="literal">
+server</CODE> option, the Samba server can make a Remote Procedure Call (RPC) call only when it needs authentication information. It can not keep a connection permanently up just for that.</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963203" CLASS="listitem">
+</A>Finally, the NT domain authentication scheme returns the full set of user attributes, not just success or failure. The attributes include a longer, more network-oriented version of the Unix uid, NT groups, and other information. This includes:</P><UL CLASS="itemizedlist">
+<LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963204" CLASS="listitem">
+</A>Username</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963205" CLASS="listitem">
+</A>Full name</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963206" CLASS="listitem">
+</A>Description</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963207" CLASS="listitem">
+</A>Security identifier (a domain-wide extension of the Unix uid)</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963208" CLASS="listitem">
+</A>NT group memberships</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963209" CLASS="listitem">
+</A>Logon hours, and whether to force the user to log out immediately</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963210" CLASS="listitem">
+</A>Workstations the user is allowed to use</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963211" CLASS="listitem">
+</A>Account expiration date</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963212" CLASS="listitem">
+</A>Home directory</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963213" CLASS="listitem">
+</A>Login script</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963214" CLASS="listitem">
+</A>Profile</P></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963215" CLASS="listitem">
+</A>Account type</P></LI></UL></LI><LI CLASS="listitem">
+<P CLASS="para">
+<A NAME="ch06-pgfId-963216" CLASS="listitem">
+</A>The Samba developers used domain-level security in Samba version 2.0.4 to add and delete domain users on Samba servers semi-automatically. In addition, it adds room for other NT-like additions, such as supporting access control lists and changing permissions of files from the client.</P></LI></UL><P CLASS="para">
+The advantage to this approach is less administration; there is only one authentication database to keep synchronized. The only local administration required on the Samba server will be creating directories for users to work in and <I CLASS="filename">
+/etc/passwd</I> entries to keep their UIDs and groups in. </P><DIV CLASS="sect3">
+<H4 CLASS="sect3">
+<A NAME="ch06-pgfId-963191" CLASS="title">
+6.3.4.1 Adding a Samba server to a Windows NT Domain</A></H4><P CLASS="para">
+If you already have an NT domain, you can easily add a Samba server to it. First, you will need to stop the Samba daemons. Then, add the Samba server to the NT domain on the PDC using the "Windows NT Server Manager for Domains" tool. When it asks for the computer type, choose "Windows NT Workstation or Server," and give it the NetBIOS name of the Samba server. This creates the machine account on the NT server.</P><P CLASS="para">
+Next, generate a Microsoft-format machine password using the <I CLASS="filename">
+smbpasswd</I> tool, which is explained in further detail in the next section. For example, if our domain is SIMPLE and the Windows NT PDC is <CODE CLASS="literal">
+beowulf</CODE>, we could use the following command on the Samba server to accomplish this:</P><PRE CLASS="programlisting">
+<CODE CLASS="literal">
+smbpasswd -j SIMPLE -r beowulf</CODE></PRE><P CLASS="para">
+Finally, add the following options to the <CODE CLASS="literal">
+[global]</CODE> section of your <I CLASS="filename">
+smb.conf</I> and restart the Samba daemons.</P><PRE CLASS="programlisting">
+[global]
+	security = domain
+	domain logins = yes
+	workgroup = SIMPLE
+	password server = beowulf</PRE><P CLASS="para">
+Samba should now be configured for domain-level security. The <CODE CLASS="literal">
+domain</CODE> <CODE CLASS="literal">
+logins</CODE> option is explained in more detail later in this chapter. </P></DIV></DIV></DIV></BLOCKQUOTE>
+<DIV>
+<CENTER>
+<HR NOSHADE SIZE="1"><TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="6.2 Controlling Access to Shares" HREF="ch06_02.html" CLASS="sect1">
+<IMG ALT="Previous: 6.2 Controlling Access to Shares" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="" HREF="index.html" CLASS="book">
+<IMG ALT="" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txthome.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="6.4 Passwords" HREF="ch06_04.html" CLASS="sect1">
+<IMG ALT="Next: 6.4 Passwords" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR><TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+6.2 Controlling Access to Shares</TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="Book Index" HREF="http://www.oreilly.com/catalog/samba/inx.html" CLASS="index">
+<IMG ALT="Book Index" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/index.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+6.4 Passwords</TD></TR></TABLE><HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+
+<!--  End of sample chapter -->
+<P><B>Back to: <A HREF="http://www.oreilly.com/catalog/samba/noframes.html">Using Samba</A></B>
+<CENTER>
+<HR NOSHADE SIZE="1">
+<FONT SIZE="1" FACE="Verdana, Arial, Helvetica">
+<A HREF="http://www.oreilly.com/">
+<B>O'Reilly Home</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/sales/bookstores">
+<B>O'Reilly Bookstores</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/order_new/">
+<B>How to Order</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/contact.html">
+<B>O'Reilly Contacts<BR></B></A>
+<A HREF="http://www.oreilly.com/international/">
+<B>International</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/about.html">
+<B>About O'Reilly</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/affiliates.html">
+<B>Affiliated Companies</B></A><P>
+<EM>&copy; 1999, O'Reilly &amp; Associates, Inc.</EM>
+</FONT>
+</CENTER>
+</BODY>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+</HTML>

@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "html.dtd">
+<HTML>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+<HEAD>
+<TITLE>[Chapter 1] 1.1 Learning Samba</TITLE>
+</HEAD>
+<BODY VLINK="#0000CC" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#990000">
+<TABLE WIDTH="90%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD COLSPAN="2">
+<IMG WIDTH="515" ALT="Search the Catalog" SRC="http://www.oreilly.com/graphics_new/catalog_header_buttons.gif" HEIGHT="37" ISMAP ALIGN="BOTTOM" USEMAP="#catalog_header_buttons" BORDER="0">
+<MAP NAME="catalog_header_buttons">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/search.html" COORDS="407,17,512,32">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/catalog/prdindex.html" COORDS="431,3,512,18">
+</MAP>
+</TD>
+</TR>
+<TR>
+<TD WIDTH="25%" VALIGN="TOP">
+<A HREF="http://www.oreilly.com/catalog/samba/">
+<IMG ALT="Using Samba" VALIGN="top" VSPACE="10" HSPACE="10" SRC="http://www.oreilly.com/catalog/covers/samba.s.gif" ALIGN="left" BORDER="0">
+</A>
+</TD>
+<TD VALIGN="TOP" HEIGHT="105">
+<BR>
+<H2>Using Samba</H2>
+<FONT SIZE="-1">
+Robert Eckstein, David Collier-Brown, Peter Kelly
+<BR>1st Edition November 1999
+<BR>1-56592-449-5, Order Number: 4495
+<BR>416 pages, $34.95
+</FONT>
+</TD>
+</TR>
+</TABLE>
+<HR NOSHADE SIZE="1">
+<!-- sample chapter begins -->
+
+<CENTER>
+<DIV CLASS="htmlnav">
+<TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+</TD>
+<TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+</TD>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="1.2 What Can Samba Do For Me?" HREF="ch01_02.html" CLASS="sect1">
+<IMG ALT="Next: 1.2 What Can Samba Do For Me?" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A>
+</TD>
+</TR>
+</TABLE>&nbsp;
+<HR NOSHADE SIZE="1">
+</CENTER>
+</DIV>
+<BLOCKQUOTE>
+<DIV>
+<H1 CLASS="sect1">1. Learning the Samba</H1>
+<DIV CLASS="htmltoc">
+<P>
+<B>
+Contents:</B><BR>
+<A TITLE="1.1 What is Samba" HREF="#ch01-what" CLASS="sect1">What is Samba</A><BR>
+<A TITLE="1.2 What Can Samba Do For Me?" HREF="ch01_02.html" CLASS="sect1">What Can Samba Do For Me?</A><BR>
+<A TITLE="1.3 Getting Familiar with a SMB/CIFS Network" HREF="ch01_03.html" CLASS="sect1">Getting Familiar with a SMB/CIFS Network</A><BR>
+<A TITLE="1.4 Microsoft Implementations" HREF="ch01_04.html" CLASS="sect1">Microsoft Implementations</A><BR>
+<A TITLE="1.5 An Overview of the Samba Distribution" HREF="ch01_05.html" CLASS="sect1">An Overview of the Samba Distribution</A><BR>
+<A TITLE="1.6 How Can I Get Samba?" HREF="ch01_06.html" CLASS="sect1">How Can I Get Samba?</A><BR>
+<A TITLE="1.7 What's New in Samba 2.0?" HREF="ch01_07.html" CLASS="sect1">What's New in Samba 2.0?</A><BR>
+<A TITLE="1.8 And That's Not All..." HREF="ch01_08.html" CLASS="sect1">And That's Not All...</A>
+
+</P><P>
+</P></DIV>
+<P>If you are a typical system administrator, then you know what it means to be <I>swamped</I> with work. Your daily routine is filled with endless hardware incompatibility issues, system outages, data backup problems, and a steady stream of angry users. So adding another program to the mix of tools that you have to maintain may sound a bit perplexing. However, if you're determined to reduce the complexity of your work environment, as well as the workload of keeping it running smoothly, Samba may be the tool you've been waiting for.</P>
+
+<P>A case in point: one of the authors of this book used to look after 70 Unix developers sharing 5 Unix servers. His neighbor administered 20 Windows 3.1 users and 5 OS/2 and Windows NT servers. To put it mildly, the Windows 3.1 administrator was swamped. When he finally left -- and the domain controller melted -- Samba was brought to the rescue. Our author quickly replaced the Windows NT and   OS/2 servers with Samba running on a Unix server, and eventually bought PCs for most of the company developers. However, he did the latter without hiring a new PC administrator; the administrator now manages one centralized Unix application instead of fifty distributed PCs. </P>
+
+<P>If you know you're facing a problem with your network and you're sure there is a better way, we encourage you to start reading this book. Or, if you've heard about Samba and you want to see what it can do for you, this is also the place to start. We'll get you started on the path to understanding Samba and its potential. Before long, you can provide Unix services to all your Windows machines -- all without spending tons of extra time or money. Sound enticing? Great, then let's get started.</P>
+
+<A NAME="ch01-what"></A>
+<H2 ID="ch01-28119">What is Samba?</H2>
+
+<P>Samba is a suite of Unix applications that speak the SMB (Server Message Block) protocol. Many operating systems, including Windows and OS/2, use SMB to perform client-server networking. By supporting this protocol, Samba allows Unix servers to get in on the action, communicating with the same networking protocol as Microsoft Windows products. Thus, a Samba-enabled Unix machine can masquerade as a server on your Microsoft network and offer the following services:</P>
+
+<UL>
+<LI ID="ch01-pgfId-940463">
+
+<P>Share one or more filesystems</P>
+
+</LI>
+<LI ID="ch01-pgfId-940464">
+
+<P>Share printers installed on both the server and its clients</P>
+
+</LI>
+<LI ID="ch01-pgfId-940465">
+
+<P>Assist clients with Network Neighborhood browsing</P>
+
+</LI>
+<LI ID="ch01-pgfId-940489">
+
+<P>Authenticate clients logging onto a Windows domain</P>
+
+</LI>
+<LI ID="ch01-pgfId-940472">
+
+<P>Provide or assist with WINS name server resolution</P>
+
+</LI>
+</UL>
+
+<P>Samba is the brainchild of Andrew Tridgell, who currently heads the Samba development team from his home of Canberra, Australia. The project was born in 1991 when Andrew created a fileserver program for his local network that supported an odd DEC protocol from Digital Pathworks. Although he didn't know it at the time, that protocol later turned out to be SMB. A few years later, he expanded upon his custom-made SMB server and began distributing it as a product on the Internet under the name SMB Server. However, Andrew couldn't keep that name -- it already belonged to another company's product -- so he tried the following Unix renaming approach:</P>
+
+<PRE>
+grep -i 's.*m.*b' /usr/dict/words </PRE>
+
+<P>And the response was:</P>
+
+<PRE>
+salmonberry samba sawtimber scramble</PRE>
+
+<P>Thus, the name "Samba" was born.<FOOTNOTE ID="ch01-pgfId-946532">
+
+<P>Which is a good thing, because our marketing people highly doubt you would have picked up a book called "Using Salmonberry"!</P>
+
+</FOOTNOTE></P>
+
+<P>Today, the Samba suite revolves around a pair of Unix daemons that provide shared resources -- or <I>shares</I> -- to SMB clients on the network. (Shares are sometimes called s<I>ervices</I> as well.) These daemons are:</P>
+
+<DL>
+<DT>smbd</DT>
+<DD>
+
+<P ID="ch01-pgfId-949804">A daemon that allows file and printer sharing on an SMB network and provides authentication and authorization for SMB clients.</P>
+
+</DD>
+
+<DT>nmbd</DT>
+<DD>
+
+<P ID="ch01-pgfId-949805">A daemon that looks after the Windows Internet Name Service (WINS), and assists with browsing.</P>
+
+</DD>
+</DL>
+
+<P>Samba is currently maintained and extended by a group of volunteers under the active supervision of Andrew Tridgell. Like the Linux operating system, Samba is considered <I>Open Source software </I>(OSS) by its authors, and is distributed under the GNU General Public License (GPL). Since its inception, development of Samba has been sponsored in part by the Australian National University, where Andrew Tridgell earned his Ph.D.<A HREF="#footnote">
+
+[1]</A>
+ In addition, some development has been sponsored by independent vendors such as Whistle and SGI. It is a true testament to Samba that both commercial and non-commercial entities are prepared to spend money to support an Open Source effort.</P>
+<BLOCKQUOTE><A NAME="footnote">
+<P>At the time of this printing, Andrew had completed his Ph.D. work and had joined San Francisco-based LinuxCare.</P>
+</BLOCKQUOTE>
+<P>Microsoft has also contributed materially by putting forward its definition of SMB and the Internet-savvy Common Internet File System (CIFS), as a public Request for Comments (RFC), a standards document. The CIFS protocol is Microsoft's renaming of future versions of the SMB protocol that will be used in Windows products -- the two terms can be used interchangeably in this book. Hence, you will often see the protocol written as "SMB/CIFS."</P> </P></DIV></DIV></DIV></BLOCKQUOTE>
+<DIV>
+<CENTER>
+<HR NOSHADE SIZE="1"><TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+
+</TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="" HREF="index.html" CLASS="book">
+<IMG ALT="" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txthome.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+<A TITLE="1.2 What Can Samba Do For Me?" HREF="ch01_02.html" CLASS="sect1">
+<IMG ALT="Next: 1.2 What Can Samba Do For Me?" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtnexta.gif" BORDER="0"></A></TD></TR><TR>
+
+<TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="Book Index" HREF="http://www.oreilly.com/catalog/samba/inx.html" CLASS="index">
+<IMG ALT="Book Index" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/index.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+1.1 Learning Samba</TD></TR></TABLE><HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+
+<!--  End of sample chapter -->
+<P><B>Back to: <A HREF="http://www.oreilly.com/catalog/samba/noframes.html">Using Samba</A></B>
+<CENTER>
+<HR NOSHADE SIZE="1">
+<FONT SIZE="1" FACE="Verdana, Arial, Helvetica">
+<A HREF="http://www.oreilly.com/">
+<B>O'Reilly Home</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/sales/bookstores">
+<B>O'Reilly Bookstores</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/order_new/">
+<B>How to Order</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/contact.html">
+<B>O'Reilly Contacts<BR></B></A>
+<A HREF="http://www.oreilly.com/international/">
+<B>International</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/about.html">
+<B>About O'Reilly</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/affiliates.html">
+<B>Affiliated Companies</B></A><P>
+<EM>&copy; 1999, O'Reilly &amp; Associates, Inc.</EM>
+</FONT>
+</CENTER>
+</BODY>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+</HTML>

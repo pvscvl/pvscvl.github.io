@@ -1,0 +1,320 @@
+<!DOCTYPE HTML PUBLIC "html.dtd">
+<HTML>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+<HEAD>
+<TITLE>[Appendix F] Sample Configuration File</TITLE>
+<META NAME="DC.title" CONTENT=""><META NAME="DC.creator" CONTENT=""><META NAME="DC.publisher" CONTENT="O'Reilly &amp; Associates, Inc."><META NAME="DC.date" CONTENT="1999-11-08T16:28:53Z"><META NAME="DC.type" CONTENT="Text.Monograph"><META NAME="DC.format" SCHEME="MIME" CONTENT="text/html"><META NAME="DC.source" SCHEME="ISBN" CONTENT=""><META NAME="DC.language" CONTENT="en-US"><META NAME="generator" CONTENT="Jade 1.1/O'Reilly DocBook 3.0 to HTML 4.0"></HEAD>
+<BODY VLINK="#0000CC" TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#990000">
+<TABLE WIDTH="90%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD COLSPAN="2">
+<IMG WIDTH="515" ALT="Search the Catalog" SRC="http://www.oreilly.com/graphics_new/catalog_header_buttons.gif" HEIGHT="37" ISMAP ALIGN="BOTTOM" USEMAP="#catalog_header_buttons" BORDER="0">
+<MAP NAME="catalog_header_buttons">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/search.html" COORDS="407,17,512,32">
+<AREA SHAPE="Rect" HREF="http://www.oreilly.com/catalog/prdindex.html" COORDS="431,3,512,18">
+</MAP>
+</TD>
+</TR>
+<TR>
+<TD WIDTH="25%" VALIGN="TOP">
+<A HREF="http://www.oreilly.com/catalog/samba/">
+<IMG ALT="Using Samba" VALIGN="top" VSPACE="10" HSPACE="10" SRC="http://www.oreilly.com/catalog/covers/samba.s.gif" ALIGN="left" BORDER="0">
+</A>
+</TD>
+<TD VALIGN="TOP" HEIGHT="105">
+<BR>
+<H2>Using Samba</H2>
+<FONT SIZE="-1">
+Robert Eckstein, David Collier-Brown, Peter Kelly
+<BR>1st Edition November 1999
+<BR>1-56592-449-5, Order Number: 4495
+<BR>416 pages, $34.95
+</FONT>
+</TD>
+</TR>
+</TABLE>
+<HR NOSHADE SIZE="1">
+<!-- sample chapter begins -->
+
+<CENTER>
+<DIV CLASS="htmlnav">
+<TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="D. Downloading Samba with CVS" HREF="appd_01.html" CLASS="appendix">
+<IMG ALT="Previous: D. Downloading Samba with CVS" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<B>
+<FONT SIZE="-1" FACE="ARIEL,HELVETICA,HELV,SANSERIF">
+Appendix E</FONT></B></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+&nbsp;</TD></TR></TABLE>&nbsp;<HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+<BLOCKQUOTE>
+<DIV CLASS="samplechapter">
+<H1 CLASS="appendix">
+<A NAME="appf-10509" CLASS="title">
+Appendix F. Sample Configuration File</A></H1><P CLASS="para">This appendix gives an example of a production <I CLASS="filename">
+smb.conf</I> file and looks at how many of the options are used in practice. The following is a slightly disguised version of one we used at a corporation with five Linux servers, five Windows for Workgroups clients and three NT Workstation clients:</P><PRE CLASS="programlisting">
+&#13;# smb.conf -- File Server System for: 1 Example.COM  BSC &amp; Management Office 
+[globals]
+	workgroup = 1EG_BSC
+	interfaces = 10.10.1.14/24 </PRE><P CLASS="para">
+We provide this service on only one of the machine's interfaces. The <CODE CLASS="literal">
+interfaces</CODE> option sets its address and netmask, where <CODE CLASS="literal">
+/24</CODE> is the same as using the netmask 255.255.255.0:</P><PRE CLASS="programlisting">
+&#13;	comment = Samba ver. %v
+	preexec = csh -c `echo /usr/samba/bin/smbclient \
+                     -M %m -I %I` &amp;</PRE><P CLASS="para">
+We use the <KBD CLASS="command">
+preexec</KBD> command to log information about all connections by machine name (<CODE CLASS="literal">
+%m</CODE>) and IP address (<CODE CLASS="literal">
+%I)</CODE>:</P><PRE CLASS="programlisting">
+&#13;	# smbstatus will output various info on current status
+	status = yes
+	browseable = yes
+	printing = bsd
+
+	# the username that will be used for access to services
+	# specified with 'guest = ok'
+	guest account = samba </PRE><P CLASS="para">
+The default guest account was <CODE CLASS="literal">
+nobody</CODE>, uid -1, which produced log messages on one of our machines saying "your server is being unfriendly," so we created a specific Samba guest account for browsing and printing:</P><PRE CLASS="programlisting">
+&#13;	# superuser account - admin privilages to shares, with no
+	# restrictions
+	# WARNING - use this with care: files can be modified,
+	# regardless of file permissions
+	admin users = root
+
+	# who is NOT allowed to connect to ANY service
+	invalid users = @wheel, mail, deamon, adt</PRE><P CLASS="para">
+Daemons can't use Samba, only people. The <CODE CLASS="literal">
+invalid</CODE> <CODE CLASS="literal">
+users</CODE> option closes a security hole; it prevents intruders from breaking in by pretending to be a daemon process.</P><PRE CLASS="programlisting">
+&#13;	# hosts that are ALLOWED or DENIED from connecting to ANY service
+	hosts allow = 10.10.1.
+	hosts deny = 10.10.1.6
+	
+	# where the lock files will be located
+	lock directory = /var/lock/samba/locks
+		
+	# debug log files 
+	# %m = separate log for each NetBIOS name (each machine)
+	log file = /var/log/samba/log.%m
+
+	# We send priority 0, 1 and 2 messages to the system logs
+	syslog = 2
+		
+	# If a WinPopup message is sent to the server,
+	# redirect it to a user via e-mail
+	
+	message command = /bin/mail -s 'message from #% on %m' \
+						 pkelly &lt; %s; rm %s
+
+# ---------------------------------------------------
+# [globals] Performance Tuning
+# ---------------------------------------------------
+	
+	# caching algorithm to reduce time doing getwd() calls.  
+	getwd cache = yes
+
+	socket options = TCP_NODELAY
+
+	# tell the server whether the client is present and
+	# responding in seconds
+	keep alive = 60
+
+	# num minutes of inactivity before a connection is
+	# considered dead
+	dead time = 30 
+
+	read prediction = yes
+	share modes = yes
+	max xmit = 17384 
+	read size = 512</PRE><P CLASS="para">
+The <CODE CLASS="literal">
+share</CODE> <CODE CLASS="literal">
+modes</CODE>, <CODE CLASS="literal">
+max</CODE>, <CODE CLASS="literal">
+xinit</CODE>, and <CODE CLASS="literal">
+read</CODE> <CODE CLASS="literal">
+size</CODE> options are machine-specific (see <B>Appendix B, <CITE CLASS="appendix">
+Samba Performance Tuning</CITE></B>): </P><PRE CLASS="programlisting">
+&#13;	# locking is done by the server
+	locking = yes
+
+	# control whether dos style attributes should be mapped
+	# to unix execute bits
+	map hidden = yes
+	map archive = yes
+	map system = yes</PRE><P CLASS="para">
+The three <CODE CLASS="literal">
+map</CODE> options will work only on shares with a create mode that includes the execute bits (0111). Our <CODE CLASS="literal">
+homes</CODE> and <CODE CLASS="literal">
+printers</CODE> shares won't honor them, but the [<CODE CLASS="literal">
+www]</CODE> share will:</P><PRE CLASS="programlisting">
+&#13;# ---------------------------------------------------------
+# [globals] Security and Domain Logon Services
+# ---------------------------------------------------------	
+# connections are made with UID and GID, not as shares
+	security = user
+
+# boolean variable that controls whether passwords
+# will be encrypted
+	encrypt passwords = yes
+	passwd chat = &quot;*New password:*&quot; %n\r &quot;*New password (again):*&quot; %n\r \ &quot;*Password changed*&quot;
+	passwd program = /usr/bin/passwd %u
+	
+# Always become the local master browser
+	domain master = yes
+	preferred master = yes
+	os level = 34
+	
+# For domain logons to work correctly. Samba acts as a
+# primary domain controller.
+	domain logons = yes
+	
+# Logon script to run for user off the server each time
+# username (%U) logs in.  Set the time, connect to shares,
+# virus checks, etc.
+	logon script = scripts\%U.bat
+
+[netlogon]
+	comment = &quot;Domain Logon Services&quot;
+	path = /u/netlogon
+	writable = yes
+	create mode = 444
+	guest ok = no
+	volume = &quot;Network&quot;</PRE><P CLASS="para">
+This share, discussed in <B>Chapter 6, <CITE CLASS="chapter">
+Users, Security, and Domains </CITE></B>, is required for Samba to work smoothly in a Windows NT domain:</P><PRE CLASS="programlisting">
+&#13;# -----------------------------------------------------------
+# [homes] User Home Directories
+# -----------------------------------------------------------
+[homes]
+	comment = &quot;Home Directory for : %u &quot;
+	path = /u/users/%u</PRE><P CLASS="para">
+The password file of the Samba server specifies each person's home directory as   <EM CLASS="emphasis">
+/home/</EM><CODE CLASS="replaceable">
+<I>
+machine_name</I></CODE><EM CLASS="emphasis">
+/</EM><CODE CLASS="replaceable">
+<I>
+person</I></CODE>, which NFS converts to point to the actual physicl location under <EM CLASS="emphasis">
+/u/users</EM>. The <CODE CLASS="literal">
+path</CODE> option in the <CODE CLASS="literal">
+[homes]</CODE> share tells Samba the actual (non-NFS) location:</P><PRE CLASS="programlisting">
+&#13;	guest ok = no
+	read only = no
+	create mode = 644
+	writable = yes
+	browseable = no 
+
+# -----------------------------------------------------------
+# [printers] System Printers
+# -----------------------------------------------------------
+[printers]
+	comment = &quot;Printers&quot;
+	path = /var/spool/lpd/samba
+	printcap name = /etc/printcap
+	printable = yes
+	public = no 
+	writable = no
+
+	lpq command = /usr/bin/lpq -P%p
+	lprm command = /usr/bin/lprm -P%p %j
+	lppause command = /usr/sbin/lpc stop %p
+	lpresume command = /usr/sbin/lpc start %p
+
+	create mode = 0700
+
+	browseable = no 
+	load printers = yes  
+
+# -----------------------------------------------------------
+# Specific Descriptions: [programs] [data] [retail]
+# -----------------------------------------------------------
+[programs]
+	comment = &quot;Shared Programs %T&quot;
+	volume = &quot;programs&quot;</PRE><P CLASS="para">
+Shared Programs shows up in the Network Neighborhood, and <CODE CLASS="literal">
+programs</CODE> is the volume name you specify when an installation program wants to know the label of the CD-ROM from which it thinks it's loading:</P><PRE CLASS="programlisting">
+&#13;	path = /u/programs
+	public = yes
+	writeable = yes
+	printable = no
+	create mode = 664
+[cdrom]
+	comment = &quot;Unix CDROM&quot;
+	path = /u/cdrom
+	public = no 
+	writeable = no 
+	printable = no
+	volume = &quot;cdrom&quot;
+
+[data]
+	comment =  &quot;Data Directories %T&quot;
+	path = /u/data
+	public = no
+	create mode = 770
+	writeable = yes
+	volume = &quot;data&quot;
+
+[nt4]
+	comment =  &quot;NT4 Server&quot;
+	path = /u/systems/nt4
+	public = yes 
+	create mode = 770
+	writeable = yes
+	volume = &quot;nt4_server&quot;
+
+[www]
+	comment =  &quot;WWW System&quot;
+	path = /usr/www/http
+	public = yes 
+	create mode = 775
+	writeable = yes
+	volume = &quot;www_system&quot;</PRE><P CLASS="para">
+The <CODE CLASS="literal">
+[www]</CODE> share is the directory used on the Unix server to serve web pages. Samba makes the directory available to local PC users so the art department can update web pages.</P></DIV></BLOCKQUOTE>
+<DIV>
+<CENTER>
+<HR NOSHADE SIZE="1"><TABLE WIDTH="515" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+<TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+<A TITLE="D. Downloading Samba with CVS" HREF="appd_01.html" CLASS="appendix">
+<IMG ALT="Previous: D. Downloading Samba with CVS" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txtpreva.gif" BORDER="0"></A></TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="" HREF="index.html" CLASS="book">
+<IMG ALT="" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/txthome.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">&nbsp;</TD></TR><TR>
+<TD WIDTH="172" VALIGN="TOP" ALIGN="LEFT">
+D. Downloading Samba with CVS</TD><TD WIDTH="171" VALIGN="TOP" ALIGN="CENTER">
+<A TITLE="Book Index" HREF="http://www.oreilly.com/catalog/samba/inx.html" CLASS="index">
+<IMG ALT="Book Index" SRC="http://www.oreilly.com/catalog/samba/chapter/gifs/index.gif" BORDER="0"></A></TD><TD WIDTH="172" VALIGN="TOP" ALIGN="RIGHT">
+&nbsp;</TD></TR></TABLE><HR NOSHADE SIZE="1"></CENTER>
+</DIV>
+
+<!--  End of sample chapter -->
+<P><B>Back to: <A HREF="http://www.oreilly.com/catalog/samba/noframes.html">Using Samba</A></B>
+<CENTER>
+<HR NOSHADE SIZE="1">
+<FONT SIZE="1" FACE="Verdana, Arial, Helvetica">
+<A HREF="http://www.oreilly.com/">
+<B>O'Reilly Home</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/sales/bookstores">
+<B>O'Reilly Bookstores</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/order_new/">
+<B>How to Order</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/contact.html">
+<B>O'Reilly Contacts<BR></B></A>
+<A HREF="http://www.oreilly.com/international/">
+<B>International</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/oreilly/about.html">
+<B>About O'Reilly</B></A> <B> | </B>
+<A HREF="http://www.oreilly.com/affiliates.html">
+<B>Affiliated Companies</B></A><P>
+<EM>&copy; 1999, O'Reilly &amp; Associates, Inc.</EM>
+</FONT>
+</CENTER>
+</BODY>
+
+<!-- Mirrored from 63.227.213.92 by HTTrack/2.x [XR/YP'2000] -->
+</HTML>
