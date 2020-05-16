@@ -1,0 +1,5 @@
+0.0.0.0	pool.ntp.org
+0.0.0.0 0.de.pool.ntp.org
+0.0.0.0 1.de.pool.ntp.org
+0.0.0.0 2.de.pool.ntp.org
+0.0.0.0 3.de.pool.ntp.org
